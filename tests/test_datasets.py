@@ -1,12 +1,22 @@
 # test_dataset.py
 from project_datasets.vsr_dataset import get_vsr_loader, VSRDataset
 import pytest
+import clip
 
 
 # VSR DATASET
-def test_vsr_dataset():
+
+@pytest.fixture
+def image_transform():
+    #return transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
+    _, preprocess = clip.load("ViT-B/32", device="cpu")#TODO change to GPU
+    return preprocess
+    
+
+@pytest.mark.dataset
+def test_vsr_dataset(image_transform):
     print("🔍 Loading VSR dataset...")
-    loader = get_vsr_loader(split="train", dataset_name="zeroshot", batch_size=2) #TODO model_name 
+    loader = get_vsr_loader(split="train", dataset_name="zeroshot", batch_size=2, transform=image_transform)
 
     # get batch
     batch = next(iter(loader))
@@ -23,18 +33,15 @@ def test_vsr_dataset():
     else:
         print("Images:", type(batch["image"][0]))
 
-def test_vsr_dataset_len(tmp_path):
-    # Asumiendo que tienes los jsonl en project_data/raw/vsr/zeroshot/
-    dataset = VSRDataset(dataset_name="zeroshot", split="train", base_path="project_data/raw/vsr")
+@pytest.mark.dataset
+def test_vsr_dataset_len(image_transform):
+    dataset = VSRDataset(dataset_name="zeroshot", split="train", base_path="project_data/raw/vsr", transform=image_transform)
     assert len(dataset) > 0, "Dataset should not be empty"
 
-def test_vsr_dataset_item_structure():
-    dataset = VSRDataset(dataset_name="zeroshot", split="train", base_path="project_data/raw/vsr")
+@pytest.mark.dataset
+def test_vsr_dataset_item_structure(image_transform):
+    dataset = VSRDataset(dataset_name="zeroshot", split="train", base_path="project_data/raw/vsr", transform=image_transform)
     item = dataset[0]
-    assert all(k in item for k in ["image", "text", "label", "relation"]), "Missing expected keys in dataset item"
-
-# VSR DATAMODULE
-
-
-if __name__ == "__main__":
-    test_vsr_dataset()
+    expected_keys = ["image", "text", "label", "relation"]
+    for k in expected_keys:
+        assert k in item, f"Missing key '{k}' in dataset item"

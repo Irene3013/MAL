@@ -9,6 +9,9 @@ from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
 
+# -----------------------------
+# DATASET
+# -----------------------------
 class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
@@ -32,7 +35,7 @@ class VSRDataset(Dataset):
         self.split = split
 
         # Load dataset
-        data_path = self.base_path / dataset_name / f"{split}.jsonl"
+        data_path = self.base_path / f"{split}.jsonl"
         self.dataset = self._load_jsonl(data_path)
 
     def _load_jsonl(self, filepath):
@@ -68,12 +71,15 @@ def get_vsr_loader(dataset_name="zeroshot", split="train", batch_size=8, shuffle
 
 
 
+# -----------------------------
+# DATAMODULE
+# -----------------------------
 class VSRDataModule(pl.LightningDataModule):
     """
     Visual Spatial Relations (VSR) Data Module
     """
 
-    def __init__(self, dataset_name="zeroshot", batch_size=8, transform=None):
+    def __init__(self, dataset_name="zeroshot", batch_size=8, transform=None): #TODO args
         super().__init__()
         self.dataset_name = dataset_name
         self.batch_size = batch_size
