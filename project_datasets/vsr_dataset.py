@@ -57,17 +57,18 @@ class VSRDataset(Dataset):
         return {
             "image": self.transform(image),
             "text": item["caption"],
-            "label": item["label"],
-            "relation": item["relation"],
+            "label": item["label"], # 1-TRUE / 0-FALSE
         }
 
     @staticmethod
     def compute_accuracy(preds, labels):
         return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
 
-def get_vsr_loader(dataset_name="zeroshot", split="train", batch_size=8, shuffle=False, transform=None):
+def get_vsr_loader(dataset_name="zeroshot", split="train", batch_size=8,
+                   shuffle=False, transform=None, num_workers=0):
     dataset = VSRDataset(dataset_name=dataset_name, split=split, transform=transform)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+
 
 
 
@@ -78,12 +79,14 @@ class VSRDataModule(pl.LightningDataModule):
     """
     Visual Spatial Relations (VSR) Data Module
     """
-
-    def __init__(self, dataset_name="zeroshot", batch_size=8, transform=None): #TODO args
+    def __init__(self, args, transform=None):
         super().__init__()
-        self.dataset_name = dataset_name
-        self.batch_size = batch_size
+
+        self.batch_size = args.batch_size
+        self.num_workers = args.num_workers
+        self.dataset_name = args.variant # [zeroshot / random]
         self.transform = transform
+        #self.root = args.root
 
     def setup(self, stage=None):
         """
@@ -94,13 +97,31 @@ class VSRDataModule(pl.LightningDataModule):
         self.test_dataset = VSRDataset(split="test", dataset_name=self.dataset_name, transform=self.transform)
 
     def train_dataloader(self):
-        return get_vsr_loader(split="train", dataset_name=self.dataset_name,
-                              batch_size=self.batch_size, shuffle=True, transform=self.transform)
+        params = {
+            'batch_size': self.batch_size,
+            'shuffle': True,
+            'num_workers': self.num_workers,
+            'dataset_name': self.dataset_name,
+            'transform': self.transform
+        }
+        return get_vsr_loader(split="train", **params)
 
     def val_dataloader(self):
-        return get_vsr_loader(split="dev", dataset_name=self.dataset_name,
-                              batch_size=self.batch_size, shuffle=False, transform=self.transform)
+        params = {
+            'batch_size': self.batch_size,
+            'shuffle': False,
+            'num_workers': self.num_workers,
+            'dataset_name': self.dataset_name,
+            'transform': self.transform
+        }
+        return get_vsr_loader(split="dev", **params)
 
     def test_dataloader(self):
-        return get_vsr_loader(split="test", dataset_name=self.dataset_name,
-                              batch_size=self.batch_size, shuffle=False, transform=self.transform)
+        params = {
+            'batch_size': self.batch_size,
+            'shuffle': False,
+            'num_workers': self.num_workers,
+            'dataset_name': self.dataset_name,
+            'transform': self.transform
+        }
+        return get_vsr_loader(split="test", **params)

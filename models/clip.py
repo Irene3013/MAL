@@ -1,37 +1,36 @@
 #models/clip.py
 import torch
 import clip
-from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize, InterpolationMode
-from project_datasets.vsr_dataset import get_vsr_loader
 import pytorch_lightning as pl
-#from pytorch_lightning.loggers import TensorBoardLogger
-#from pytorch_lightning.callbacks import ModelCheckpoint
-from project_datasets.vsr_dataset import get_vsr_loader, VSRDataset
+from project_datasets.vsr_dataset import VSRDataset
+import transformers
 
 
 class ClipModel(pl.LightningModule):
     """
     Wrapper Lightning Module for CLIP model fine-tuning or zero-shot evaluation.
     """
-
-    def __init__(self, model_name="ViT-B/32", dataset="vsr", batch_size=8, lr=1e-5, device="cpu"): #TODO change to GPU
+    #def __init__(self, model_name="ViT-B/32", dataset="vsr", batch_size=8, lr=1e-5, device="cpu"): #TODO change to GPU
+    def __init__(self, args): #TODO change to GPU
         super().__init__()
 
         self.save_hyperparameters()
 
+         # --- Params ---
+        self.model_name = args.target_model # Version of the CLIP model
+        self.dataset = args.dataset         # [vsr, whatsup, biscor]
+        self.batch_size = args.batch_size
+        self.loss_fn = torch.nn.CrossEntropyLoss()
+        print(f"args.gpus: {args.gpus}")
+        self.device_name = "cpu" if args.gpus == 0 else "cuda"
+
+
         # --- Validations ---
         available_models = ['RN50', 'RN101', 'RN50x4', 'RN50x16', 'RN50x64','ViT-B/32', 'ViT-B/16', 'ViT-L/14', 'ViT-L/14@336px']
-        assert model_name in available_models, f"Unsupported clip version: '{model_name}'. Must be one of [{", ".join(available_models)}]."
-
-        # --- Params ---
-        self.model_name = model_name 
-        self.dataset = dataset       # vsr, whatsup, biscor
-        self.batch_size = batch_size
-        self.lr = lr
-        self.loss_fn = torch.nn.CrossEntropyLoss()
+        assert self.model_name in available_models, f"Unsupported clip model: '{self.model_name}'. Must be one of [{', '.join(available_models)}]."
 
         # --- Load CLIP ---
-        self.model, self.preprocess = clip.load(self.model_name, device=device)
+        self.model, self.preprocess = clip.load(self.model_name, device=self.device_name)
 
         # --- Load CLIP Tokenizer ---
         self.tokenizer = clip.tokenize
@@ -42,6 +41,11 @@ class ClipModel(pl.LightningModule):
         else: 
             raise ValueError(f"Unsupported dataset: {self.dataset}")
 
+        # --- Define other hyperparameters ---
+        self.warmup_steps = args.warmup_steps
+        self.max_steps = args.max_steps
+        self.lr = args.lr
+        self.scheduler_off = args.scheduler_off
 
     # -----------------------------
     # COMPUTE LOSS
@@ -88,6 +92,9 @@ class ClipModel(pl.LightningModule):
         # Accuracy -- depends on the dataset
         accuracy = self.dataset_class.compute_accuracy(logits, labels) 
 
+        print(f"\n logits: {logits} \n labels: {labels}")
+        print(f"loss: {loss} \t accuracy: {accuracy} \n")
+        
         #Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
@@ -108,5 +115,11 @@ class ClipModel(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
-        #TODO scheduler
-        return optimizer
+        if self.scheduler_off:
+            return [optimizer]
+        else:
+            scheduler = {
+                "scheduler": transformers.get_cosine_schedule_with_warmup(optimizer=optimizer, num_warmup_steps=self.warmup_steps, num_training_steps=self.max_steps),
+                "interval": "step"
+            }
+            return [optimizer], [scheduler]
