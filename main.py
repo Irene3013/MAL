@@ -140,7 +140,7 @@ def main_program():
         if args.ckpt is None:
             model = ClipModel(args)
         else:
-            model = ClipModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=False)
+            model = ClipModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
     else: 
         sys.exit()
 
@@ -197,15 +197,6 @@ def main_program():
     #             #callbacks=[checkpoint_callback]
     #             )
     # else:
-    #     trainer = pl.Trainer(
-    #             devices=args.gpus, 
-    #             fast_dev_run=False, 
-    #             logger=logger, 
-    #             max_steps=args.max_steps, 
-    #             accumulate_grad_batches=args.accumulate_grad_batches, 
-    #             strategy= 'auto', 
-    #             precision=args.precision, 
-    #             callbacks=[checkpoint_callback])
     
     # Prepare Trainer
     trainer = pl.Trainer(
@@ -222,6 +213,7 @@ def main_program():
     # Train model
     if args.train:
         print("Training starts!")
+        model.train()
         trainer.fit(model, datamodule)
         print("Training finished!")
 
@@ -229,11 +221,13 @@ def main_program():
     if args.evaluate and args.train:
         print(f'Loading {checkpoint_callback.best_model_path} with val accuracy of {checkpoint_callback.best_model_score} to test')
         print('Testing starts!')
+        model.eval()
         trainer.test(ckpt_path = 'best', dataloaders=datamodule.test_dataloader(), verbose=False)
         print('Testing finished!')
 
     elif args.evaluate and not args.train:
         print('Testing starts!')
+        model.eval()
         trainer.test(model=model, dataloaders=datamodule.test_dataloader(), verbose=False)
         print('Testing finished!')
     
