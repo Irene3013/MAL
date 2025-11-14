@@ -20,10 +20,10 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="/gscratch3/users/gazkune/datasets/vsr/vsr_seq2seq_files", help="Path to the Coco or VinVL prediction files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/project_data", help="Path to the Coco or VinVL prediction files."
     )
     parser.add_argument(
-        "--output_path", type=str, default="/gaueko0/users/ietxarri010/ofa_okvqa_finetuning/", help="Output directory for plots and models."
+        "--output_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Output directory for plots and models."
     )
     parser.add_argument(
         "--train", action="store_true", help="Fine-tune model."
@@ -55,7 +55,7 @@ def parse_args():
         "--variant", type=str, default=None, help="Select dataset variant to be trained on."
     )
     parser.add_argument(
-        "--num_workers", type=int, default=12, help="Workers used in the dataloader." 
+        "--num_workers", type=int, default=2, help="Workers used in the dataloader." 
     )
 
     # Trainer args
@@ -141,6 +141,7 @@ def main_program():
             model = ClipModel(args)
         else:
             model = ClipModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
+        model.float()
     else: 
         sys.exit()
 
@@ -178,7 +179,7 @@ def main_program():
      # Use ModelCheckPoint to store best validation model
     checkpoint_callback = ModelCheckpoint(
         dirpath=args.output_path, 
-        monitor='val_accuracy', 
+        monitor='dev_accuracy', 
         mode='max', 
         filename=tb_run_name + "-{epoch:02d}-{val_accuracy:.2f}", 
         save_weights_only=True, 
@@ -211,6 +212,7 @@ def main_program():
             )
     
     # Train model
+    model.train()
     if args.train:
         print("Training starts!")
         model.train()
@@ -218,6 +220,7 @@ def main_program():
         print("Training finished!")
 
     # Evaluate model
+    model.eval()
     if args.evaluate and args.train:
         print(f'Loading {checkpoint_callback.best_model_path} with val accuracy of {checkpoint_callback.best_model_score} to test')
         print('Testing starts!')

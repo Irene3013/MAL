@@ -16,10 +16,10 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", base_path="project_data/raw/vsr", transform=None):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="project_data", transform=None):
 
         # Validations
-        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "project_data" / "raw" / "vsr") #relative path
+        self.base_path = Path(data_path) / "raw" / "vsr" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert split in ['train', 'dev', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'dev', 'test']."
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
@@ -31,7 +31,7 @@ class VSRDataset(Dataset):
 
         # Get train/dev/test
         self.dataset_name = dataset_name #[zeroshot, random]
-        self.base_path = Path(base_path) / self.dataset_name
+        self.base_path = Path(self.base_path) / self.dataset_name
         self.split = split
 
         # Load dataset
@@ -64,9 +64,9 @@ class VSRDataset(Dataset):
     def compute_accuracy(preds, labels):
         return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
 
-def get_vsr_loader(dataset_name="zeroshot", split="train", batch_size=8,
+def get_vsr_loader(data_path="project_data", dataset_name="zeroshot", split="train", batch_size=8,
                    shuffle=False, transform=None, num_workers=0):
-    dataset = VSRDataset(dataset_name=dataset_name, split=split, transform=transform)
+    dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
 
@@ -86,15 +86,15 @@ class VSRDataModule(pl.LightningDataModule):
         self.num_workers = args.num_workers
         self.dataset_name = args.variant # [zeroshot / random]
         self.transform = transform
-        #self.root = args.root
+        self.root = args.root
 
     def setup(self, stage=None):
         """
         Called once at the beginning of training, to prepare datasets.
         """
-        self.train_dataset = VSRDataset(split="train", dataset_name=self.dataset_name, transform=self.transform)
-        self.val_dataset = VSRDataset(split="dev", dataset_name=self.dataset_name, transform=self.transform)
-        self.test_dataset = VSRDataset(split="test", dataset_name=self.dataset_name, transform=self.transform)
+        self.train_dataset = VSRDataset(split="train", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
+        self.val_dataset = VSRDataset(split="dev", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
+        self.test_dataset = VSRDataset(split="test", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
 
     def train_dataloader(self):
         params = {
@@ -102,7 +102,8 @@ class VSRDataModule(pl.LightningDataModule):
             'shuffle': True,
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
-            'transform': self.transform
+            'transform': self.transform,
+            'data_path': self.root
         }
         return get_vsr_loader(split="train", **params)
 
@@ -112,7 +113,8 @@ class VSRDataModule(pl.LightningDataModule):
             'shuffle': False,
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
-            'transform': self.transform
+            'transform': self.transform,
+            'data_path': self.root
         }
         return get_vsr_loader(split="dev", **params)
 
@@ -122,6 +124,7 @@ class VSRDataModule(pl.LightningDataModule):
             'shuffle': False,
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
-            'transform': self.transform
+            'transform': self.transform,
+            'data_path': self.root
         }
         return get_vsr_loader(split="test", **params)
