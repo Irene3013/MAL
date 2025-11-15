@@ -8,6 +8,7 @@ from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
+import random
 
 # -----------------------------
 # DATASET
@@ -52,7 +53,8 @@ class VSRDataset(Dataset):
             image = Image.open(BytesIO(response.content)).convert("RGB")
         except Exception as e:
             print(f"[WARN] Failed to load image {item['image_link']}: {e}")
-            return None
+            new_idx = random.randint(0, len(self.dataset)-1)
+            return self.__getitem__(new_idx)
 
         return {
             "image": self.transform(image),
