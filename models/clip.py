@@ -77,29 +77,79 @@ class ClipModel(pl.LightningModule):
     # -----------------------------
     # STEP (train/val/test)
     # -----------------------------
-    def step(self, batch, split): #TODO check this!!!!
+    def step(self, batch, split):
         images, texts, labels = batch["image"], batch["text"], batch["label"]
-        
-        # Tokenize text
+
+        # Tokenize text and move tensors to device
         tokenized_texts = clip.tokenize(texts, truncate=True).to(self.device)
+        images = images.to(self.device)
 
         # Forward
-        logits = self.forward(images.to(self.device), tokenized_texts)
+        logits = self.forward(images, tokenized_texts)  # shape: (B, B?) or (B, C) depending on texts provided
+
+        # Ensure labels on device and correct dtype
+        if labels is not None:
+            labels = labels.to(self.device)
+            if labels.dtype != torch.long:
+                labels = labels.long()
+
+        # ======= Determine target for CrossEntropyLoss =======
+        # Case A: contrastive CLIP-style training where texts correspond 1:1 with images in batch
+        B = logits.size(0)
+        # If logits is square (B x B) -> typical CLIP similarity matrix, use arange targets
+        if logits.dim() == 2 and logits.size(1) == B:
+            targets = torch.arange(B, device=self.device, dtype=torch.long)
+        else:
+            # Otherwise assume labels from dataset are the class indices expected by the logits
+            # and use them as targets, but validate range
+            if labels is None:
+                raise ValueError("labels is None but logits != square (B x B). Cannot infer targets.")
+            targets = labels
+            # Validate range to catch errors early
+            n_classes = logits.size(1)
+            if targets.min().item() < 0 or targets.max().item() >= n_classes:
+                # helpful debug info before failing
+                raise ValueError(f"Label values out of range for CrossEntropyLoss: labels min={targets.min().item()} max={targets.max().item()} n_classes={n_classes}")
 
         # Loss
-        loss = self.compute_loss(logits, labels.to(self.device))
-        
-        # Accuracy -- depends on the dataset
-        accuracy = self.dataset_class.compute_accuracy(logits, labels) 
+        loss = self.compute_loss(logits, targets)
 
-        print(f"\n logits: {logits} \n labels: {labels}")
-        print(f"loss: {loss} \t accuracy: {accuracy} \n")
-        
-        #Logging
+        # Accuracy -- ensure metric gets CPU/GPU consistent tensors as expected by your dataset_class
+        # Move targets to CPU if compute_accuracy expects CPU; otherwise pass device tensors.
+        try:
+            accuracy = self.dataset_class.compute_accuracy(logits, targets)
+        except Exception:
+            # fallback: compute a simple batch accuracy (argmax)
+            preds = logits.argmax(dim=1)
+            accuracy = (preds == targets).float().mean()
+
+        # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-
+        
         return loss
+
+
+    # def step(self, batch, split):
+    #     images, texts, labels = batch["image"], batch["text"], batch["label"]
+        
+    #     # Tokenize text
+    #     tokenized_texts = clip.tokenize(texts, truncate=True).to(self.device)
+
+    #     # Forward
+    #     logits = self.forward(images.to(self.device), tokenized_texts)
+
+    #     # Loss
+    #     loss = self.compute_loss(logits, labels.to(self.device))
+        
+    #     # Accuracy -- depends on the dataset
+    #     accuracy = self.dataset_class.compute_accuracy(logits, labels) 
+
+    #     #Logging
+    #     self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+    #     self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+
+    #     return loss
 
     # -----------------------------
     # LIGHTNING STEP METHODS
