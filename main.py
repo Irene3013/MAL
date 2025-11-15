@@ -179,25 +179,11 @@ def main_program():
      # Use ModelCheckPoint to store best validation model
     checkpoint_callback = ModelCheckpoint(
         dirpath=args.output_path, 
-        monitor='dev_accuracy', 
+        monitor='val_accuracy', 
         mode='max', 
         filename=tb_run_name + "-{epoch:02d}-{val_accuracy:.2f}", 
         save_weights_only=True, 
         save_top_k=1)
-    
-    # if (args.gpus == 0): #CPU
-    #     trainer = pl.Trainer(
-    #             devices=1, 
-    #             accelerator="cpu",
-    #             fast_dev_run=False, 
-    #             logger=logger, 
-    #             max_steps=args.max_steps, 
-    #             accumulate_grad_batches=args.accumulate_grad_batches, 
-    #             strategy= 'auto', 
-    #             #precision=args.precision, 
-    #             #callbacks=[checkpoint_callback]
-    #             )
-    # else:
     
     # Prepare Trainer
     trainer = pl.Trainer(

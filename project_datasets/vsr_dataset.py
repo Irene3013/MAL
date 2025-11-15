@@ -21,7 +21,7 @@ class VSRDataset(Dataset):
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
-        assert split in ['train', 'dev', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'dev', 'test']."
+        assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
         assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
 
@@ -29,7 +29,7 @@ class VSRDataset(Dataset):
         # Img transformation
         self.transform = transform
 
-        # Get train/dev/test
+        # Get train/val/test
         self.dataset_name = dataset_name #[zeroshot, random]
         self.base_path = Path(self.base_path) / self.dataset_name
         self.split = split
@@ -93,7 +93,7 @@ class VSRDataModule(pl.LightningDataModule):
         Called once at the beginning of training, to prepare datasets.
         """
         self.train_dataset = VSRDataset(split="train", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
-        self.val_dataset = VSRDataset(split="dev", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
+        self.val_dataset = VSRDataset(split="val", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
         self.test_dataset = VSRDataset(split="test", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
 
     def train_dataloader(self):
@@ -116,7 +116,7 @@ class VSRDataModule(pl.LightningDataModule):
             'transform': self.transform,
             'data_path': self.root
         }
-        return get_vsr_loader(split="dev", **params)
+        return get_vsr_loader(split="val", **params)
 
     def test_dataloader(self):
         params = {
