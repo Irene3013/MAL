@@ -9,10 +9,10 @@ args: !!python/object:argparse.Namespace
   lr: 2.0e-05
   max_steps: 20000
   model: clip
-  num_workers: 12
-  output_path: /gaueko0/users/ietxarri010/ofa_okvqa_finetuning/
+  num_workers: 2
+  output_path: /gaueko0/users/ietxarri010/out/
   precision: 32
-  root: /gaueko0/users/ietxarri010/MAL
+  root: /gaueko0/users/ietxarri010/MAL/project_data
   run_name: vsr_zs_clip_finetuning
   scheduler_off: false
   seed: -1
