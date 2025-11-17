@@ -60,6 +60,8 @@ class ClipModel(pl.LightningModule):
     def compute_loss(self, logits, labels):
         """
         Compute contrastive loss for CLIP.
+        - BCE if mode=bin
+        - CE if mode!=bin
         """
         return self.loss_fn(logits, labels)
 
@@ -68,7 +70,7 @@ class ClipModel(pl.LightningModule):
     # -----------------------------
     def forward(self, images, texts):
         """
-        Forward pass through CLIP.
+        Forward pass through CLIP: 1 image + N caption.
         """
         image_features = self.model.encode_image(images)
         text_features = self.model.encode_text(texts)
@@ -82,7 +84,7 @@ class ClipModel(pl.LightningModule):
     
     def binary_forward(self, images, texts):
         """
-        Forward pass through CLIP.
+        Forward pass through CLIP: 1 image + 1 caption.
         """
         image_features = self.model.encode_image(images)
         text_features = self.model.encode_text(texts)
@@ -91,8 +93,8 @@ class ClipModel(pl.LightningModule):
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         text_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        logits = (100.0 * image_features @ text_features.T).diagonal()
-        #logits = (image_features * text_features).sum(dim=1) * 100.0
+        #logits = (100.0 * image_features @ text_features.T).diagonal()
+        logits = (image_features * text_features).sum(dim=1) * 100.0
 
         return logits
 
@@ -107,34 +109,42 @@ class ClipModel(pl.LightningModule):
         tokenized_texts = clip.tokenize(texts, truncate=True).to(self.device)
         images = images.to(self.device)
 
-        # Forward
+        # Forward pass
         if self.mode =="bin":
-            labels = labels.to(self.device).float()  # BCE wants float targets
-            logits = self.binary_forward(images, tokenized_texts) 
-
-            # BCE loss
+            logits = self.binary_forward(images, tokenized_texts)
+    
+            # Loss
+            labels = labels.to(self.device).float()  # BCE needs float labels
             loss = self.compute_loss(logits, labels)
 
-            # accuracy
-            probs = torch.sigmoid(logits)
-            preds = (probs >= 0.5).long()
-
-            accuracy = (preds == labels).float().mean()
+            # Accuracy
+            accuracy = self.dataset_class.compute_accuracy(logits, labels, mode=self.mode)
 
         else: 
-            # Ensure labels on device and correct dtype --> what Cross Entropy Loss expects 
-            if labels is not None:
-                labels = labels.to(self.device)
-                if labels.dtype != torch.long:
-                    labels = labels.long()
-
             logits = self.forward(images, tokenized_texts)  
-            loss = self.compute_loss(logits, labels)
-            accuracy = self.dataset_class.compute_accuracy(logits, labels)
+            
+            # Loss
+            targets = [label.index(1) for label in labels] # CE needs correct labels index (targets)
+            targets = torch.tensor(targets, dtype=torch.long).to(self.device)
+            loss = self.compute_loss(logits, targets)
 
+            # Accuracy
+            accuracy = self.dataset_class.compute_accuracy(logits, targets, mode=self.mode)
         
+        # Logging
+        self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        
+        return loss
 
-        # # ======= Determine target for CrossEntropyLoss ======= # shape: (B, B?) or (B, C) depending on texts provided
+
+    # Ensure labels on device and correct dtype --> what Cross Entropy Loss expects 
+        # if labels is not None:
+        #     labels = labels.to(self.device)
+        #     if labels.dtype != torch.long:
+        #         labels = labels.long()
+
+    # # ======= Determine target for CrossEntropyLoss ======= # shape: (B, B?) or (B, C) depending on texts provided
         # # Case A: contrastive CLIP-style training where texts correspond 1:1 with images in batch
         # B = logits.size(0)
         # # If logits is square (B x B) -> typical CLIP similarity matrix, use arange targets
@@ -162,12 +172,6 @@ class ClipModel(pl.LightningModule):
         #     # fallback: compute a simple batch accuracy (argmax)
         #     preds = logits.argmax(dim=1)
         #     accuracy = (preds == targets).float().mean()
-
-        # Logging
-        self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-        self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-        
-        return loss
 
 
     # def step(self, batch, split):

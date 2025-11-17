@@ -150,18 +150,18 @@ class VSRDataset(Dataset):
             return self.__getitem__(new_idx)
 
         if self.negated:
-            new_caption = invert_relation(item["caption"], item["relation"], negate)
+            negated = invert_relation(item["caption"], item["relation"], negate)
+            label = [item["label"], 1 - item["label"]]
+
             return {
                 "image": self.transform(image),
-                "text": item["caption"],
-                "text_n": new_caption,
-                "label": item["label"], # 1-TRUE / 0-FALSE
+                "text": [item["caption"], negated], # Both captions
+                "label": label, # dim=2 1-TRUE / 0-FALSE
             }
         else: 
             return {
                 "image": self.transform(image),
-                "text": item["caption"],
-                "text_n": item["caption"],
+                "text": item["caption"],# Unique caption
                 "label": item["label"], # 1-TRUE / 0-FALSE
             }
 
