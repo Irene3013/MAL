@@ -149,7 +149,7 @@ class VSRDataset(Dataset):
             new_idx = random.randint(0, len(self.dataset)-1)
             return self.__getitem__(new_idx)
 
-        if self.negated:
+        if self.negated: #multi caption
             negated = invert_relation(item["caption"], item["relation"], negate)
             label = [item["label"], 1 - item["label"]]
 

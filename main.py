@@ -201,8 +201,8 @@ def main_program():
             )
     
     # Train model
-    model.train()
     if args.train:
+        model.train()
         print("Training starts!")
         model.train()
         trainer.fit(model, datamodule)

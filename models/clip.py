@@ -107,6 +107,9 @@ class ClipModel(pl.LightningModule):
     # -----------------------------
     def step(self, batch, split):
         images, texts, labels = batch["image"], batch["text"], batch["label"]
+        
+        # Normalize text
+        texts = [t[0] if isinstance(t, list) else t for t in texts]
 
         # Tokenize text and move tensors to device
         tokenized_texts = clip.tokenize(texts, truncate=True).to(self.device)
@@ -127,8 +130,10 @@ class ClipModel(pl.LightningModule):
 
         else: 
             # Loss
-            targets = [label.index(1) for label in labels] # CE needs correct labels index (targets)
-            targets = torch.tensor(targets, dtype=torch.long).to(self.device)
+            targets = torch.tensor( # CE needs correct labels index (targets)
+                [label.index(1) for label in labels], dtype=torch.long, device=self.device)
+            #targets = [label.index(1) for label in labels] 
+            #targets = torch.tensor(targets, dtype=torch.long).to(self.device)
             loss = self.compute_loss(logits, targets)
 
             # Accuracy
