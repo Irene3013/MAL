@@ -166,8 +166,8 @@ class VSRDataset(Dataset):
             }
 
     @staticmethod
-    def compute_accuracy(logits, labels, mode="other"):
-        if mode=="bin":
+    def compute_accuracy(logits, labels, mode="multicaption"):
+        if mode=="singlecaption":
             probs = torch.sigmoid(logits)
             preds = (probs >= 0.5).long()
             return (preds == labels).float().mean()
@@ -175,8 +175,8 @@ class VSRDataset(Dataset):
             return (logits.argmax(dim=1) == labels).float().mean()
 
 def get_vsr_loader(data_path="project_data", dataset_name="zeroshot", split="train", batch_size=8,
-                   shuffle=False, transform=None, num_workers=0):
-    dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform)
+                   shuffle=False, transform=None, num_workers=0, negated=False):
+    dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform, negated=negated)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
 
@@ -197,6 +197,7 @@ class VSRDataModule(pl.LightningDataModule):
         self.dataset_name = args.variant # [zeroshot / random]
         self.transform = transform
         self.root = args.root
+        self.negated = args.clip_mode == "multicaption"
 
     def setup(self, stage=None):
         """
@@ -210,6 +211,7 @@ class VSRDataModule(pl.LightningDataModule):
         params = {
             'batch_size': self.batch_size,
             'shuffle': True,
+            'negated': self.negated,
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
             'transform': self.transform,
@@ -221,6 +223,7 @@ class VSRDataModule(pl.LightningDataModule):
         params = {
             'batch_size': self.batch_size,
             'shuffle': False,
+            'negated': self.negated,
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
             'transform': self.transform,
@@ -232,6 +235,7 @@ class VSRDataModule(pl.LightningDataModule):
         params = {
             'batch_size': self.batch_size,
             'shuffle': False,
+            'negated': self.negated,
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
             'transform': self.transform,

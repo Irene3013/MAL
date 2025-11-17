@@ -13,17 +13,23 @@
 source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
-srun python main.py --model "clip" --target_model ViT-B/32  \
-   --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name vsr_rd_clip_finetuning --train --evaluate --dataset vsr \
-   --root /gaueko0/users/ietxarri010/MAL/project_data --precision 32 --variant random
+
+# srun python main.py --model "clip" --target_model ViT-B/32  \
+#    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+#    --run_name vsr_zs_clip_finetuning --train --evaluate --dataset vsr  --clip_mode multicaption \
+#    --root /gaueko0/users/ietxarri010/MAL/project_data --precision 32 --variant zeroshot
+
+# srun python main.py --model "clip" --target_model ViT-B/32  \
+#    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+#    --run_name vsr_rd_clip_finetuning --train --evaluate --dataset vsr  --clip_mode multicaption \
+#    --root /gaueko0/users/ietxarri010/MAL/project_data --precision 32 --variant random
 
 srun python main.py --model "clip" --target_model ViT-B/32  \
    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name vsr_zs_clip_zeroshot --evaluate --dataset vsr \
+   --run_name vsr_zs_clip_zeroshot --evaluate --dataset vsr  --clip_mode multicaption \
    --root /gaueko0/users/ietxarri010/MAL/project_data --precision 32 --variant zeroshot
 
 srun python main.py --model "clip" --target_model ViT-B/32  \
    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name vsr_rd_clip_zeroshot --evaluate --dataset vsr \
+   --run_name vsr_rd_clip_zeroshot --evaluate --dataset vsr --clip_mode multicaption  \
    --root /gaueko0/users/ietxarri010/MAL/project_data --precision 32 --variant random

@@ -22,11 +22,10 @@ class ClipModel(pl.LightningModule):
         self.batch_size = args.batch_size
         self.mode = args.clip_mode 
 
-        if self.mode == "bin":
+        if self.mode == "singlecaption":
             self.loss_fn = torch.nn.BCEWithLogitsLoss()
         else:
             self.loss_fn = torch.nn.CrossEntropyLoss()
-        ##self.loss_fn = torch.nn.CrossEntropyLoss()
         
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
@@ -60,8 +59,8 @@ class ClipModel(pl.LightningModule):
     def compute_loss(self, logits, labels):
         """
         Compute contrastive loss for CLIP.
-        - BCE if mode=bin
-        - CE if mode!=bin
+        - BCE if singlecaption
+        - CE if multicaption
         """
         return self.loss_fn(logits, labels)
 
@@ -70,7 +69,9 @@ class ClipModel(pl.LightningModule):
     # -----------------------------
     def forward(self, images, texts):
         """
-        Forward pass through CLIP: 1 image + N caption.
+        Forward pass through CLIP: 
+        - multicaption: 1 image + N caption.
+        - singlecaption: 1 image + 1 caption.
         """
         image_features = self.model.encode_image(images)
         text_features = self.model.encode_text(texts)
@@ -79,24 +80,26 @@ class ClipModel(pl.LightningModule):
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         text_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        logits = 100.0 * image_features @ text_features.T
-        return logits
+        if self.mode =="multicaption":
+            return 100.0 * image_features @ text_features.T
+        else:
+            return (image_features * text_features).sum(dim=1) * 100.0
     
-    def binary_forward(self, images, texts):
-        """
-        Forward pass through CLIP: 1 image + 1 caption.
-        """
-        image_features = self.model.encode_image(images)
-        text_features = self.model.encode_text(texts)
+    # def binary_forward(self, images, texts):
+    #     """
+    #     Forward pass through CLIP: 
+    #     """
+    #     image_features = self.model.encode_image(images)
+    #     text_features = self.model.encode_text(texts)
 
-        # Normalize for cosine similarity
-        image_features = image_features / image_features.norm(dim=-1, keepdim=True)
-        text_features = text_features / text_features.norm(dim=-1, keepdim=True)
+    #     # Normalize for cosine similarity
+    #     image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+    #     text_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        #logits = (100.0 * image_features @ text_features.T).diagonal()
-        logits = (image_features * text_features).sum(dim=1) * 100.0
+    #     #logits = (100.0 * image_features @ text_features.T).diagonal()
+    #     logits = (image_features * text_features).sum(dim=1) * 100.0
 
-        return logits
+    #     return logits
 
 
     # -----------------------------
@@ -110,9 +113,11 @@ class ClipModel(pl.LightningModule):
         images = images.to(self.device)
 
         # Forward pass
-        if self.mode =="bin":
-            logits = self.binary_forward(images, tokenized_texts)
-    
+        logits = self.forward(images, tokenized_texts)
+
+        #Compute loss and accuracy
+        if self.mode =="singlecaption":
+            
             # Loss
             labels = labels.to(self.device).float()  # BCE needs float labels
             loss = self.compute_loss(logits, labels)
@@ -121,8 +126,6 @@ class ClipModel(pl.LightningModule):
             accuracy = self.dataset_class.compute_accuracy(logits, labels, mode=self.mode)
 
         else: 
-            logits = self.forward(images, tokenized_texts)  
-            
             # Loss
             targets = [label.index(1) for label in labels] # CE needs correct labels index (targets)
             targets = torch.tensor(targets, dtype=torch.long).to(self.device)
