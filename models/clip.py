@@ -20,7 +20,14 @@ class ClipModel(pl.LightningModule):
         self.model_name = args.target_model # Version of the CLIP model
         self.dataset = args.dataset         # [vsr, whatsup, biscor]
         self.batch_size = args.batch_size
-        self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.mode = args.clip_mode 
+
+        if self.mode == "bin":
+            self.loss_fn = torch.nn.BCEWithLogitsLoss()
+        else:
+            self.loss_fn = torch.nn.CrossEntropyLoss()
+        ##self.loss_fn = torch.nn.CrossEntropyLoss()
+        
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
 
@@ -72,6 +79,22 @@ class ClipModel(pl.LightningModule):
 
         logits = 100.0 * image_features @ text_features.T
         return logits
+    
+    def binary_forward(self, images, texts):
+        """
+        Forward pass through CLIP.
+        """
+        image_features = self.model.encode_image(images)
+        text_features = self.model.encode_text(texts)
+
+        # Normalize for cosine similarity
+        image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+        text_features = text_features / text_features.norm(dim=-1, keepdim=True)
+
+        logits = (100.0 * image_features @ text_features.T).diagonal()
+        #logits = (image_features * text_features).sum(dim=1) * 100.0
+
+        return logits
 
 
     # -----------------------------
@@ -85,43 +108,60 @@ class ClipModel(pl.LightningModule):
         images = images.to(self.device)
 
         # Forward
-        logits = self.forward(images, tokenized_texts)  # shape: (B, B?) or (B, C) depending on texts provided
+        if self.mode =="bin":
+            labels = labels.to(self.device).float()  # BCE wants float targets
+            logits = self.binary_forward(images, tokenized_texts) 
 
-        # Ensure labels on device and correct dtype
-        if labels is not None:
-            labels = labels.to(self.device)
-            if labels.dtype != torch.long:
-                labels = labels.long()
+            # BCE loss
+            loss = self.compute_loss(logits, labels)
 
-        # ======= Determine target for CrossEntropyLoss =======
-        # Case A: contrastive CLIP-style training where texts correspond 1:1 with images in batch
-        B = logits.size(0)
-        # If logits is square (B x B) -> typical CLIP similarity matrix, use arange targets
-        if logits.dim() == 2 and logits.size(1) == B:
-            targets = torch.arange(B, device=self.device, dtype=torch.long)
-        else:
-            # Otherwise assume labels from dataset are the class indices expected by the logits
-            # and use them as targets, but validate range
-            if labels is None:
-                raise ValueError("labels is None but logits != square (B x B). Cannot infer targets.")
-            targets = labels
-            # Validate range to catch errors early
-            n_classes = logits.size(1)
-            if targets.min().item() < 0 or targets.max().item() >= n_classes:
-                # helpful debug info before failing
-                raise ValueError(f"Label values out of range for CrossEntropyLoss: labels min={targets.min().item()} max={targets.max().item()} n_classes={n_classes}")
+            # accuracy
+            probs = torch.sigmoid(logits)
+            preds = (probs >= 0.5).long()
+
+            accuracy = (preds == labels).float().mean()
+
+        else: 
+            # Ensure labels on device and correct dtype --> what Cross Entropy Loss expects 
+            if labels is not None:
+                labels = labels.to(self.device)
+                if labels.dtype != torch.long:
+                    labels = labels.long()
+
+            logits = self.forward(images, tokenized_texts)  
+            loss = self.compute_loss(logits, labels)
+            accuracy = self.dataset_class.compute_accuracy(logits, labels)
+
+        
+
+        # # ======= Determine target for CrossEntropyLoss ======= # shape: (B, B?) or (B, C) depending on texts provided
+        # # Case A: contrastive CLIP-style training where texts correspond 1:1 with images in batch
+        # B = logits.size(0)
+        # # If logits is square (B x B) -> typical CLIP similarity matrix, use arange targets
+        # if logits.dim() == 2 and logits.size(1) == B:
+        #     targets = torch.arange(B, device=self.device, dtype=torch.long)
+        # else:
+        #     # Otherwise assume labels from dataset are the class indices expected by the logits
+        #     # and use them as targets, but validate range
+        #     if labels is None:
+        #         raise ValueError("labels is None but logits != square (B x B). Cannot infer targets.")
+        #     targets = labels
+        #     # Validate range to catch errors early
+        #     n_classes = logits.size(1)
+        #     if targets.min().item() < 0 or targets.max().item() >= n_classes:
+        #         raise ValueError(f"Label values out of range for CrossEntropyLoss: labels min={targets.min().item()} max={targets.max().item()} n_classes={n_classes}")
 
         # Loss
-        loss = self.compute_loss(logits, targets)
+        # loss = self.compute_loss(logits, targets)
 
         # Accuracy -- ensure metric gets CPU/GPU consistent tensors as expected by your dataset_class
         # Move targets to CPU if compute_accuracy expects CPU; otherwise pass device tensors.
-        try:
-            accuracy = self.dataset_class.compute_accuracy(logits, targets)
-        except Exception:
-            # fallback: compute a simple batch accuracy (argmax)
-            preds = logits.argmax(dim=1)
-            accuracy = (preds == targets).float().mean()
+        # try:
+        #     accuracy = self.dataset_class.compute_accuracy(logits, targets)
+        # except Exception:
+        #     # fallback: compute a simple batch accuracy (argmax)
+        #     preds = logits.argmax(dim=1)
+        #     accuracy = (preds == targets).float().mean()
 
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)

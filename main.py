@@ -43,6 +43,9 @@ def parse_args():
     parser.add_argument(
         "--target_model", type=str, default=None, help="Model to be fine-tuned."
     )
+    parser.add_argument(
+        "--clip_mode", type=str, default="bin", help="Clip approach to  use"
+    )
 
     # DataLoader args
     parser.add_argument(

@@ -9,6 +9,98 @@ from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
 import random
+import torch
+
+
+negate = {
+    # Adjacency
+    "adjacent to": "nonadjacent to", 
+    "alongside": "away from", 
+    "at the side of": "away from", 
+    "at the right side of": "at the left side of", 
+    "at the left side of": "at the right side of",
+    "attached to": "disconnect from", 
+    "at the back of": "at the front of", 
+    "ahead of": "not ahead of", 
+    "against": "away from", 
+    "at the edge of": "far from the edge of", 
+    # Directional
+    "off": "on", 
+    "past": "before", 
+    "toward": "away from", 
+    "down": "up", 
+    "away from": "not away from", 
+    "along": "not along", 
+    "around": "not around", 
+    "into": "not into", 
+    "across": "not accross",
+    "across from": "not across from", 
+    "down from": "up from", 
+    # Orientation
+    "facing": "facing away from", 
+    "facing away from": "facing", 
+    "parallel to": "perpendicular to", 
+    "perpendicular to": "parallel to", 
+    # Proximity
+    "by": "far away from", 
+    "close to": "far from", 
+    "near": "far from", 
+    "far from": "close to", 
+    "far away from": "by", 
+    # Topological
+    "connected to": "detached from", 
+    "detached from": "connected to", 
+    "has as a part": "does not have a part", 
+    "part of": "not part of", 
+    "contains": "does not contain", 
+    "within": "outside of", 
+    "at": "not at", 
+    "on": "not on", 
+    "in": "not in",
+    "with": "not with", 
+    "surrounding": "not surrounding", 
+    "among": "not among", 
+    "consists of": "does not consists of", 
+    "out of": "not out of", 
+    "between": "not between", 
+    "inside": "outside", 
+    "outside": "inside", 
+    "touching": "not touching",
+    # Unallocated
+    "beyond": "inside",
+    "next to": "far from", 
+    "opposite to": "not opposite to", 
+    "enclosed by": "not enclosed by", 
+    # missing
+    "above": "below",
+    "below": "above",
+    "behind": "in front of",
+    "on top of": "not on top of",
+    "under": "over",
+    "over": "under",
+    "left of": "right of",
+    "right of": "left of",
+    "in front of": "behind",
+    "beneath": "not beneath",
+    "beside": "not beside",
+    "in the middle of": "not in the middle of",
+    "congruent": "incongruent",
+}
+
+def invert_relation(caption, relation, inverse_relations):
+    """
+    Reemplaza la relación en el caption por su opuesta según el diccionario.
+    """
+    if relation not in inverse_relations:
+        raise ValueError(f"There is not a negated relation defined for '{relation}'")
+    
+    inverse = inverse_relations[relation]
+    
+    # Reemplazar solo la primera ocurrencia de la relación
+    new_caption = caption.replace(relation, inverse, 1)
+    
+    return new_caption
+
 
 # -----------------------------
 # DATASET
@@ -17,7 +109,7 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", data_path="project_data", transform=None):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="project_data", transform=None, negated=False):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
@@ -34,6 +126,7 @@ class VSRDataset(Dataset):
         self.dataset_name = dataset_name #[zeroshot, random]
         self.base_path = Path(self.base_path) / self.dataset_name
         self.split = split
+        self.negated = negated
 
         # Load dataset
         data_path = self.base_path / f"{split}.jsonl"
@@ -56,15 +149,30 @@ class VSRDataset(Dataset):
             new_idx = random.randint(0, len(self.dataset)-1)
             return self.__getitem__(new_idx)
 
-        return {
-            "image": self.transform(image),
-            "text": item["caption"],
-            "label": item["label"], # 1-TRUE / 0-FALSE
-        }
+        if self.negated:
+            new_caption = invert_relation(item["caption"], item["relation"], negate)
+            return {
+                "image": self.transform(image),
+                "text": item["caption"],
+                "text_n": new_caption,
+                "label": item["label"], # 1-TRUE / 0-FALSE
+            }
+        else: 
+            return {
+                "image": self.transform(image),
+                "text": item["caption"],
+                "text_n": item["caption"],
+                "label": item["label"], # 1-TRUE / 0-FALSE
+            }
 
     @staticmethod
-    def compute_accuracy(preds, labels):
-        return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
+    def compute_accuracy(logits, labels, mode="other"):
+        if mode=="bin":
+            probs = torch.sigmoid(logits)
+            preds = (probs >= 0.5).long()
+            return (preds == labels).float().mean()
+        else:
+            return (logits.argmax(dim=1) == labels).float().mean()
 
 def get_vsr_loader(data_path="project_data", dataset_name="zeroshot", split="train", batch_size=8,
                    shuffle=False, transform=None, num_workers=0):
