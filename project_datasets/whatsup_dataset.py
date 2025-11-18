@@ -14,10 +14,10 @@ class WhatsUpDataset(Dataset):
     """
     What's Up Dataset
     """
-    def __init__(self, dataset_name="images", base_path="project_data/raw/whatsup", transform=None):
+    def __init__(self, dataset_name="images", base_path="data/raw/whatsup", transform=None):
 
         # Validations
-        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "project_data" / "raw" / "whatsup") #relative path
+        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "data" / "raw" / "whatsup") #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['images', 'clevr'], f"Unsupported subset: '{dataset_name}'. Must be one of ['images', 'clevr']."
         assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
@@ -67,10 +67,10 @@ class COCO_SpatialDataset(Dataset):
     """
     COCO spatial Dataset
     """
-    def __init__(self, dataset_name="one", base_path="project_data/raw/COCO_spatial", transform=None):
+    def __init__(self, dataset_name="one", base_path="data/raw/COCO_spatial", transform=None):
 
         # Validations
-        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "project_data" / "raw" / "whatsup") #relative path
+        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "data" / "raw" / "whatsup") #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['one', 'two'], f"Unsupported subset: '{dataset_name}'. Must be one of ['one', 'two']."
         assert transform is not None, "Transform cannot be None. Please provide a valid transform." 

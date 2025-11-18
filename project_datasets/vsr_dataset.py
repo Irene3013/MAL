@@ -109,7 +109,7 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", data_path="project_data", transform=None, negated=False):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", transform=None, negated=False):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
@@ -139,11 +139,36 @@ class VSRDataset(Dataset):
     def __len__(self):
         return len(self.dataset)
 
+    def clip_collate(batch):
+        images = []
+        texts = []
+        labels = []
+
+        for item in batch:
+            images.append(item["image"])
+
+            # Si texto es lista (multi-caption), extender
+            if isinstance(item["text"], list):
+                texts.extend(item["text"])
+            else:
+                texts.append(item["text"])
+
+            labels.append(item["label"])
+
+        images = torch.stack(images)
+        return {
+            "images": images,
+            "texts": texts,
+            "labels": torch.stack(labels),
+        }
+
+
     def __getitem__(self, idx):
         item = self.dataset[idx]
         try: #try requesting image link
-            response = requests.get(item["image_link"], timeout=5)
-            image = Image.open(BytesIO(response.content)).convert("RGB")
+            #response = requests.get(item["image_link"], timeout=5)
+            #image = Image.open(BytesIO(response.content)).convert("RGB")
+            image = Image.open(requests.get(item["image_link"], stream=True).raw)
         except Exception as e:
             print(f"[WARN] Failed to load image {item['image_link']}: {e}")
             new_idx = random.randint(0, len(self.dataset)-1)
@@ -154,15 +179,16 @@ class VSRDataset(Dataset):
             label = [item["label"], 1 - item["label"]]
 
             return {
-                "image": self.transform(image),
+                #"image": self.transform(image),
+                "image": image,                     # PIL
                 "text": [item["caption"], negated], # Both captions
-                "label": label, # dim=2 1-TRUE / 0-FALSE
+                "label": label,                     # dim=2: 1-TRUE / 0-FALSE
             }
         else: 
             return {
-                "image": self.transform(image),
-                "text": item["caption"],# Unique caption
-                "label": item["label"], # 1-TRUE / 0-FALSE
+                "image": image,                     # PIL
+                "text": item["caption"],            # Unique caption
+                "label": item["label"],             # 1-TRUE / 0-FALSE
             }
 
     @staticmethod
@@ -174,7 +200,7 @@ class VSRDataset(Dataset):
         else:
             return (logits.argmax(dim=1) == labels).float().mean()
 
-def get_vsr_loader(data_path="project_data", dataset_name="zeroshot", split="train", batch_size=8,
+def get_vsr_loader(data_path="data", dataset_name="zeroshot", split="train", batch_size=8,
                    shuffle=False, transform=None, num_workers=0, negated=False):
     dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform, negated=negated)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)

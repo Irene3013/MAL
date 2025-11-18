@@ -20,7 +20,7 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/project_data", help="Path to the Coco or VinVL prediction files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the Coco or VinVL prediction files."
     )
     parser.add_argument(
         "--output_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Output directory for plots and models."
@@ -44,7 +44,7 @@ def parse_args():
         "--target_model", type=str, default=None, help="Model to be fine-tuned."
     )
     parser.add_argument(
-        "--clip_mode", type=str, default="singlecaption", choices=["multicaption", "singlecaption"], help="Clip approach to  use"
+        "--clip_mode", type=str, default="multicaption", choices=["multicaption", "singlecaption"], help="Clip approach to  use"
     )
 
     # DataLoader args
