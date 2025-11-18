@@ -109,24 +109,28 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", transform=None, negated=False):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", transform=None, processor=None):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
-        assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
-
+        #assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
         
         # Img transformation
-        self.transform = transform
+        self.transform = transform if transform is not None else transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),  # Convierte la imagen PIL a un tensor
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Normaliza la imagen
+        ])
+
+        self.processor = processor
 
         # Get train/val/test
         self.dataset_name = dataset_name #[zeroshot, random]
         self.base_path = Path(self.base_path) / self.dataset_name
         self.split = split
-        self.negated = negated
 
         # Load dataset
         data_path = self.base_path / f"{split}.jsonl"
@@ -174,22 +178,23 @@ class VSRDataset(Dataset):
             new_idx = random.randint(0, len(self.dataset)-1)
             return self.__getitem__(new_idx)
 
-        if self.negated: #multi caption
-            negated = invert_relation(item["caption"], item["relation"], negate)
-            label = [item["label"], 1 - item["label"]]
+        negated = invert_relation(item["caption"], item["relation"], negate)
+        label = torch.tensor([item["label"], 1 - item["label"]])
 
+        if self.model == "clip":
+
+            input = self.processor(text=[item["caption"], negated], images=image, return_tensors="pt", padding=True)
             return {
-                #"image": self.transform(image),
-                "image": image,                     # PIL
-                "text": [item["caption"], negated], # Both captions
-                "label": label,                     # dim=2: 1-TRUE / 0-FALSE
-            }
-        else: 
-            return {
-                "image": image,                     # PIL
-                "text": item["caption"],            # Unique caption
-                "label": item["label"],             # 1-TRUE / 0-FALSE
-            }
+            "input": input,
+            "label": label,                     # dim=2: 1-TRUE / 0-FALSE
+        }
+        
+        return {
+            "image": self.transform(image),
+            "text": [item["caption"], negated], # Both captions
+            "label": label,                     # dim=2: 1-TRUE / 0-FALSE
+        }
+        
 
     @staticmethod
     def compute_accuracy(logits, labels, mode="multicaption"):
@@ -201,8 +206,8 @@ class VSRDataset(Dataset):
             return (logits.argmax(dim=1) == labels).float().mean()
 
 def get_vsr_loader(data_path="data", dataset_name="zeroshot", split="train", batch_size=8,
-                   shuffle=False, transform=None, num_workers=0, negated=False):
-    dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform, negated=negated)
+                   shuffle=False, transform=None, num_workers=0, processor=None):
+    dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform, processor=processor)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
 
@@ -215,15 +220,17 @@ class VSRDataModule(pl.LightningDataModule):
     """
     Visual Spatial Relations (VSR) Data Module
     """
-    def __init__(self, args, transform=None):
+    def __init__(self, args, transform=None, processor=None):
         super().__init__()
 
         self.batch_size = args.batch_size
         self.num_workers = args.num_workers
         self.dataset_name = args.variant # [zeroshot / random]
-        self.transform = transform
         self.root = args.root
         self.negated = args.clip_mode == "multicaption"
+
+        self.transform = transform
+        self.processor = processor
 
     def setup(self, stage=None):
         """
@@ -241,7 +248,8 @@ class VSRDataModule(pl.LightningDataModule):
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
             'transform': self.transform,
-            'data_path': self.root
+            'data_path': self.root,
+            'processor': self.processor
         }
         return get_vsr_loader(split="train", **params)
 
@@ -253,7 +261,8 @@ class VSRDataModule(pl.LightningDataModule):
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
             'transform': self.transform,
-            'data_path': self.root
+            'data_path': self.root,
+            'processor': self.processor
         }
         return get_vsr_loader(split="val", **params)
 
@@ -265,6 +274,7 @@ class VSRDataModule(pl.LightningDataModule):
             'num_workers': self.num_workers,
             'dataset_name': self.dataset_name,
             'transform': self.transform,
-            'data_path': self.root
+            'data_path': self.root,
+            'processor': self.processor
         }
         return get_vsr_loader(split="test", **params)

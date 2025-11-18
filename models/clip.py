@@ -4,7 +4,13 @@ import torch
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 import transformers
+from torchvision import transforms
+
 from transformers import CLIPProcessor, CLIPModel
+import requests
+from io import BytesIO
+from PIL import Image
+
 
 
 class ClipModel(pl.LightningModule):
@@ -22,7 +28,8 @@ class ClipModel(pl.LightningModule):
         self.dataset = args.dataset         # [vsr, whatsup, biscor]
         self.batch_size = args.batch_size
         self.mode = args.clip_mode 
-
+        self.to_pil = transforms.ToPILImage()
+        
         if self.mode == "singlecaption":
             self.loss_fn = torch.nn.BCEWithLogitsLoss()
         else:
@@ -93,9 +100,12 @@ class ClipModel(pl.LightningModule):
     # STEP (train/val/test)
     # -----------------------------
     def step(self, batch, split):
-        images = batch["images"]
-        texts  = batch["texts"]
-        labels = batch["labels"].to(self.device)
+        images_tensor= batch["image"]
+        texts  = batch["text"]
+        labels = batch["label"].to(self.device)
+
+        # Convertir los tensores de imágenes a PIL
+        images = [self.to_pil(image) for image in images_tensor]
         
         inputs = self.processor(
             text=texts,

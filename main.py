@@ -154,7 +154,7 @@ def main_program():
     print("Loading data...")
 
     if args.dataset == "vsr":
-        datamodule = VSRDataModule(args, transform=model.preprocess)
+        datamodule = VSRDataModule(args, transform=None, processor=model.processor)
     else:
         if args.dataset == "whatsup":
             datamodule = WhatsUpDataModule(args, transform=model.preprocess)
