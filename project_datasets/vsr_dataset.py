@@ -116,7 +116,6 @@ class VSRDataset(Dataset):
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
-        #assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
         
         # Img transformation
         self.transform = transform if transform is not None else transforms.Compose([
@@ -125,6 +124,7 @@ class VSRDataset(Dataset):
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Normaliza la imagen
         ])
 
+        # Input processor
         self.processor = processor
 
         # Get train/val/test
@@ -143,35 +143,9 @@ class VSRDataset(Dataset):
     def __len__(self):
         return len(self.dataset)
 
-    # def clip_collate(batch):
-    #     images = []
-    #     texts = []
-    #     labels = []
-
-    #     for item in batch:
-    #         images.append(item["image"])
-
-    #         # Si texto es lista (multi-caption), extender
-    #         if isinstance(item["text"], list):
-    #             texts.extend(item["text"])
-    #         else:
-    #             texts.append(item["text"])
-
-    #         labels.append(item["label"])
-
-    #     images = torch.stack(images)
-    #     return {
-    #         "images": images,
-    #         "texts": texts,
-    #         "labels": torch.stack(labels),
-    #     }
-
-
     def __getitem__(self, idx):
         item = self.dataset[idx]
         try: #try requesting image link
-            #response = requests.get(item["image_link"], timeout=5)
-            #image = Image.open(BytesIO(response.content)).convert("RGB")
             image = Image.open(requests.get(item["image_link"], stream=True).raw)
         except Exception as e:
             print(f"[WARN] Failed to load image {item['image_link']}: {e}")
@@ -179,21 +153,14 @@ class VSRDataset(Dataset):
             return self.__getitem__(new_idx)
 
         negated = invert_relation(item["caption"], item["relation"], negate)
-        label = torch.tensor([item["label"], 1 - item["label"]])
-
-        if self.model == "clip":
-            input = self.processor(text=[item["caption"], negated], images=image, return_tensors="pt", padding=True)
-            return {
-            "input": input,
-            "label": label,                     # dim=2: 1-TRUE / 0-FALSE
-        }
+        #label = torch.tensor([item["label"], 1 - item["label"]])
         
         return {
-            "image": self.transform(image),
-            "text": [item["caption"], negated], # Both captions
-            "label": label,                     # dim=2: 1-TRUE / 0-FALSE
+            "caption": item["caption"],
+            "negated": negated,
+            "image": image,
+            "label": item["label"]
         }
-        
 
     @staticmethod
     def compute_accuracy(logits, labels, mode="multicaption"):
@@ -203,13 +170,6 @@ class VSRDataset(Dataset):
             return (preds == labels).float().mean()
         else:
             return (logits.argmax(dim=1) == labels).float().mean()
-
-def get_vsr_loader(data_path="data", dataset_name="zeroshot", split="train", batch_size=8,
-                   shuffle=False, transform=None, num_workers=0, processor=None):
-    dataset = VSRDataset(dataset_name=dataset_name, split=split, data_path=data_path, transform=transform, processor=processor)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-
-
 
 
 # -----------------------------
@@ -224,56 +184,80 @@ class VSRDataModule(pl.LightningDataModule):
 
         self.batch_size = args.batch_size
         self.num_workers = args.num_workers
-        self.dataset_name = args.variant # [zeroshot / random]
+        self.dataset_name = args.variant
         self.root = args.root
-        self.negated = args.clip_mode == "multicaption"
-
         self.transform = transform
         self.processor = processor
+        #self.collate_fn = collate_fn
 
     def setup(self, stage=None):
-        """
-        Called once at the beginning of training, to prepare datasets.
-        """
-        self.train_dataset = VSRDataset(split="train", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
-        self.val_dataset = VSRDataset(split="val", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
-        self.test_dataset = VSRDataset(split="test", data_path=self.root, dataset_name=self.dataset_name, transform=self.transform)
+      self.train_dataset = VSRDataset(
+          split="train",
+          data_path=self.root,
+          dataset_name=self.dataset_name,
+          transform=self.transform,
+          processor=self.processor
+      )
+      self.val_dataset = VSRDataset(
+          split="val",
+          data_path=self.root,
+          dataset_name=self.dataset_name,
+          transform=self.transform,
+          processor=self.processor
+      )
+      self.test_dataset = VSRDataset(
+          split="test",
+          data_path=self.root,
+          dataset_name=self.dataset_name,
+          transform=self.transform,
+          processor=self.processor
+      )
+
+
+    def collate_fn(self, batch):
+      captions = [b["caption"] for b in batch]
+      negs     = [b["negated"] for b in batch]
+      images   = [b["image"]   for b in batch]
+      labels   = torch.tensor([b["label"] for b in batch]).long()
+
+      # interleave captions and negated captions
+      all_text = []
+      for c, n in zip(captions, negs):
+          all_text.append(c)
+          all_text.append(n)
+
+      inputs = self.processor(
+          text=all_text,
+          images=images,
+          return_tensors="pt",
+          padding=True
+      )
+
+      return {"input": inputs, "label": labels}
 
     def train_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'negated': self.negated,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform,
-            'data_path': self.root,
-            'processor': self.processor
-        }
-        return get_vsr_loader(split="train", **params)
+        return DataLoader(
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn
+        )
 
     def val_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': False,
-            'negated': self.negated,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform,
-            'data_path': self.root,
-            'processor': self.processor
-        }
-        return get_vsr_loader(split="val", **params)
+        return DataLoader(
+            self.val_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn
+        )
 
     def test_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': False,
-            'negated': self.negated,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform,
-            'data_path': self.root,
-            'processor': self.processor
-        }
-        return get_vsr_loader(split="test", **params)
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn
+        )
