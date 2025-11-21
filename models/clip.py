@@ -100,22 +100,24 @@ class ClipModel(pl.LightningModule):
     # STEP (train/val/test)
     # -----------------------------
     def step(self, batch, split):
-        images_tensor= batch["image"]
-        texts  = batch["text"]
+        inputs = batch["input"].to(self.device)
         labels = batch["label"].to(self.device)
+    #     images_tensor= batch["image"]
+    #     texts  = batch["text"]
+    #     labels = batch["label"].to(self.device)
 
-        # Convertir los tensores de imágenes a PIL
-        images = [self.to_pil(image) for image in images_tensor]
+    #     # Convertir los tensores de imágenes a PIL
+    #     images = [self.to_pil(image) for image in images_tensor]
         
-        inputs = self.processor(
-            text=texts,
-            images=images,
-            return_tensors="pt",
-            padding=True
-        ).to(self.device)
+    #     inputs = self.processor(
+    #         text=texts,
+    #         images=images,
+    #         return_tensors="pt",
+    #         padding=True
+    #     ).to(self.device)
 
         outputs = self.model(**inputs)
-        logits = outputs.logits_per_image     # shape: (N_images, N_texts)
+        #logits = outputs.logits_per_image     # shape: (N_images, N_texts)
         #probs = logits.softmax(dim=1)
 
 

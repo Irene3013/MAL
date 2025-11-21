@@ -143,28 +143,28 @@ class VSRDataset(Dataset):
     def __len__(self):
         return len(self.dataset)
 
-    def clip_collate(batch):
-        images = []
-        texts = []
-        labels = []
+    # def clip_collate(batch):
+    #     images = []
+    #     texts = []
+    #     labels = []
 
-        for item in batch:
-            images.append(item["image"])
+    #     for item in batch:
+    #         images.append(item["image"])
 
-            # Si texto es lista (multi-caption), extender
-            if isinstance(item["text"], list):
-                texts.extend(item["text"])
-            else:
-                texts.append(item["text"])
+    #         # Si texto es lista (multi-caption), extender
+    #         if isinstance(item["text"], list):
+    #             texts.extend(item["text"])
+    #         else:
+    #             texts.append(item["text"])
 
-            labels.append(item["label"])
+    #         labels.append(item["label"])
 
-        images = torch.stack(images)
-        return {
-            "images": images,
-            "texts": texts,
-            "labels": torch.stack(labels),
-        }
+    #     images = torch.stack(images)
+    #     return {
+    #         "images": images,
+    #         "texts": texts,
+    #         "labels": torch.stack(labels),
+    #     }
 
 
     def __getitem__(self, idx):
@@ -182,7 +182,6 @@ class VSRDataset(Dataset):
         label = torch.tensor([item["label"], 1 - item["label"]])
 
         if self.model == "clip":
-
             input = self.processor(text=[item["caption"], negated], images=image, return_tensors="pt", padding=True)
             return {
             "input": input,
