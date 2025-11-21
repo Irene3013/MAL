@@ -43,10 +43,7 @@ def parse_args():
     parser.add_argument(
         "--target_model", type=str, default=None, help="Model to be fine-tuned."
     )
-    parser.add_argument(
-        "--clip_mode", type=str, default="multicaption", choices=["multicaption", "singlecaption"], help="Clip approach to  use"
-    )
-
+    
     # DataLoader args
     parser.add_argument(
         "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial"], help="Select dataset to be trained on."
@@ -89,7 +86,6 @@ def parse_args():
     parser.add_argument(
         "--seed", type=int, default=-1, help="Seed."
     )
-   
     
     # For coco: "/ikerlariak/asalaberria009/datasets/mscoco"
     
@@ -121,11 +117,8 @@ def parse_args():
     #     "--grid_size", type=int, default=32, help="The size of the grid for the location encoding."
     # )
 
-
     args = parser.parse_args()
     return args
-
-
 
 
 def main_program():
@@ -155,6 +148,7 @@ def main_program():
 
     if args.dataset == "vsr":
         datamodule = VSRDataModule(args, transform=None, processor=model.processor)
+        datamodule.setup()
     else:
         if args.dataset == "whatsup":
             datamodule = WhatsUpDataModule(args, transform=model.preprocess)
