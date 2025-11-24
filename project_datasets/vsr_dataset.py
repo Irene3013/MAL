@@ -188,7 +188,6 @@ class VSRDataModule(pl.LightningDataModule):
         self.root = args.root
         self.transform = transform
         self.processor = processor
-        #self.collate_fn = collate_fn
 
     def setup(self, stage=None):
       self.train_dataset = VSRDataset(

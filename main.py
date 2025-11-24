@@ -3,7 +3,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.clip import ClipModel
 from project_datasets.vsr_dataset import VSRDataModule
-from project_datasets.whatsup_dataset import WhatsUpDataModule, COCO_SpatialDataModule
+from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
 import sys
 
@@ -46,7 +46,7 @@ def parse_args():
     
     # DataLoader args
     parser.add_argument(
-        "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial"], help="Select dataset to be trained on."
+        "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial"], help="Select dataset to be trained on."
     )
     parser.add_argument(
         "--batch_size", type=int, default=56, help="Batch size (per gpu)."
@@ -149,17 +149,17 @@ def main_program():
     if args.dataset == "vsr":
         datamodule = VSRDataModule(args, transform=None, processor=model.processor)
         datamodule.setup()
-    else:
-        if args.dataset == "whatsup":
-            datamodule = WhatsUpDataModule(args, transform=model.preprocess)
-        elif args.dataset == "cocospatial":
-            datamodule = COCO_SpatialDataModule(args, transform=model.preprocess)
-        else:
-            datamodule = VSRDataModule(args, transform=model.preprocess)
-        
+    elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
+        datamodule = WhatsUpDataModule(args, transform=None, processor=model.processor)
+        datamodule.setup()
+
         # ZeroShot en WhatsUp
         args.train = False
-        args.evaluate = False
+        args.evaluate = True
+    else:
+        raise NotImplementedError
+        
+        
        
     print("Data loaded!")
 

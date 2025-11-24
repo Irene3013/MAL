@@ -5,6 +5,8 @@ import os
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
+from torchvision import transforms
+import torch
 
 
 # -----------------------------
@@ -14,20 +16,27 @@ class WhatsUpDataset(Dataset):
     """
     What's Up Dataset
     """
-    def __init__(self, dataset_name="images", base_path="data/raw/whatsup", transform=None):
+    def __init__(self, dataset_name="images", data_path="data", transform=None, processor=None):
+
 
         # Validations
-        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "data" / "raw" / "whatsup") #relative path
+        self.base_path = Path(data_path) / "raw" / "whatsup" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['images', 'clevr'], f"Unsupported subset: '{dataset_name}'. Must be one of ['images', 'clevr']."
-        assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
         
         # Img transformation
-        self.transform = transform
+        self.transform = transform if transform is not None else transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(), 
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  #  Normalize
+        ])
+
+        # Input processor
+        self.processor = processor
 
         # Get train/dev/test
         self.dataset_name = dataset_name
-        self.base_path = Path(base_path) / self.dataset_name
+        self.base_path = Path(self.base_path) / self.dataset_name
         self.subset = "A" if self.dataset_name == "images" else "B"
 
         # Load dataset
@@ -51,10 +60,9 @@ class WhatsUpDataset(Dataset):
     def __getitem__(self, idx):
         item = self.dataset[idx]
         return {
-            "image": self.transform(self._load_image(item["image_path"])),
+            "image": self._load_image(item["image_path"]),
             "caption_options": item["caption_options"],
             "correct_option": item["caption_options"][0], # The first option is the correct one
-            #"relation": item["relation"],
         }
 
     @staticmethod
@@ -107,7 +115,6 @@ class COCO_SpatialDataset(Dataset):
             "image": self.transform(self._load_image(item["image_path"])),
             "caption_options": item["caption_options"],
             "correct_option": item["caption_options"][0], # The first option is the correct one
-            #"relation": item["relation"],
         }
 
     @staticmethod
@@ -115,116 +122,99 @@ class COCO_SpatialDataset(Dataset):
         return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
 
 
-# -----------------------------
-# DATALOADERS
-# -----------------------------
-def get_whatsup_loader(dataset_name="images", batch_size=8, shuffle=False, transform=None):
-    dataset = WhatsUpDataset(dataset_name=dataset_name, transform=transform)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
-
-def get_COCO_spatial_loader(dataset_name="images", batch_size=8, shuffle=False, transform=None):
-    dataset = COCO_SpatialDataset(dataset_name=dataset_name, transform=transform)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
 # -----------------------------
-# DATAMODULES
+# DATAMODULE
 # -----------------------------
 class WhatsUpDataModule(pl.LightningDataModule):
     """
-    Visual Spatial Relations (VSR) Data Module
+    What's Up Data Module
     """
-    def __init__(self, args, transform=None): 
+    def __init__(self, args, transform=None, processor=None): 
         super().__init__()
+
+        self.batch_size = args.batch_size
         self.num_workers = args.num_workers
         self.dataset_name = args.variant # [images / clver]
-        self.batch_size = args.batch_size
+        self.root = args.root
+        self.dataset = args.dataset
+
         self.transform = transform
+        self.processor = processor
+
+        if args.model == "clip":
+            self.collate_fn = self.clip_collate
 
     def setup(self, stage=None):
         """
         Called once at the beginning of training, to prepare datasets.
         """
-        self.train_dataset = WhatsUpDataset(dataset_name=self.dataset_name, transform=self.transform)
-        self.val_dataset = WhatsUpDataset(dataset_name=self.dataset_name, transform=self.transform)
-        self.test_dataset = WhatsUpDataset(dataset_name=self.dataset_name, transform=self.transform)
-
-    def train_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform
-        }
-        return get_whatsup_loader(**params)
-
-    def val_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform
-        }
-        return get_whatsup_loader(**params)
-
-    def test_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform
-        }
-        return get_whatsup_loader(**params)
+        if self.dataset == "whatsup":
+            self.dataset = WhatsUpDataset(
+            data_path=self.root,
+            dataset_name=self.dataset_name,
+            transform=self.transform,
+            processor=self.processor
+            )
     
+    def clip_collate(self, batch):
+        all_captions = []      # tendrá B*4 captions
+        labels = []            # etiquetas enteras (0..3)
+        images = []            # B imágenes
 
-class COCO_SpatialDataModule(pl.LightningDataModule):
-    """
-    COCO-spatial Data Module
-    """
-    def __init__(self, args, transform=None):
-        super().__init__()
+        for item in batch:
+            options = item["caption_options"]         # lista de 4 captions
+            correct_caption = item["correct_option"]  # string de la correcta
+            img = item["image"]
 
-        self.num_workers = args.num_workers
-        self.dataset_name = args.variant # [one / two]
-        self.batch_size = args.batch_size
-        self.transform = transform
+            # añadimos las 4 captions al gran vector
+            all_captions.extend(options)
 
-    def setup(self, stage=None):
-        """
-        Called once at the beginning of training, to prepare datasets.
-        """
-        self.train_dataset = COCO_SpatialDataset(dataset_name=self.dataset_name, transform=self.transform)
-        self.val_dataset = COCO_SpatialDataset(dataset_name=self.dataset_name, transform=self.transform)
-        self.test_dataset = COCO_SpatialDataset(dataset_name=self.dataset_name, transform=self.transform)
+            # índice correcto dentro de las 4
+            correct_idx = options.index(correct_caption)
+            labels.append(correct_idx)
+
+            images.append(img)
+
+        # Procesamos todo el texto junto
+        inputs = self.processor(
+            text=all_captions,
+            images=images,
+            return_tensors="pt",
+            padding=True
+        )
+
+        labels = torch.tensor(labels, dtype=torch.long)
+
+        return {
+            "input": inputs,
+            "labels": labels,
+        }
 
     def train_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform
-        }
-        return get_COCO_spatial_loader(**params)
+        return DataLoader(
+            self.dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn
+        )
 
     def val_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform
-        }
-        return get_COCO_spatial_loader(**params)
+        return DataLoader(
+            self.dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn
+        )
 
     def test_dataloader(self):
-        params = {
-            'batch_size': self.batch_size,
-            'shuffle': True,
-            'num_workers': self.num_workers,
-            'dataset_name': self.dataset_name,
-            'transform': self.transform
-        }
-        return get_COCO_spatial_loader(**params)
+        return DataLoader(
+            self.dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn
+        )
+    
