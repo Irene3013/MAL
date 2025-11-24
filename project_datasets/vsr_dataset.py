@@ -127,38 +127,43 @@ class VSRDataset(Dataset):
         # Input processor
         self.processor = processor
 
-        # Get train/val/test
+        # Data / Images path
         self.dataset_name = dataset_name #[zeroshot, random]
-        self.base_path = Path(self.base_path) / self.dataset_name
         self.split = split
 
-        # Load dataset
-        data_path = self.base_path / f"{split}.jsonl"
-        self.dataset = self._load_jsonl(data_path)
+        self.image_path = Path(self.base_path) / "images"
+        self.data_path = Path(self.base_path) / self.dataset_name  / f"{split}.jsonl"
+        self.dataset = self._load_jsonl()
 
-    def _load_jsonl(self, filepath):
-        with open(filepath, "r", encoding="utf-8") as f:
+    def _load_jsonl(self):
+        with open(self.data_path, "r", encoding="utf-8") as f:
             return [json.loads(line) for line in f]
+    
+    def _load_image(self, image):
+        img_path = self.image_path / image
+        if not os.path.exists(img_path):
+            raise FileNotFoundError(f"Image not found: {img_path}")
+        return Image.open(img_path).convert("RGB")
     
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
-        try: #try requesting image link
-            image = Image.open(requests.get(item["image_link"], stream=True).raw)
-        except Exception as e:
-            print(f"[WARN] Failed to load image {item['image_link']}: {e}")
-            new_idx = random.randint(0, len(self.dataset)-1)
-            return self.__getitem__(new_idx)
 
-        negated = invert_relation(item["caption"], item["relation"], negate)
+        # try: #try requesting image link
+        #     image = Image.open(requests.get(item["image_link"], stream=True).raw)
+        # except Exception as e:
+        #     print(f"[WARN] Failed to load image {item['image_link']}: {e}")
+        #     new_idx = random.randint(0, len(self.dataset)-1)
+        #     return self.__getitem__(new_idx)
+
         #label = torch.tensor([item["label"], 1 - item["label"]])
         
         return {
             "caption": item["caption"],
-            "negated": negated,
-            "image": image,
+            "negated": invert_relation(item["caption"], item["relation"], negate),
+            "image": self._load_image(item["image"]),
             "label": item["label"]
         }
 
