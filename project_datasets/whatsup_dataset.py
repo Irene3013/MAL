@@ -36,17 +36,16 @@ class WhatsUpDataset(Dataset):
 
         # Get train/dev/test
         self.dataset_name = dataset_name
-        self.base_path = Path(self.base_path) / self.dataset_name
-        self.subset = "A" if self.dataset_name == "images" else "B"
+        #self.subset = "A" if self.dataset_name == "images" else "B"
 
         # Load dataset
-        self.data_path = self.base_path / f"controlled_{dataset_name}_dataset.jsonl"
+        self.data_path = self.base_path / f"controlled_{dataset_name}_dataset.json"
         self.image_path = self.base_path / f"controlled_{dataset_name}"
-        self.dataset = self._load_jsonl()
+        self.dataset = self._load_json()
 
-    def _load_jsonl(self):
+    def _load_json(self):
         with open(self.data_path, "r", encoding="utf-8") as f:
-            return [json.loads(line) for line in f]
+            return json.load(f)
     
     def _load_image(self, orig_path):
         img_path = self.image_path / orig_path.split("/")[-1]
@@ -158,37 +157,32 @@ class WhatsUpDataModule(pl.LightningDataModule):
             )
     
     def clip_collate(self, batch):
-        all_captions = []      # tendrá B*4 captions
-        labels = []            # etiquetas enteras (0..3)
-        images = []            # B imágenes
+        labels = []          
+        all_inputs = []
 
         for item in batch:
-            options = item["caption_options"]         # lista de 4 captions
-            correct_caption = item["correct_option"]  # string de la correcta
+            options = item["caption_options"]         
+            correct_caption = item["correct_option"]  
             img = item["image"]
 
-            # añadimos las 4 captions al gran vector
-            all_captions.extend(options)
-
-            # índice correcto dentro de las 4
+            # índice correcto entre de las 4
             correct_idx = options.index(correct_caption)
             labels.append(correct_idx)
 
-            images.append(img)
-
-        # Procesamos todo el texto junto
-        inputs = self.processor(
-            text=all_captions,
-            images=images,
-            return_tensors="pt",
-            padding=True
-        )
+            # Procesamos todo el texto junto
+            inputs = self.processor(
+                text=options,
+                images=img,
+                return_tensors="pt",
+                padding=True
+            )
+            all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)
 
         return {
-            "input": inputs,
-            "labels": labels,
+            "input": all_inputs,
+            "label": labels,
         }
 
     def train_dataloader(self):

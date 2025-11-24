@@ -61,16 +61,20 @@ class ClipModel(pl.LightningModule):
     # STEP (train/val/test)
     # -----------------------------
     def step(self, batch, split):
-        inputs = batch["input"].to(self.device)
         labels = batch["label"].to(self.device)
-
-        # Forward pass
-        outputs = self.model(**inputs)
-        logits_per_image = outputs.logits_per_image   # Shape: (N_images, 2) porque cada imagen tiene 2 captions
+        inputs_list = batch["input"]
+        logits_list = []
+        
+        # Forward pass each input
+        for inputs in inputs_list:     
+            inputs = inputs.to(self.device)
+            outputs = self.model(**inputs)
+            logits_list.append(outputs.logits_per_image)
 
         # Loss and accuracy
-        loss = torch.nn.functional.cross_entropy(logits_per_image, labels)
-        pred = logits_per_image.argmax(dim=1)  # Devuelve el índice del caption con mayor similitud
+        logits = torch.cat(logits_list, dim=0)
+        loss = torch.nn.functional.cross_entropy(logits, labels)
+        pred = logits.argmax(dim=1)
         accuracy = (pred == labels).float().mean()
 
         # Logging

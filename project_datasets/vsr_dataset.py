@@ -189,6 +189,9 @@ class VSRDataModule(pl.LightningDataModule):
         self.transform = transform
         self.processor = processor
 
+        if args.model == "clip":
+            self.collate_fn = self.clip_collate
+
     def setup(self, stage=None):
       self.train_dataset = VSRDataset(
           split="train",
@@ -213,26 +216,55 @@ class VSRDataModule(pl.LightningDataModule):
       )
 
 
-    def collate_fn(self, batch):
-      captions = [b["caption"] for b in batch]
-      negs     = [b["negated"] for b in batch]
-      images   = [b["image"]   for b in batch]
-      labels   = torch.tensor([b["label"] for b in batch]).long()
+    # def collate_fn(self, batch):
+    #   captions = [b["caption"] for b in batch]
+    #   negs     = [b["negated"] for b in batch]
+    #   images   = [b["image"]   for b in batch]
+    #   labels   = torch.tensor([b["label"] for b in batch]).long()
 
-      # interleave captions and negated captions
-      all_text = []
-      for c, n in zip(captions, negs):
-          all_text.append(c)
-          all_text.append(n)
+    #   # interleave captions and negated captions
+    #   all_text = []
+    #   for c, n in zip(captions, negs):
+    #       all_text.append(c)
+    #       all_text.append(n)
 
-      inputs = self.processor(
-          text=all_text,
-          images=images,
-          return_tensors="pt",
-          padding=True
-      )
+    #   inputs = self.processor(
+    #       text=all_text,
+    #       images=images,
+    #       return_tensors="pt",
+    #       padding=True
+    #   )
 
-      return {"input": inputs, "label": labels}
+    #   return {"input": inputs, "label": labels}
+
+    def clip_collate(self, batch):
+        labels = []          
+        all_inputs = []
+
+        for item in batch:
+            caption = item["caption"]         
+            negation = item["negated"]  
+            img = item["image"]
+
+            # índice correcto entre las 2
+            correct_idx = 0 if item["label"] == 1 else 1
+            labels.append(correct_idx)
+
+            # Procesamos todo el texto junto
+            inputs = self.processor(
+                text=[caption, negation],
+                images=img,
+                return_tensors="pt",
+                padding=True
+            )
+            all_inputs.append(inputs)
+
+        labels = torch.tensor(labels, dtype=torch.long)
+
+        return {
+            "input": all_inputs,
+            "label": labels,
+        }
 
     def train_dataloader(self):
         return DataLoader(
