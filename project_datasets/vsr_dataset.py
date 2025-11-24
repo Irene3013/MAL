@@ -85,6 +85,7 @@ negate = {
     "beside": "not beside",
     "in the middle of": "not in the middle of",
     "congruent": "incongruent",
+    "through": "not through",
 }
 
 def invert_relation(caption, relation, inverse_relations):
