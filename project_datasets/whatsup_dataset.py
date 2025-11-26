@@ -70,37 +70,41 @@ class WhatsUpDataset(Dataset):
 
 
 
-class COCO_SpatialDataset(Dataset):
+class COCOSpatialDataset(Dataset):
     """
-    COCO spatial Dataset
+    COCO-spatial Dataset
     """
-    def __init__(self, dataset_name="one", base_path="data/raw/COCO_spatial", transform=None):
+    def __init__(self, dataset_name="one", data_path="data", image_path="data", transform=None, processor=None):
 
         # Validations
-        self.base_path = Path(base_path or Path(__file__).resolve().parents[1] / "data" / "raw" / "whatsup") #relative path
+        self.base_path = Path(data_path) / "raw" / "COCO_spatial" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['one', 'two'], f"Unsupported subset: '{dataset_name}'. Must be one of ['one', 'two']."
-        assert transform is not None, "Transform cannot be None. Please provide a valid transform." 
-
+        
         # Img transformation
-        self.transform = transform
+        self.transform = transform if transform is not None else transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(), 
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  #  Normalize
+        ])
+
+        # Input processor
+        self.processor = processor
 
         # Get train/dev/test
         self.dataset_name = dataset_name
-        self.base_path = Path(base_path) / self.dataset_name
-        self.subset = "A" if self.dataset_name == "images" else "B"
 
         # Load dataset
-        self.data_path = self.base_path / f"controlled_{dataset_name}_dataset.jsonl"
-        self.image_path = self.base_path / f"controlled_{dataset_name}"
-        self.dataset = self._load_jsonl()
+        self.data_path = self.base_path / f"coco_qa_{dataset_name}_obj.json"
+        self.image_path = image_path
+        self.dataset = self._load_json()
 
-    def _load_jsonl(self):
+    def _load_json(self):
         with open(self.data_path, "r", encoding="utf-8") as f:
-            return [json.loads(line) for line in f]
+            return json.load(f)
     
-    def _load_image(self, orig_path):
-        img_path = self.image_path / orig_path.split("/")[-1]
+    def _load_image(self, image):
+        img_path = self.image_path / f"{str(image).zfill(12)}.jpg"
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path).convert("RGB")
@@ -111,9 +115,63 @@ class COCO_SpatialDataset(Dataset):
     def __getitem__(self, idx):
         item = self.dataset[idx]
         return {
-            "image": self.transform(self._load_image(item["image_path"])),
-            "caption_options": item["caption_options"],
-            "correct_option": item["caption_options"][0], # The first option is the correct one
+            "image": self._load_image(item[0]),
+            "caption_options": item[1],
+            "correct_option": item[1][0], # The first option is the correct one
+        }
+
+    @staticmethod
+    def compute_accuracy(preds, labels):
+        return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
+    
+class GQASpatialDataset(Dataset):
+    """
+    GQA-spatial Dataset
+    """
+    def __init__(self, dataset_name="one", data_path="data", image_path="data", transform=None, processor=None):
+
+        # Validations
+        self.base_path = Path(data_path) / "raw" / "GQA_spatial" #relative path
+        assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
+        assert dataset_name in ['one', 'two'], f"Unsupported subset: '{dataset_name}'. Must be one of ['one', 'two']."
+        
+        # Img transformation
+        self.transform = transform if transform is not None else transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(), 
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  #  Normalize
+        ])
+
+        # Input processor
+        self.processor = processor
+
+        # Get train/dev/test
+        self.dataset_name = dataset_name
+
+        # Load dataset
+        self.data_path = self.base_path / f"vg_qa_{dataset_name}_obj.json"
+        self.image_path = image_path
+        self.dataset = self._load_json()
+
+    def _load_json(self):
+        with open(self.data_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    
+    def _load_image(self, image):
+        img_path = self.image_path / f"{image}.jpg"
+        if not os.path.exists(img_path):
+            raise FileNotFoundError(f"Image not found: {img_path}")
+        return Image.open(img_path).convert("RGB")
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        item = self.dataset[idx]
+        return {
+            "image": self._load_image(item[0]),
+            "caption_options": item[1],
+            "correct_option": item[1][0], # The first option is the correct one
         }
 
     @staticmethod
@@ -136,6 +194,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
         self.num_workers = args.num_workers
         self.dataset_name = args.variant # [images / clver]
         self.root = args.root
+        self.image_path = args.image_path
         self.dataset = args.dataset
 
         self.transform = transform
@@ -150,11 +209,31 @@ class WhatsUpDataModule(pl.LightningDataModule):
         """
         if self.dataset == "whatsup":
             self.dataset = WhatsUpDataset(
-            data_path=self.root,
-            dataset_name=self.dataset_name,
-            transform=self.transform,
-            processor=self.processor
+                data_path=self.root,
+                dataset_name=self.dataset_name,
+                transform=self.transform,
+                processor=self.processor
             )
+
+        elif self.dataset == "cocospatial":
+            self.dataset = COCOSpatialDataset(
+                data_path=self.root,
+                image_path=self.image_path,
+                dataset_name=self.dataset_name,
+                transform=self.transform,
+                processor=self.processor
+            )
+
+        elif self.dataset == "gqaspatial":
+            self.dataset = COCOSpatialDataset(
+                data_path=self.root,
+                image_path=self.image_path,
+                dataset_name=self.dataset_name,
+                transform=self.transform,
+                processor=self.processor
+            )
+        else: 
+            raise NotImplementedError
     
     def clip_collate(self, batch):
         labels = []          

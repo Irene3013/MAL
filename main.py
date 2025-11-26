@@ -20,7 +20,10 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the Coco or VinVL prediction files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the data files."
+    )
+    parser.add_argument(
+        "--image_path", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the image files if its different from the annotations files."
     )
     parser.add_argument(
         "--output_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Output directory for plots and models."
