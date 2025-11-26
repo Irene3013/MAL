@@ -222,26 +222,34 @@ class VSRDataModule(pl.LightningDataModule):
       )
 
 
-    # def collate_fn(self, batch):
-    #   captions = [b["caption"] for b in batch]
-    #   negs     = [b["negated"] for b in batch]
-    #   images   = [b["image"]   for b in batch]
-    #   labels   = torch.tensor([b["label"] for b in batch]).long()
+    def siglip_collate(self, batch):
+        labels = []          
+        all_inputs = []
 
-    #   # interleave captions and negated captions
-    #   all_text = []
-    #   for c, n in zip(captions, negs):
-    #       all_text.append(c)
-    #       all_text.append(n)
+        for item in batch:
+            options = item["caption_options"]         
+            correct_caption = item["correct_option"]  
+            img = item["image"]
 
-    #   inputs = self.processor(
-    #       text=all_text,
-    #       images=images,
-    #       return_tensors="pt",
-    #       padding=True
-    #   )
+            # índice correcto entre de las 4
+            correct_idx = options.index(correct_caption)
+            labels.append(correct_idx)
 
-    #   return {"input": inputs, "label": labels}
+            # Procesamos todo el texto junto
+            inputs = self.processor(
+                text=options,
+                images=img,
+                padding="max_length",
+                return_tensors="pt",
+            )
+            all_inputs.append(inputs)
+
+        labels = torch.tensor(labels, dtype=torch.long)
+
+        return {
+            "input": all_inputs,
+            "label": labels,
+        }
 
     def clip_collate(self, batch):
         labels = []          

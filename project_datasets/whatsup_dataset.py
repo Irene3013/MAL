@@ -158,7 +158,7 @@ class GQASpatialDataset(Dataset):
             return json.load(f)
     
     def _load_image(self, image):
-        img_path = self.image_path / f"{image}.jpg"
+        img_path = Path(self.image_path) / f"{image}.jpg"
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path).convert("RGB")
@@ -170,8 +170,8 @@ class GQASpatialDataset(Dataset):
         item = self.dataset[idx]
         return {
             "image": self._load_image(item[0]),
-            "caption_options": [str(item[0]), str(item[1])],
-            "correct_option": str(item[0]), # The first option is the correct one
+            "caption_options": [str(item[1]), str(item[2])],
+            "correct_option": str(item[1]), # The first option is the correct one
         }
 
     @staticmethod
@@ -200,8 +200,11 @@ class WhatsUpDataModule(pl.LightningDataModule):
         self.transform = transform
         self.processor = processor
 
+        # Prepare data depending on model
         if args.model == "clip":
             self.collate_fn = self.clip_collate
+        elif args.model == "siglip":
+            self.collate_fn = self.siglip_collate
 
     def setup(self, stage=None):
         """
@@ -254,6 +257,35 @@ class WhatsUpDataModule(pl.LightningDataModule):
                 images=img,
                 return_tensors="pt",
                 padding=True
+            )
+            all_inputs.append(inputs)
+
+        labels = torch.tensor(labels, dtype=torch.long)
+
+        return {
+            "input": all_inputs,
+            "label": labels,
+        }
+    
+    def siglip_collate(self, batch):
+        labels = []          
+        all_inputs = []
+
+        for item in batch:
+            options = item["caption_options"]         
+            correct_caption = item["correct_option"]  
+            img = item["image"]
+
+            # índice correcto entre de las 4
+            correct_idx = options.index(correct_caption)
+            labels.append(correct_idx)
+
+            # Procesamos todo el texto junto
+            inputs = self.processor(
+                text=options,
+                images=img,
+                padding="max_length",
+                return_tensors="pt",
             )
             all_inputs.append(inputs)
 

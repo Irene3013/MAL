@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.clip import ClipModel
+from models.siglip import SigLIPModel
 from project_datasets.vsr_dataset import VSRDataModule
 from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
@@ -40,7 +41,7 @@ def parse_args():
 
     # Model args
     parser.add_argument(
-        "--model", type=str, required=True, choices=["clip", "todo"],
+        "--model", type=str, required=True, choices=["clip", "siglip"],
         help = "Model type to be fine-tuned."
     )
     parser.add_argument(
@@ -141,6 +142,14 @@ def main_program():
         else:
             model = ClipModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
         model.float()
+
+    elif args.model == "siglip":
+        if args.ckpt is None:
+            model = SigLIPModel(args)
+        else:
+            model = SigLIPModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
+        model.float()
+
     else: 
         sys.exit()
 
