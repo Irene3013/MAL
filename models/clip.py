@@ -76,6 +76,7 @@ class ClipModel(pl.LightningModule):
         loss = torch.nn.functional.cross_entropy(logits, labels)
         pred = logits.argmax(dim=1)
         accuracy = (pred == labels).float().mean()
+        
 
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)

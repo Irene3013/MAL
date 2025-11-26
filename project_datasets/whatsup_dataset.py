@@ -59,9 +59,9 @@ class WhatsUpDataset(Dataset):
     def __getitem__(self, idx):
         item = self.dataset[idx]
         return {
-            "image": self._load_image(item["image_path"]),
-            "caption_options": item["caption_options"],
-            "correct_option": item["caption_options"][0], # The first option is the correct one
+            "image": self._load_image(item[0]),
+            "caption_options": [str(item[1]), str(item[2])],
+            "correct_option": str(item[1]), # The first option is the correct one
         }
 
     @staticmethod
@@ -104,7 +104,7 @@ class COCOSpatialDataset(Dataset):
             return json.load(f)
     
     def _load_image(self, image):
-        img_path = self.image_path / f"{str(image).zfill(12)}.jpg"
+        img_path = Path(self.image_path) / f"{str(image).zfill(12)}.jpg"
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path).convert("RGB")
@@ -116,8 +116,8 @@ class COCOSpatialDataset(Dataset):
         item = self.dataset[idx]
         return {
             "image": self._load_image(item[0]),
-            "caption_options": item[1],
-            "correct_option": item[1][0], # The first option is the correct one
+            "caption_options": [str(item[1]), str(item[2])],
+            "correct_option": str(item[1]), # The first option is the correct one
         }
 
     @staticmethod
@@ -170,8 +170,8 @@ class GQASpatialDataset(Dataset):
         item = self.dataset[idx]
         return {
             "image": self._load_image(item[0]),
-            "caption_options": item[1],
-            "correct_option": item[1][0], # The first option is the correct one
+            "caption_options": [str(item[0]), str(item[1])],
+            "correct_option": str(item[0]), # The first option is the correct one
         }
 
     @staticmethod
@@ -192,7 +192,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
 
         self.batch_size = args.batch_size
         self.num_workers = args.num_workers
-        self.dataset_name = args.variant # [images / clver]
+        self.dataset_name = args.variant 
         self.root = args.root
         self.image_path = args.image_path
         self.dataset = args.dataset
@@ -225,7 +225,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
             )
 
         elif self.dataset == "gqaspatial":
-            self.dataset = COCOSpatialDataset(
+            self.dataset = GQASpatialDataset(
                 data_path=self.root,
                 image_path=self.image_path,
                 dataset_name=self.dataset_name,
