@@ -59,9 +59,9 @@ class WhatsUpDataset(Dataset):
     def __getitem__(self, idx):
         item = self.dataset[idx]
         return {
-            "image": self._load_image(item[0]),
-            "caption_options": [str(item[1]), str(item[2])],
-            "correct_option": str(item[1]), # The first option is the correct one
+            "image": self._load_image(item["image_path"]),
+            "caption_options": item["caption_options"],
+            "correct_option": item["caption_options"][0], # The first option is the correct one
         }
 
     @staticmethod

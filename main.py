@@ -2,10 +2,10 @@ import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.clip import DualEncoder
-from models.siglip import SigLIPModel
 from project_datasets.vsr_dataset import VSRDataModule
 from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
+import torch.serialization
 import sys
 
 
@@ -126,6 +126,9 @@ def parse_args():
 
 
 def main_program():
+
+    torch.serialization.add_safe_globals([argparse.Namespace])
+
     print("Parsing args...")
     args = parse_args()
     
@@ -207,7 +210,6 @@ def main_program():
         print("Training finished!")
 
     # Evaluate model
-    model.eval()
     if args.evaluate and args.train:
         print(f'Loading {checkpoint_callback.best_model_path} with val accuracy of {checkpoint_callback.best_model_score} to test')
         print('Testing starts!')
