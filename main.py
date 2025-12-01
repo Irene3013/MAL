@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
-from models.clip import ClipModel
+from models.clip import DualEncoder
 from models.siglip import SigLIPModel
 from project_datasets.vsr_dataset import VSRDataModule
 from project_datasets.whatsup_dataset import WhatsUpDataModule
@@ -136,20 +136,12 @@ def main_program():
     # Load model
     print("Loading model...")
 
-    if (args.model == "clip"):
+    if args.model in ["clip", "siglip"]:
         if args.ckpt is None:
-            model = ClipModel(args)
+            model = DualEncoder(args)
         else:
-            model = ClipModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
+            model = DualEncoder.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
         model.float()
-
-    elif args.model == "siglip":
-        if args.ckpt is None:
-            model = SigLIPModel(args)
-        else:
-            model = SigLIPModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
-        model.float()
-
     else: 
         sys.exit()
 

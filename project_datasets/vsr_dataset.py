@@ -151,15 +151,6 @@ class VSRDataset(Dataset):
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
-
-        # try: #try requesting image link
-        #     image = Image.open(requests.get(item["image_link"], stream=True).raw)
-        # except Exception as e:
-        #     print(f"[WARN] Failed to load image {item['image_link']}: {e}")
-        #     new_idx = random.randint(0, len(self.dataset)-1)
-        #     return self.__getitem__(new_idx)
-
-        #label = torch.tensor([item["label"], 1 - item["label"]])
         
         return {
             "caption": item["caption"],
@@ -197,6 +188,8 @@ class VSRDataModule(pl.LightningDataModule):
 
         if args.model == "clip":
             self.collate_fn = self.clip_collate
+        if args.model == "siglip":
+            self.collate_fn = self.siglip_collate
 
     def setup(self, stage=None):
       self.train_dataset = VSRDataset(
@@ -227,17 +220,17 @@ class VSRDataModule(pl.LightningDataModule):
         all_inputs = []
 
         for item in batch:
-            options = item["caption_options"]         
-            correct_caption = item["correct_option"]  
+            caption = item["caption"]         
+            negation = item["negated"]  
             img = item["image"]
 
             # índice correcto entre de las 4
-            correct_idx = options.index(correct_caption)
+            correct_idx = 0 if item["label"] == 1 else 1
             labels.append(correct_idx)
 
             # Procesamos todo el texto junto
             inputs = self.processor(
-                text=options,
+                text=[caption, negation],
                 images=img,
                 padding="max_length",
                 return_tensors="pt",

@@ -5,11 +5,13 @@ import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 import transformers
 from transformers import CLIPProcessor, CLIPModel
+from transformers import AutoProcessor, AutoModel
+
 import requests
 from io import BytesIO
 from PIL import Image
 
-class ClipModel(pl.LightningModule):
+class DualEncoder(pl.LightningModule):
     """
     Wrapper Lightning Module for CLIP model fine-tuning or zero-shot evaluation.
     """
@@ -19,7 +21,7 @@ class ClipModel(pl.LightningModule):
         self.save_hyperparameters()
 
          # --- Params ---
-        self.model_name = args.target_model # Version of the CLIP model
+        #self.model_name = args.target_model # Version of the CLIP model
         self.dataset = args.dataset         # [vsr, whatsup, biscor]
         self.batch_size = args.batch_size
         self.loss_fn = torch.nn.CrossEntropyLoss()
@@ -27,14 +29,13 @@ class ClipModel(pl.LightningModule):
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
 
-
-        # --- Validations ---
-        available_models = ['RN50', 'RN101', 'RN50x4', 'RN50x16', 'RN50x64','ViT-B/32', 'ViT-B/16', 'ViT-L/14', 'ViT-L/14@336px']
-        assert self.model_name in available_models, f"Unsupported clip model: '{self.model_name}'. Must be one of [{', '.join(available_models)}]."
-
         # --- Load CLIP ---
-        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        if args.model == "clip":
+            self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+            self.processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        elif args.model == "siglip":
+            self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
+            self.processor = AutoProcessor.from_pretrained("google/siglip-base-patch16-224")
 
         # --- Get dataset class ---
         # if self.dataset == "vsr":
@@ -74,7 +75,8 @@ class ClipModel(pl.LightningModule):
         # Loss and accuracy
         logits = torch.cat(logits_list, dim=0)
         loss = torch.nn.functional.cross_entropy(logits, labels)
-        pred = logits.argmax(dim=1)
+        probs = torch.sigmoid(logits)
+        pred = probs.argmax(dim=1)
         accuracy = (pred == labels).float().mean()
         
 
