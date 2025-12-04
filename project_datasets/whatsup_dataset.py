@@ -67,7 +67,7 @@ class WhatsUpDataset(Dataset):
     @staticmethod
     def compute_accuracy(preds, labels):
         return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
-
+    
 
 
 class COCOSpatialDataset(Dataset):
@@ -187,7 +187,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
     """
     What's Up Data Module
     """
-    def __init__(self, args, transform=None, processor=None): 
+    def __init__(self, args, transform=None, tokenize = None, processor=None): 
         super().__init__()
 
         self.batch_size = args.batch_size
@@ -199,6 +199,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
 
         self.transform = transform
         self.processor = processor
+        self.tokenize = tokenize
 
         # Prepare data depending on model
         if args.model == "clip":
@@ -280,13 +281,16 @@ class WhatsUpDataModule(pl.LightningDataModule):
             correct_idx = options.index(correct_caption)
             labels.append(correct_idx)
 
-            # Procesamos todo el texto junto
-            inputs = self.processor(
-                text=options,
-                images=img,
-                padding="max_length",
-                return_tensors="pt",
-            )
+            img_input = self.transform(img)
+            text_imput = self.tokenize(options, return_tensors="pt", padding=True)
+
+            # # Procesamos todo el texto junto
+            # inputs = self.processor(
+            #     text=options,
+            #     images=img,
+            #     padding="max_length",
+            #     return_tensors="pt",
+            # )
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)

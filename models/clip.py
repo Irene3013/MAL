@@ -6,10 +6,11 @@ from project_datasets.vsr_dataset import VSRDataset
 import transformers
 from transformers import CLIPProcessor, CLIPModel
 from transformers import AutoProcessor, AutoModel
+from transformers import CLIPImageProcessor, CLIPTokenizer, Siglip2ImageProcessor, GemmaTokenizerFast
 
-import requests
-from io import BytesIO
-from PIL import Image
+
+# from io import BytesIO
+# from PIL import Image
 
 class DualEncoder(pl.LightningModule):
     """
@@ -21,7 +22,6 @@ class DualEncoder(pl.LightningModule):
         self.save_hyperparameters()
 
          # --- Params ---
-        #self.model_name = args.target_model # Version of the CLIP model
         self.dataset = args.dataset         # [vsr, whatsup, biscor]
         self.batch_size = args.batch_size
         self.loss_fn = torch.nn.CrossEntropyLoss()
@@ -32,11 +32,37 @@ class DualEncoder(pl.LightningModule):
         # --- Load Model ---
         if args.model == "clip":
             self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-            self.processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+            self.confifg = {
+                "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
+                "transform": CLIPImageProcessor,
+                "tokenizer": CLIPTokenizer,
+                "params": {"padding": True, "truncation": True}
+            }
 
         elif args.model == "siglip":
             self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
-            self.processor = AutoProcessor.from_pretrained("google/siglip-base-patch16-224")
+            self.confifg = {
+                "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
+                "transform": Siglip2ImageProcessor,
+                "tokenizer": GemmaTokenizerFast,
+                "params": {"padding": "max_length", "max_length": 64}
+            }
+
+        elif args.model == "siglip2":
+            self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
+            self.confifg = {
+                "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
+                "transform": Siglip2ImageProcessor,
+                "tokenizer": GemmaTokenizerFast,
+                "params": {"padding": "max_length", "max_length": 64}
+            }
+
+        elif args.model == "PEcore":
+            # TODO https://huggingface.co/facebook/PE-Core-B16-224
+            raise NotImplementedError
+
+        else:
+            raise NotImplementedError
 
         # --- Get dataset class ---
         # if self.dataset == "vsr":
@@ -55,9 +81,17 @@ class DualEncoder(pl.LightningModule):
     # -----------------------------
     def compute_loss(self, logits, labels):
         """
-        Compute contrastive loss for CLIP.
+        Compute discriminative loss for CLIP.
         """
         return self.loss_fn(logits, labels)
+    
+    def compute_contrastive_loss(self, logits, labels):
+        """
+        Compute contrastive loss for CLIP.
+        """
+        T2I_logits = logits[0]
+        I2T_logits = logits[1]
+        return (self.loss_fn(T2I_logits, labels) + self.loss_fn(I2T_logits, labels)) / 2.0
 
     # -----------------------------
     # STEP (train/val/test)
@@ -65,22 +99,27 @@ class DualEncoder(pl.LightningModule):
     def step(self, batch, split):
         labels = batch["label"].to(self.device)
         inputs_list = batch["input"]
-        logits_list = []
+
+        T2I_logits_list = []
+        I2T_logits_list = []
         
         # Forward pass each input
         for inputs in inputs_list:     
             inputs = inputs.to(self.device)
             outputs = self.model(**inputs)
-            logits_list.append(outputs.logits_per_image)
+            T2I_logits_list.append(outputs.logits_per_image)
+            I2T_logits_list.append(outputs.logits_per_text)
 
         # Loss and accuracy
-        logits = torch.cat(logits_list, dim=0)
-        loss = torch.nn.functional.cross_entropy(logits, labels)
+        logits = torch.cat(T2I_logits_list, dim=0) 
+
+        # TODO CONTRASTIVE LOSS
+
+        loss = self.compute_loss(logits, labels)
         probs = torch.sigmoid(logits)
         pred = probs.argmax(dim=1)
         accuracy = (pred == labels).float().mean()
         
-
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)

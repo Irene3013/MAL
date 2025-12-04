@@ -41,7 +41,7 @@ def parse_args():
 
     # Model args
     parser.add_argument(
-        "--model", type=str, required=True, choices=["clip", "siglip"],
+        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2"],
         help = "Model type to be fine-tuned."
     )
     parser.add_argument(
@@ -91,36 +91,6 @@ def parse_args():
         "--seed", type=int, default=-1, help="Seed."
     )
     
-    # For coco: "/ikerlariak/asalaberria009/datasets/mscoco"
-    
-    # parser.add_argument(
-    #     "--visual_root", type=str, default="/ikerlariak/asalaberria009/datasets/mscoco/images", help="Path to the Coco or VinVL prediction files."
-    # )
-    # parser.add_argument(
-    #     "--vsr_variant", type=str, default="random", choices=["random", "zero-shot"], help="Variant of the VSR dataset."
-    # )
-    # parser.add_argument(
-    #     "--source", type=str, default="vinvl", choices=["coco", "vinvl"], help="Source of the object annotations."
-    # )
-    # parser.add_argument(
-    #     "--location_encoding", type=str, default="none", choices= ["none", "token", "grid", "rect", "none"], help="What kind of spatial representation to use."
-    # )
-    # parser.add_argument(
-    #     "--distractors", type=int, default=-1, help="How many objects we should use as distractors (-1: all available)."
-    # )
-    # parser.add_argument(
-    #     "--attributes", action="store_true", help="Use VinVL attributes for image descriptions."
-    # )
-    # parser.add_argument(
-    #     "--spatial_val_file", type=str, default="/gscratch3/users/gazkune/datasets/vinvl_vqa/validation-vinvl-alldistractors-noattr.json", help="Use an already prepared spatial validation file; if None, it will be generated on the fly."
-    # )
-    # parser.add_argument(
-    #     "--tiny", action="store_true", help="Use tiny version of the dataset for development."
-    # )
-    # parser.add_argument(
-    #     "--grid_size", type=int, default=32, help="The size of the grid for the location encoding."
-    # )
-
     args = parser.parse_args()
     return args
 
@@ -139,7 +109,7 @@ def main_program():
     # Load model
     print("Loading model...")
 
-    if args.model in ["clip", "siglip"]:
+    if args.model in ["clip", "siglip", "siglip2"]:
         if args.ckpt is None:
             model = DualEncoder(args)
         else:
@@ -154,10 +124,11 @@ def main_program():
     print("Loading data...")
 
     if args.dataset == "vsr":
-        datamodule = VSRDataModule(args, transform=None, processor=model.processor)
+        datamodule = VSRDataModule(args, config=model.confifg)
         datamodule.setup()
+
     elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
-        datamodule = WhatsUpDataModule(args, transform=None, processor=model.processor)
+        datamodule = WhatsUpDataModule(args, config=model.confifg)
         datamodule.setup()
 
         # ZeroShot en WhatsUp

@@ -110,7 +110,7 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", transform=None, processor=None):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="data"):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
@@ -118,16 +118,6 @@ class VSRDataset(Dataset):
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
         
-        # Img transformation
-        self.transform = transform if transform is not None else transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),  # Convierte la imagen PIL a un tensor
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Normaliza la imagen
-        ])
-
-        # Input processor
-        self.processor = processor
-
         # Data / Images path
         self.dataset_name = dataset_name #[zeroshot, random]
         self.split = split
@@ -160,13 +150,8 @@ class VSRDataset(Dataset):
         }
 
     @staticmethod
-    def compute_accuracy(logits, labels, mode="multicaption"):
-        if mode=="singlecaption":
-            probs = torch.sigmoid(logits)
-            preds = (probs >= 0.5).long()
-            return (preds == labels).float().mean()
-        else:
-            return (logits.argmax(dim=1) == labels).float().mean()
+    def compute_accuracy(logits, labels):
+        return (logits.argmax(dim=1) == labels).float().mean()
 
 
 # -----------------------------
@@ -176,19 +161,24 @@ class VSRDataModule(pl.LightningDataModule):
     """
     Visual Spatial Relations (VSR) Data Module
     """
-    def __init__(self, args, transform=None, processor=None):
+    def __init__(self, args, config):
         super().__init__()
 
         self.batch_size = args.batch_size
         self.num_workers = args.num_workers
         self.dataset_name = args.variant
         self.root = args.root
-        self.transform = transform
-        self.processor = processor
+
+        # Model config
+        self.transform = config["transform"]
+        self.tokenizer = config["tokenizer"]
+        self.processor = config["processor"]
+        self.params = config.get("params", {})
 
         if args.model == "clip":
             self.collate_fn = self.clip_collate
-        if args.model == "siglip":
+
+        if args.model in ["siglip", "siglip2"]:
             self.collate_fn = self.siglip_collate
 
     def setup(self, stage=None):
@@ -233,6 +223,7 @@ class VSRDataModule(pl.LightningDataModule):
                 text=[caption, negation],
                 images=img,
                 padding="max_length",
+                max_length=64,
                 return_tensors="pt",
             )
             all_inputs.append(inputs)
@@ -258,12 +249,20 @@ class VSRDataModule(pl.LightningDataModule):
             labels.append(correct_idx)
 
             # Procesamos todo el texto junto
+            # inputs = self.processor(
+            #     text=[caption, negation],
+            #     images=img,
+            #     return_tensors="pt",
+            #     padding=True
+            # )
+
             inputs = self.processor(
                 text=[caption, negation],
                 images=img,
                 return_tensors="pt",
-                padding=True
+                **self.params
             )
+            
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)
