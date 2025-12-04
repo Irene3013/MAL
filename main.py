@@ -1,10 +1,11 @@
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
-from models.clip import ClipModel
+from models.clip import DualEncoder
 from project_datasets.vsr_dataset import VSRDataModule
-from project_datasets.whatsup_dataset import WhatsUpDataModule, COCO_SpatialDataModule
+from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
+import torch.serialization
 import sys
 
 
@@ -20,7 +21,10 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the Coco or VinVL prediction files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the data files."
+    )
+    parser.add_argument(
+        "--image_path", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the image files if its different from the annotations files."
     )
     parser.add_argument(
         "--output_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Output directory for plots and models."
@@ -37,19 +41,16 @@ def parse_args():
 
     # Model args
     parser.add_argument(
-        "--model", type=str, required=True, choices=["clip", "todo"],
+        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2"],
         help = "Model type to be fine-tuned."
     )
     parser.add_argument(
         "--target_model", type=str, default=None, help="Model to be fine-tuned."
     )
-    parser.add_argument(
-        "--clip_mode", type=str, default="multicaption", choices=["multicaption", "singlecaption"], help="Clip approach to  use"
-    )
-
+    
     # DataLoader args
     parser.add_argument(
-        "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial"], help="Select dataset to be trained on."
+        "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial"], help="Select dataset to be trained on."
     )
     parser.add_argument(
         "--batch_size", type=int, default=56, help="Batch size (per gpu)."
@@ -89,46 +90,15 @@ def parse_args():
     parser.add_argument(
         "--seed", type=int, default=-1, help="Seed."
     )
-   
     
-    # For coco: "/ikerlariak/asalaberria009/datasets/mscoco"
-    
-    # parser.add_argument(
-    #     "--visual_root", type=str, default="/ikerlariak/asalaberria009/datasets/mscoco/images", help="Path to the Coco or VinVL prediction files."
-    # )
-    # parser.add_argument(
-    #     "--vsr_variant", type=str, default="random", choices=["random", "zero-shot"], help="Variant of the VSR dataset."
-    # )
-    # parser.add_argument(
-    #     "--source", type=str, default="vinvl", choices=["coco", "vinvl"], help="Source of the object annotations."
-    # )
-    # parser.add_argument(
-    #     "--location_encoding", type=str, default="none", choices= ["none", "token", "grid", "rect", "none"], help="What kind of spatial representation to use."
-    # )
-    # parser.add_argument(
-    #     "--distractors", type=int, default=-1, help="How many objects we should use as distractors (-1: all available)."
-    # )
-    # parser.add_argument(
-    #     "--attributes", action="store_true", help="Use VinVL attributes for image descriptions."
-    # )
-    # parser.add_argument(
-    #     "--spatial_val_file", type=str, default="/gscratch3/users/gazkune/datasets/vinvl_vqa/validation-vinvl-alldistractors-noattr.json", help="Use an already prepared spatial validation file; if None, it will be generated on the fly."
-    # )
-    # parser.add_argument(
-    #     "--tiny", action="store_true", help="Use tiny version of the dataset for development."
-    # )
-    # parser.add_argument(
-    #     "--grid_size", type=int, default=32, help="The size of the grid for the location encoding."
-    # )
-
-
     args = parser.parse_args()
     return args
 
 
-
-
 def main_program():
+
+    torch.serialization.add_safe_globals([argparse.Namespace])
+
     print("Parsing args...")
     args = parse_args()
     
@@ -139,11 +109,11 @@ def main_program():
     # Load model
     print("Loading model...")
 
-    if (args.model == "clip"):
+    if args.model in ["clip", "siglip", "siglip2"]:
         if args.ckpt is None:
-            model = ClipModel(args)
+            model = DualEncoder(args)
         else:
-            model = ClipModel.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
+            model = DualEncoder.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
         model.float()
     else: 
         sys.exit()
@@ -154,19 +124,20 @@ def main_program():
     print("Loading data...")
 
     if args.dataset == "vsr":
-        datamodule = VSRDataModule(args, transform=None, processor=model.processor)
+        datamodule = VSRDataModule(args, config=model.confifg)
         datamodule.setup()
-    else:
-        if args.dataset == "whatsup":
-            datamodule = WhatsUpDataModule(args, transform=model.preprocess)
-        elif args.dataset == "cocospatial":
-            datamodule = COCO_SpatialDataModule(args, transform=model.preprocess)
-        else:
-            datamodule = VSRDataModule(args, transform=model.preprocess)
-        
+
+    elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
+        datamodule = WhatsUpDataModule(args, config=model.confifg)
+        datamodule.setup()
+
         # ZeroShot en WhatsUp
         args.train = False
-        args.evaluate = False
+        args.evaluate = True
+    else:
+        raise NotImplementedError
+        
+        
        
     print("Data loaded!")
 
@@ -210,7 +181,6 @@ def main_program():
         print("Training finished!")
 
     # Evaluate model
-    model.eval()
     if args.evaluate and args.train:
         print(f'Loading {checkpoint_callback.best_model_path} with val accuracy of {checkpoint_callback.best_model_score} to test')
         print('Testing starts!')

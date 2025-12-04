@@ -4,14 +4,15 @@ import torch
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 import transformers
-from torchvision import transforms
-
 from transformers import CLIPProcessor, CLIPModel
-import requests
-from io import BytesIO
-from PIL import Image
+from transformers import AutoProcessor, AutoModel
+from transformers import CLIPImageProcessor, CLIPTokenizer, Siglip2ImageProcessor, GemmaTokenizerFast
 
-class ClipModel(pl.LightningModule):
+
+# from io import BytesIO
+# from PIL import Image
+
+class DualEncoder(pl.LightningModule):
     """
     Wrapper Lightning Module for CLIP model fine-tuning or zero-shot evaluation.
     """
@@ -21,34 +22,53 @@ class ClipModel(pl.LightningModule):
         self.save_hyperparameters()
 
          # --- Params ---
-        self.model_name = args.target_model # Version of the CLIP model
         self.dataset = args.dataset         # [vsr, whatsup, biscor]
         self.batch_size = args.batch_size
-        self.mode = args.clip_mode 
-        self.to_pil = transforms.ToPILImage()
-        
-        if self.mode == "singlecaption":
-            self.loss_fn = torch.nn.BCEWithLogitsLoss()
-        else:
-            self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.loss_fn = torch.nn.CrossEntropyLoss()
         
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
 
+        # --- Load Model ---
+        if args.model == "clip":
+            self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+            self.confifg = {
+                "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
+                "transform": CLIPImageProcessor,
+                "tokenizer": CLIPTokenizer,
+                "params": {"padding": True, "truncation": True}
+            }
 
-        # --- Validations ---
-        available_models = ['RN50', 'RN101', 'RN50x4', 'RN50x16', 'RN50x64','ViT-B/32', 'ViT-B/16', 'ViT-L/14', 'ViT-L/14@336px']
-        assert self.model_name in available_models, f"Unsupported clip model: '{self.model_name}'. Must be one of [{', '.join(available_models)}]."
+        elif args.model == "siglip":
+            self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
+            self.confifg = {
+                "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
+                "transform": Siglip2ImageProcessor,
+                "tokenizer": GemmaTokenizerFast,
+                "params": {"padding": "max_length", "max_length": 64}
+            }
 
-        # --- Load CLIP ---
-        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        elif args.model == "siglip2":
+            self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
+            self.confifg = {
+                "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
+                "transform": Siglip2ImageProcessor,
+                "tokenizer": GemmaTokenizerFast,
+                "params": {"padding": "max_length", "max_length": 64}
+            }
+
+        elif args.model == "PEcore":
+            # TODO https://huggingface.co/facebook/PE-Core-B16-224
+            raise NotImplementedError
+
+        else:
+            raise NotImplementedError
 
         # --- Get dataset class ---
-        if self.dataset == "vsr":
-            self.dataset_class = VSRDataset
-        else: 
-            raise ValueError(f"Unsupported dataset: {self.dataset}")
+        # if self.dataset == "vsr":
+        #     self.dataset_class = VSRDataset
+        # else: 
+        #     raise ValueError(f"Unsupported dataset: {self.dataset}")
 
         # --- Define other hyperparameters ---
         self.warmup_steps = args.warmup_steps
@@ -61,50 +81,45 @@ class ClipModel(pl.LightningModule):
     # -----------------------------
     def compute_loss(self, logits, labels):
         """
-        Compute contrastive loss for CLIP.
-        - BCE if singlecaption
-        - CE if multicaption
+        Compute discriminative loss for CLIP.
         """
         return self.loss_fn(logits, labels)
-
-    # # -----------------------------
-    # # FORWARD PASS
-    # # -----------------------------
-    # def forward(self, images, texts):
-    #     """
-    #     Forward pass through CLIP: 
-    #     - multicaption: 1 image + N caption.
-    #     - singlecaption: 1 image + 1 caption.
-    #     """
-    #     # image_features = self.model.encode_image(images)
-    #     # text_features = self.model.encode_text(texts)
-
-    #     # # Normalize for cosine similarity
-    #     # image_features = image_features / image_features.norm(dim=-1, keepdim=True)
-    #     # text_features = text_features / text_features.norm(dim=-1, keepdim=True)
-
-    #     # if self.mode =="multicaption":
-    #     #     return 100.0 * image_features @ text_features.T
-    #     # else:
-    #     #     return (image_features * text_features).sum(dim=1) * 100.0
-
+    
+    def compute_contrastive_loss(self, logits, labels):
+        """
+        Compute contrastive loss for CLIP.
+        """
+        T2I_logits = logits[0]
+        I2T_logits = logits[1]
+        return (self.loss_fn(T2I_logits, labels) + self.loss_fn(I2T_logits, labels)) / 2.0
 
     # -----------------------------
     # STEP (train/val/test)
     # -----------------------------
     def step(self, batch, split):
-        inputs = batch["input"].to(self.device)
         labels = batch["label"].to(self.device)
-    
+        inputs_list = batch["input"]
 
-        outputs = self.model(**inputs)
-        logits_per_image = outputs.logits_per_image   # Shape: (N_images, 2) porque cada imagen tiene 2 captions
-
+        T2I_logits_list = []
+        I2T_logits_list = []
         
-        loss = torch.nn.functional.cross_entropy(logits_per_image, labels)
-        pred = logits_per_image.argmax(dim=1)  # Devuelve el índice del caption con mayor similitud
-        accuracy = (pred == labels).float().mean()
+        # Forward pass each input
+        for inputs in inputs_list:     
+            inputs = inputs.to(self.device)
+            outputs = self.model(**inputs)
+            T2I_logits_list.append(outputs.logits_per_image)
+            I2T_logits_list.append(outputs.logits_per_text)
 
+        # Loss and accuracy
+        logits = torch.cat(T2I_logits_list, dim=0) 
+
+        # TODO CONTRASTIVE LOSS
+
+        loss = self.compute_loss(logits, labels)
+        probs = torch.sigmoid(logits)
+        pred = probs.argmax(dim=1)
+        accuracy = (pred == labels).float().mean()
+        
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         self.log(f'{split}_accuracy', accuracy, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
