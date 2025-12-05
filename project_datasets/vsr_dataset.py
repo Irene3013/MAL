@@ -4,6 +4,7 @@ import json
 import requests
 from io import BytesIO
 import os
+import torchvision
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
@@ -134,7 +135,7 @@ class VSRDataset(Dataset):
         img_path = self.image_path / image
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found: {img_path}")
-        return Image.open(img_path).convert("RGB")
+        return Image.open(img_path)
     
     def __len__(self):
         return len(self.dataset)
@@ -186,23 +187,17 @@ class VSRDataModule(pl.LightningDataModule):
       self.train_dataset = VSRDataset(
           split="train",
           data_path=self.root,
-          dataset_name=self.dataset_name,
-          transform=self.transform,
-          processor=self.processor
+          dataset_name=self.dataset_name
       )
       self.val_dataset = VSRDataset(
           split="val",
           data_path=self.root,
-          dataset_name=self.dataset_name,
-          transform=self.transform,
-          processor=self.processor
+          dataset_name=self.dataset_name
       )
       self.test_dataset = VSRDataset(
           split="test",
           data_path=self.root,
-          dataset_name=self.dataset_name,
-          transform=self.transform,
-          processor=self.processor
+          dataset_name=self.dataset_name
       )
 
 
@@ -219,19 +214,17 @@ class VSRDataModule(pl.LightningDataModule):
             correct_idx = 0 if item["label"] == 1 else 1
             labels.append(correct_idx)
 
-            # 1. Transform Image (CLIP processor)
-            image_inputs = self.transform(
-                images=img,
-                return_tensors="pt"
-            )
-            # 2. Tokenize Text
-            text_inputs = self.tokenizer(
+            # 1. CROP image (like CLIP)
+            img_crop = self.transform(img)
+            img_crop = img_crop.convert("RGB")
+
+            # 2. Process inputs
+            inputs = self.processor(
                 text=[caption, negation],
+                images=img_crop,
                 return_tensors="pt",
                 **self.params
             )
-            # 3. Combine results
-            inputs = {**image_inputs, **text_inputs}
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)

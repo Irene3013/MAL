@@ -3,10 +3,11 @@ import torch
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 from project_datasets.whatsup_dataset import WhatsUpDataset
+from torchvision import transforms
+from torchvision.transforms import Resize, CenterCrop
 import transformers
 from transformers import CLIPProcessor, CLIPModel
 from transformers import AutoProcessor, AutoModel
-from transformers import CLIPImageProcessor, CLIPTokenizer, Siglip2ImageProcessor, GemmaTokenizerFast
 
 class DualEncoder(pl.LightningModule):
     """
@@ -29,13 +30,19 @@ class DualEncoder(pl.LightningModule):
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
 
+        # CLIP image processor
+        self.preprocess = transforms.Compose([
+            Resize(size=224, interpolation=transforms.InterpolationMode.BICUBIC, antialias=True),
+            CenterCrop(224),
+        ])
+
         # --- Load Model ---
         if args.model == "clip":
             self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
             self.confifg = {
                 "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
-                "transform": CLIPImageProcessor,
-                "tokenizer": CLIPTokenizer,
+                "transform": None,
+                "tokenizer": None,
                 "params": {"padding": True, "truncation": True}
             }
 
@@ -43,8 +50,8 @@ class DualEncoder(pl.LightningModule):
             self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
             self.confifg = {
                 "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
-                "transform": CLIPImageProcessor, #Siglip2ImageProcessor,
-                "tokenizer": GemmaTokenizerFast,
+                "transform": self.preprocess, # crop images
+                "tokenizer": None,
                 "params": {"padding": "max_length", "max_length": 64}
             }
 
@@ -52,8 +59,8 @@ class DualEncoder(pl.LightningModule):
             self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
             self.confifg = {
                 "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
-                "transform": CLIPImageProcessor, #Siglip2ImageProcessor,
-                "tokenizer": GemmaTokenizerFast,
+                "transform": self.preprocess, # crop images
+                "tokenizer": None,
                 "params": {"padding": "max_length", "max_length": 64}
             }
 
