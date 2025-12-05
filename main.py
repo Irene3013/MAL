@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
-from models.clip import DualEncoder
+from models.dual_encoder import DualEncoder
 from project_datasets.vsr_dataset import VSRDataModule
 from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
@@ -37,6 +37,9 @@ def parse_args():
     )
     parser.add_argument(
         "--run_name", type=str, default=None, help="Name of the run. Used in tensorboard and output filenames. If it is not filled or already exists, a custom one will be generated."
+    )
+    parser.add_argument(
+        "--score", type=str, default="precision", choices=["precision", "pair-wise", "set-wise"], help = "Method to compute score."
     )
 
     # Model args
@@ -125,19 +128,18 @@ def main_program():
 
     if args.dataset == "vsr":
         datamodule = VSRDataModule(args, config=model.confifg)
-        datamodule.setup()
-
+       
     elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
         datamodule = WhatsUpDataModule(args, config=model.confifg)
-        datamodule.setup()
 
         # ZeroShot en WhatsUp
         args.train = False
         args.evaluate = True
     else:
         raise NotImplementedError
-        
-        
+    
+    # Setup datamodule
+    datamodule.setup()   
        
     print("Data loaded!")
 

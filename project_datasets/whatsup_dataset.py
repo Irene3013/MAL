@@ -5,7 +5,6 @@ import os
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
-from torchvision import transforms
 import torch
 
 
@@ -16,27 +15,15 @@ class WhatsUpDataset(Dataset):
     """
     What's Up Dataset
     """
-    def __init__(self, dataset_name="images", data_path="data", transform=None, processor=None):
-
+    def __init__(self, dataset_name="images", data_path="data"):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "whatsup" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['images', 'clevr'], f"Unsupported subset: '{dataset_name}'. Must be one of ['images', 'clevr']."
         
-        # Img transformation
-        self.transform = transform if transform is not None else transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(), 
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  #  Normalize
-        ])
-
-        # Input processor
-        self.processor = processor
-
         # Get train/dev/test
         self.dataset_name = dataset_name
-        #self.subset = "A" if self.dataset_name == "images" else "B"
 
         # Load dataset
         self.data_path = self.base_path / f"controlled_{dataset_name}_dataset.json"
@@ -65,8 +52,14 @@ class WhatsUpDataset(Dataset):
         }
 
     @staticmethod
-    def compute_accuracy(preds, labels):
-        return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
+    def compute_accuracy(logits, labels, score): 
+        # TODO acc depending on score
+        if score == "pair-wise":
+            0
+        elif score == "set-wise":
+            0
+        else: 
+            return (logits.argmax(dim=1) == labels).float().mean() 
     
 
 
@@ -74,23 +67,13 @@ class COCOSpatialDataset(Dataset):
     """
     COCO-spatial Dataset
     """
-    def __init__(self, dataset_name="one", data_path="data", image_path="data", transform=None, processor=None):
+    def __init__(self, dataset_name="one", data_path="data", image_path="data"):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "COCO_spatial" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['one', 'two'], f"Unsupported subset: '{dataset_name}'. Must be one of ['one', 'two']."
         
-        # Img transformation
-        self.transform = transform if transform is not None else transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(), 
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  #  Normalize
-        ])
-
-        # Input processor
-        self.processor = processor
-
         # Get train/dev/test
         self.dataset_name = dataset_name
 
@@ -119,32 +102,18 @@ class COCOSpatialDataset(Dataset):
             "caption_options": [str(item[1]), str(item[2])],
             "correct_option": str(item[1]), # The first option is the correct one
         }
-
-    @staticmethod
-    def compute_accuracy(preds, labels):
-        return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
     
 class GQASpatialDataset(Dataset):
     """
     GQA-spatial Dataset
     """
-    def __init__(self, dataset_name="one", data_path="data", image_path="data", transform=None, processor=None):
+    def __init__(self, dataset_name="one", data_path="data", image_path="data"):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "GQA_spatial" #relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert dataset_name in ['one', 'two'], f"Unsupported subset: '{dataset_name}'. Must be one of ['one', 'two']."
         
-        # Img transformation
-        self.transform = transform if transform is not None else transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(), 
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  #  Normalize
-        ])
-
-        # Input processor
-        self.processor = processor
-
         # Get train/dev/test
         self.dataset_name = dataset_name
 
@@ -174,12 +143,6 @@ class GQASpatialDataset(Dataset):
             "correct_option": str(item[1]), # The first option is the correct one
         }
 
-    @staticmethod
-    def compute_accuracy(preds, labels):
-        return (preds.argmax(dim=1) == labels).float().mean() #count coincidences
-
-
-
 # -----------------------------
 # DATAMODULE
 # -----------------------------
@@ -187,24 +150,28 @@ class WhatsUpDataModule(pl.LightningDataModule):
     """
     What's Up Data Module
     """
-    def __init__(self, args, transform=None, tokenize = None, processor=None): 
+    def __init__(self, args, config): 
         super().__init__()
 
+        self.root = args.root
         self.batch_size = args.batch_size
         self.num_workers = args.num_workers
         self.dataset_name = args.variant 
-        self.root = args.root
         self.image_path = args.image_path
         self.dataset = args.dataset
+        self.score = args.score
 
-        self.transform = transform
-        self.processor = processor
-        self.tokenize = tokenize
+        # Model config
+        self.transform = config["transform"]
+        self.tokenizer = config["tokenizer"]
+        self.processor = config["processor"]
+        self.params = config.get("params", {})
 
         # Prepare data depending on model
         if args.model == "clip":
             self.collate_fn = self.clip_collate
-        elif args.model == "siglip":
+
+        if args.model in ["siglip", "siglip2"]:
             self.collate_fn = self.siglip_collate
 
     def setup(self, stage=None):
@@ -213,28 +180,23 @@ class WhatsUpDataModule(pl.LightningDataModule):
         """
         if self.dataset == "whatsup":
             self.dataset = WhatsUpDataset(
+                score = self.score,
                 data_path=self.root,
-                dataset_name=self.dataset_name,
-                transform=self.transform,
-                processor=self.processor
+                dataset_name=self.dataset_name 
             )
 
         elif self.dataset == "cocospatial":
             self.dataset = COCOSpatialDataset(
                 data_path=self.root,
                 image_path=self.image_path,
-                dataset_name=self.dataset_name,
-                transform=self.transform,
-                processor=self.processor
+                dataset_name=self.dataset_name
             )
 
         elif self.dataset == "gqaspatial":
             self.dataset = GQASpatialDataset(
                 data_path=self.root,
                 image_path=self.image_path,
-                dataset_name=self.dataset_name,
-                transform=self.transform,
-                processor=self.processor
+                dataset_name=self.dataset_name
             )
         else: 
             raise NotImplementedError
@@ -248,7 +210,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
             correct_caption = item["correct_option"]  
             img = item["image"]
 
-            # índice correcto entre de las 4
+            # Choose correct index
             correct_idx = options.index(correct_caption)
             labels.append(correct_idx)
 
@@ -257,7 +219,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
                 text=options,
                 images=img,
                 return_tensors="pt",
-                padding=True
+                **self.params
             )
             all_inputs.append(inputs)
 
@@ -277,24 +239,26 @@ class WhatsUpDataModule(pl.LightningDataModule):
             correct_caption = item["correct_option"]  
             img = item["image"]
 
-            # índice correcto entre de las 4
+            # Choose correct index
             correct_idx = options.index(correct_caption)
             labels.append(correct_idx)
 
-            img_input = self.transform(img)
-            text_imput = self.tokenize(options, return_tensors="pt", padding=True)
-
-            # # Procesamos todo el texto junto
-            # inputs = self.processor(
-            #     text=options,
-            #     images=img,
-            #     padding="max_length",
-            #     return_tensors="pt",
-            # )
+            # 1. Transform Image (CLIP processor)
+            image_inputs = self.transform(
+                images=img,
+                return_tensors="pt"
+            )
+            # 2. Tokenize Text
+            text_inputs = self.tokenizer(
+                text=options,
+                return_tensors="pt",
+                **self.params
+            )
+            # 3. Combine results
+            inputs = {**image_inputs, **text_inputs}
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)
-
         return {
             "input": all_inputs,
             "label": labels,

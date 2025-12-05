@@ -1,16 +1,12 @@
-#models/clip.py
+#models/dual_encoder.py
 import torch
-#import clip
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
+from project_datasets.whatsup_dataset import WhatsUpDataset
 import transformers
 from transformers import CLIPProcessor, CLIPModel
 from transformers import AutoProcessor, AutoModel
 from transformers import CLIPImageProcessor, CLIPTokenizer, Siglip2ImageProcessor, GemmaTokenizerFast
-
-
-# from io import BytesIO
-# from PIL import Image
 
 class DualEncoder(pl.LightningModule):
     """
@@ -22,9 +18,13 @@ class DualEncoder(pl.LightningModule):
         self.save_hyperparameters()
 
          # --- Params ---
-        self.dataset = args.dataset         # [vsr, whatsup, biscor]
+        self.warmup_steps = args.warmup_steps
+        self.max_steps = args.max_steps
+        self.lr = args.lr
+        self.scheduler_off = args.scheduler_off
         self.batch_size = args.batch_size
-        self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.cross_entropy = torch.nn.CrossEntropyLoss()
+        self.score = args.score
         
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
@@ -43,7 +43,7 @@ class DualEncoder(pl.LightningModule):
             self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
             self.confifg = {
                 "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
-                "transform": Siglip2ImageProcessor,
+                "transform": CLIPImageProcessor, #Siglip2ImageProcessor,
                 "tokenizer": GemmaTokenizerFast,
                 "params": {"padding": "max_length", "max_length": 64}
             }
@@ -52,7 +52,7 @@ class DualEncoder(pl.LightningModule):
             self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
             self.confifg = {
                 "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
-                "transform": Siglip2ImageProcessor,
+                "transform": CLIPImageProcessor, #Siglip2ImageProcessor,
                 "tokenizer": GemmaTokenizerFast,
                 "params": {"padding": "max_length", "max_length": 64}
             }
@@ -64,17 +64,13 @@ class DualEncoder(pl.LightningModule):
         else:
             raise NotImplementedError
 
-        # --- Get dataset class ---
-        # if self.dataset == "vsr":
-        #     self.dataset_class = VSRDataset
-        # else: 
-        #     raise ValueError(f"Unsupported dataset: {self.dataset}")
-
-        # --- Define other hyperparameters ---
-        self.warmup_steps = args.warmup_steps
-        self.max_steps = args.max_steps
-        self.lr = args.lr
-        self.scheduler_off = args.scheduler_off
+        # --- Accuracy depending on dataset ---
+        if args.dataset == "whatsup":
+            # precision / pair-wise / set-wise 
+            self.compute_accuracy = WhatsUpDataset.compute_accuracy
+        else: 
+            # precision 
+            self.compute_accuracy = VSRDataset.compute_accuracy        
 
     # -----------------------------
     # COMPUTE LOSS
@@ -83,15 +79,15 @@ class DualEncoder(pl.LightningModule):
         """
         Compute discriminative loss for CLIP.
         """
-        return self.loss_fn(logits, labels)
+        return self.cross_entropy(logits, labels)
     
     def compute_contrastive_loss(self, logits, labels):
         """
         Compute contrastive loss for CLIP.
         """
-        T2I_logits = logits[0]
-        I2T_logits = logits[1]
-        return (self.loss_fn(T2I_logits, labels) + self.loss_fn(I2T_logits, labels)) / 2.0
+        T2I_logits = logits
+        I2T_logits = torch.inverse(logits)
+        return (self.cross_entropy(T2I_logits, labels) + self.cross_entropy(I2T_logits, labels)) / 2.0
 
     # -----------------------------
     # STEP (train/val/test)
@@ -116,9 +112,7 @@ class DualEncoder(pl.LightningModule):
         # TODO CONTRASTIVE LOSS
 
         loss = self.compute_loss(logits, labels)
-        probs = torch.sigmoid(logits)
-        pred = probs.argmax(dim=1)
-        accuracy = (pred == labels).float().mean()
+        accuracy = self.compute_accuracy(logits, labels, self.score)
         
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)

@@ -119,7 +119,7 @@ class VSRDataset(Dataset):
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
         
         # Data / Images path
-        self.dataset_name = dataset_name #[zeroshot, random]
+        self.dataset_name = dataset_name # [zeroshot, random]
         self.split = split
 
         self.image_path = Path(self.base_path) / "images"
@@ -150,8 +150,9 @@ class VSRDataset(Dataset):
         }
 
     @staticmethod
-    def compute_accuracy(logits, labels):
-        return (logits.argmax(dim=1) == labels).float().mean()
+    def compute_accuracy(logits, labels, score):
+        probs = torch.sigmoid(logits)
+        return (probs.argmax(dim=1) == labels).float().mean()
 
 
 # -----------------------------
@@ -214,22 +215,26 @@ class VSRDataModule(pl.LightningDataModule):
             negation = item["negated"]  
             img = item["image"]
 
-            # índice correcto entre de las 4
+            # Choose correct index
             correct_idx = 0 if item["label"] == 1 else 1
             labels.append(correct_idx)
 
-            # Procesamos todo el texto junto
-            inputs = self.processor(
-                text=[caption, negation],
+            # 1. Transform Image (CLIP processor)
+            image_inputs = self.transform(
                 images=img,
-                padding="max_length",
-                max_length=64,
-                return_tensors="pt",
+                return_tensors="pt"
             )
+            # 2. Tokenize Text
+            text_inputs = self.tokenizer(
+                text=[caption, negation],
+                return_tensors="pt",
+                **self.params
+            )
+            # 3. Combine results
+            inputs = {**image_inputs, **text_inputs}
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)
-
         return {
             "input": all_inputs,
             "label": labels,
@@ -244,29 +249,20 @@ class VSRDataModule(pl.LightningDataModule):
             negation = item["negated"]  
             img = item["image"]
 
-            # índice correcto entre las 2
+            # Choose correct index
             correct_idx = 0 if item["label"] == 1 else 1
             labels.append(correct_idx)
 
-            # Procesamos todo el texto junto
-            # inputs = self.processor(
-            #     text=[caption, negation],
-            #     images=img,
-            #     return_tensors="pt",
-            #     padding=True
-            # )
-
+            # Process inputs
             inputs = self.processor(
                 text=[caption, negation],
                 images=img,
                 return_tensors="pt",
                 **self.params
             )
-            
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)
-
         return {
             "input": all_inputs,
             "label": labels,
