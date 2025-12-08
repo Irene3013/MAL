@@ -200,6 +200,35 @@ class VSRDataModule(pl.LightningDataModule):
           dataset_name=self.dataset_name
       )
 
+    def pe_collate(self, batch):
+        labels = []          
+        all_inputs = []
+
+        for item in batch:
+            caption = item["caption"]         
+            negation = item["negated"]  
+            img = item["image"]
+
+            # Choose correct index
+            correct_idx = 0 if item["label"] == 1 else 1
+            labels.append(correct_idx)
+
+            # 1. CROP image (like CLIP)
+            img_crop = self.transform(img)
+            img_crop = img_crop.convert("RGB")
+
+            # 2. Process inputs
+            image = self.processor(img_crop).unsqueeze(0)
+            text = self.tokenizer([caption, negation])
+            inputs = {'pixel_values': image, 'input_ids': text}
+            all_inputs.append(inputs)
+        
+        labels = torch.tensor(labels, dtype=torch.long)
+        return {
+            "input": all_inputs,
+            "label": labels,
+        }
+
 
     def siglip_collate(self, batch):
         labels = []          

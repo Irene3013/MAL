@@ -8,6 +8,8 @@ from torchvision.transforms import Resize, CenterCrop
 import transformers
 from transformers import CLIPProcessor, CLIPModel
 from transformers import AutoProcessor, AutoModel
+import core.vision_encoder.pe as pe
+import core.vision_encoder.transforms as coreTransforms
 
 class DualEncoder(pl.LightningModule):
     """
@@ -66,6 +68,14 @@ class DualEncoder(pl.LightningModule):
 
         elif args.model == "PEcore":
             # TODO https://huggingface.co/facebook/PE-Core-B16-224
+            self.model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True) 
+            self.model = self.model.cuda()
+            self.confifg = {
+                "processor": coreTransforms.get_image_transform(self.model.image_size),
+                "transform": self.preprocess, # crop images
+                "tokenizer": coreTransforms.get_text_tokenizer(self.model.context_length),
+                "params": None
+            }
             raise NotImplementedError
 
         else:
@@ -93,7 +103,7 @@ class DualEncoder(pl.LightningModule):
         Compute contrastive loss for CLIP.
         """
         T2I_logits = logits
-        I2T_logits = torch.inverse(logits)
+        I2T_logits = logits.T
         return (self.cross_entropy(T2I_logits, labels) + self.cross_entropy(I2T_logits, labels)) / 2.0
 
     # -----------------------------

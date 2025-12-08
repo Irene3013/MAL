@@ -243,19 +243,17 @@ class WhatsUpDataModule(pl.LightningDataModule):
             correct_idx = options.index(correct_caption)
             labels.append(correct_idx)
 
-            # 1. Transform Image (CLIP processor)
-            image_inputs = self.transform(
-                images=img,
-                return_tensors="pt"
-            )
-            # 2. Tokenize Text
-            text_inputs = self.tokenizer(
+            # 1. CROP image (like CLIP)
+            img_crop = self.transform(img)
+            img_crop = img_crop.convert("RGB")
+
+            # 2. Process inputs
+            inputs = self.processor(
                 text=options,
+                images=img_crop,
                 return_tensors="pt",
                 **self.params
             )
-            # 3. Combine results
-            inputs = {**image_inputs, **text_inputs}
             all_inputs.append(inputs)
 
         labels = torch.tensor(labels, dtype=torch.long)
