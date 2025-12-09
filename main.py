@@ -99,10 +99,6 @@ def parse_args():
 
 
 def main_program():
-    with open("/gaueko0/users/imiranda014/GSCRATCH/Data/inference-time/our_dataset/colors/test_colors_negatives.json", "r", encoding="utf-8") as f:
-        print("IREKITA!")
-    return 0
-
     torch.serialization.add_safe_globals([argparse.Namespace])
 
     print("Parsing args...")

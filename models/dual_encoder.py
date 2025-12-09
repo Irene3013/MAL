@@ -112,24 +112,25 @@ class DualEncoder(pl.LightningModule):
     def step(self, batch, split):
         labels = batch["label"].to(self.device)
         inputs_list = batch["input"]
-
-        T2I_logits_list = []
-        I2T_logits_list = []
         
-        # Forward pass each input
-        for inputs in inputs_list:     
-            inputs = inputs.to(self.device)
-            outputs = self.model(**inputs)
-            T2I_logits_list.append(outputs.logits_per_image)
-            I2T_logits_list.append(outputs.logits_per_text)
+        outputs = self.model(**inputs_list)
+        loss = 0.5 * (self.cross_entropy(outputs.logits_per_image) + self.cross_entropy(outputs.logits_per_text)) 
+        # T2I_logits_list = []
+        # I2T_logits_list = []
+        
+        # # Forward pass each input
+        # for inputs in inputs_list:     
+        #     inputs = inputs.to(self.device)
+        #     outputs = self.model(**inputs)
+        #     T2I_logits_list.append(outputs.logits_per_image)
+        #     I2T_logits_list.append(outputs.logits_per_text)
 
         # Loss and accuracy
-        logits = torch.cat(T2I_logits_list, dim=0) 
-
-        # TODO CONTRASTIVE LOSS
-
-        loss = self.compute_loss(logits, labels)
-        accuracy = self.compute_accuracy(logits, labels, self.score)
+        #logits = torch.cat(T2I_logits_list, dim=0) 
+        #loss = self.compute_loss(logits, labels)
+        #accuracy = self.compute_accuracy(logits, labels, self.score)
+        
+        accuracy = self.compute_accuracy(outputs.logits_per_image, labels, self.score)
         
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
