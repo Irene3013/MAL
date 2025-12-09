@@ -52,7 +52,7 @@ class WhatsUpDataset(Dataset):
         }
 
     @staticmethod
-    def compute_accuracy(logits, labels, score): 
+    def compute_accuracy(logits, labels, score="precision"): 
         # TODO acc depending on score
         if score == "pair-wise":
             0
@@ -180,7 +180,6 @@ class WhatsUpDataModule(pl.LightningDataModule):
         """
         if self.dataset == "whatsup":
             self.dataset = WhatsUpDataset(
-                score = self.score,
                 data_path=self.root,
                 dataset_name=self.dataset_name 
             )
