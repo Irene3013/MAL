@@ -74,17 +74,18 @@ class DualEncoder(pl.LightningModule):
         elif args.model == "pecore":
             # https://huggingface.co/facebook/PE-Core-B16-224
             self.model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
-            self.model = self.model.cuda()
+            self.model.to(self.device)
             self.config = {
                 "processor": coreTransforms.get_image_transform(self.model.image_size),
                 "transform": self.preprocess, # crop images for comparable results
                 "tokenizer": coreTransforms.get_text_tokenizer(self.model.context_length),
                 "params": None
             }
-            raise NotImplementedError
 
         else:
             raise NotImplementedError
+        
+        self.model_name = args.model
 
         # --- Accuracy depending on dataset ---
         if args.dataset == "whatsup":
@@ -130,9 +131,19 @@ class DualEncoder(pl.LightningModule):
         # Forward pass each input
         logits_list = []
         for inputs in inputs_list:
-            inputs = inputs.to(self.device)
-            outputs = self.model(**inputs)
-            logits_list.append(outputs.logits_per_image)
+
+            if self.model_name == "pecore":
+                image = inputs['image'].to(self.device)
+                captions = inputs['captions'].to(self.device)
+                image_features, text_features, logit_scale = self.model(image, captions)
+                I2T_logits = logit_scale * image_features @ text_features.T
+
+            else:
+                inputs = inputs.to(self.device)
+                outputs = self.model(**inputs)
+                I2T_logits = outputs.logits_per_image
+
+            logits_list.append(I2T_logits)
 
         logits = torch.cat(logits_list, dim=0)
         acc = self.compute_accuracy(logits, labels, self.score)

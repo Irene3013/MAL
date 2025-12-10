@@ -111,7 +111,7 @@ def main_program():
     # Load model
     print("Loading model...")
 
-    if args.model in ["clip", "siglip", "siglip2"]:
+    if args.model in ["clip", "siglip", "siglip2", "pecore"]:
         if args.ckpt is None:
             model = DualEncoder(args)
         else:

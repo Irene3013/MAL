@@ -211,6 +211,7 @@ class VSRDataModule(pl.LightningDataModule):
         self.num_workers = args.num_workers
         self.dataset_name = args.variant
         self.root = args.root
+        self.model = args.model
 
         # Model config
         self.config = config
@@ -219,11 +220,14 @@ class VSRDataModule(pl.LightningDataModule):
         self.processor = config["processor"]
         self.params = config.get("params", {})
 
-        if args.model == "clip":
-            self.collate_fn = self.clip_collate
+        # if args.model == "clip":
+        #     self.collate_fn = self.clip_collate
 
-        if args.model in ["siglip", "siglip2"]:
-            self.collate_fn = self.siglip_collate
+        # if args.model in ["siglip", "siglip2"]:
+        #     self.collate_fn = self.siglip_collate
+        
+        # if args.model == "pecore":
+        #     self.collate_fn = self.pecore_collate
 
     def setup(self, stage=None):
       self.train_dataset = VSRDataset(
@@ -245,95 +249,140 @@ class VSRDataModule(pl.LightningDataModule):
           config=self.config 
       )
 
-    def pe_collate(self, batch):
-        labels = []          
+    def collate_fn(self, batch):
+        labels = []
         all_inputs = []
 
         for item in batch:
-            caption = item["caption"]         
-            negation = item["negated"]  
+            caption = item["caption"]
+            negation = item["negated"]
             img = item["image"]
 
-            # Choose correct index
+            # Select correct index
             correct_idx = 0 if item["label"] == 1 else 1
             labels.append(correct_idx)
 
-            # 1. CROP image (like CLIP)
-            img_crop = self.transform(img)
-            img_crop = img_crop.convert("RGB")
+            # Preprocess image to CLIP size
+            if self.transform is not None:
+                img = self.transform(img)
+                img = img.convert("RGB")
 
-            # 2. Process inputs
-            image = self.processor(img_crop)#.unsqueeze(0)
-            text = self.tokenizer([caption, negation])
-            inputs = {'pixel_values': image, 'input_ids': text}
+            # Process inputs depending on model
+            if self.model == "pecore":
+                image_tensor = self.processor(img).unsqueeze(0)
+                text_tensor = self.tokenizer([caption, negation])
+                inputs = {"image": image_tensor, "captions": text_tensor}
+
+            elif self.model in ["siglip", "siglip2", "clip"]:
+                inputs = self.processor(
+                    text=[caption, negation],
+                    images=img,
+                    return_tensors="pt",
+                    **self.params
+                )
+
+            else:
+                raise NotImplementedError
+
             all_inputs.append(inputs)
+
+        labels = torch.tensor(labels, dtype=torch.long)
+
+        return {
+            "input": all_inputs,
+            "label": labels
+        }
+
+
+    # def pecore_collate(self, batch):
+    #     labels = []          
+    #     all_inputs = []
+
+    #     for item in batch:
+    #         caption = item["caption"]         
+    #         negation = item["negated"]  
+    #         img = item["image"]
+
+    #         # Choose correct index
+    #         correct_idx = 0 if item["label"] == 1 else 1
+    #         labels.append(correct_idx)
+
+    #         # 1. CROP image (like CLIP)
+    #         img_crop = self.transform(img)
+    #         img_crop = img_crop.convert("RGB")
+
+    #         # 2. Process inputs
+    #         image = self.processor(img_crop)#.unsqueeze(0)
+    #         text = self.tokenizer([caption, negation])
+    #         inputs = {'pixel_values': image, 'input_ids': text}
+    #         all_inputs.append(inputs)
         
-        labels = torch.tensor(labels, dtype=torch.long)
-        return {
-            "input": all_inputs,
-            "label": labels,
-        }
+    #     labels = torch.tensor(labels, dtype=torch.long)
+    #     return {
+    #         "input": all_inputs,
+    #         "label": labels,
+    #     }
 
 
-    def siglip_collate(self, batch):
-        labels = []          
-        all_inputs = []
+    # def siglip_collate(self, batch):
+    #     labels = []          
+    #     all_inputs = []
 
-        for item in batch:
-            caption = item["caption"]         
-            negation = item["negated"]  
-            img = item["image"]
+    #     for item in batch:
+    #         caption = item["caption"]         
+    #         negation = item["negated"]  
+    #         img = item["image"]
 
-            # Choose correct index
-            correct_idx = 0 if item["label"] == 1 else 1
-            labels.append(correct_idx)
+    #         # Choose correct index
+    #         correct_idx = 0 if item["label"] == 1 else 1
+    #         labels.append(correct_idx)
 
-            # 1. CROP image (like CLIP)
-            img_crop = self.transform(img)
-            img_crop = img_crop.convert("RGB")
+    #         # 1. CROP image (like CLIP)
+    #         img_crop = self.transform(img)
+    #         img_crop = img_crop.convert("RGB")
 
-            # 2. Process inputs
-            inputs = self.processor(
-                text=[caption, negation],
-                images=img_crop,
-                return_tensors="pt",
-                **self.params
-            )
-            all_inputs.append(inputs)
+    #         # 2. Process inputs
+    #         inputs = self.processor(
+    #             text=[caption, negation],
+    #             images=img_crop,
+    #             return_tensors="pt",
+    #             **self.params
+    #         )
+    #         all_inputs.append(inputs)
 
-        labels = torch.tensor(labels, dtype=torch.long)
-        return {
-            "input": all_inputs,
-            "label": labels,
-        }
+    #     labels = torch.tensor(labels, dtype=torch.long)
+    #     return {
+    #         "input": all_inputs,
+    #         "label": labels,
+    #     }
 
-    def clip_collate(self, batch):
-        labels = []          
-        all_inputs = []
+    # def clip_collate(self, batch):
+    #     labels = []          
+    #     all_inputs = []
 
-        for item in batch:
-            caption = item["caption"]         
-            negation = item["negated"]  
-            img = item["image"]
+    #     for item in batch:
+    #         caption = item["caption"]         
+    #         negation = item["negated"]  
+    #         img = item["image"]
 
-            # Choose correct index
-            correct_idx = 0 if item["label"] == 1 else 1
-            labels.append(correct_idx)
+    #         # Choose correct index
+    #         correct_idx = 0 if item["label"] == 1 else 1
+    #         labels.append(correct_idx)
 
-            # Process inputs
-            inputs = self.processor(
-                text=[caption, negation],
-                images=img,
-                return_tensors="pt",
-                **self.params
-            )
-            all_inputs.append(inputs)
+    #         # Process inputs
+    #         inputs = self.processor(
+    #             text=[caption, negation],
+    #             images=img,
+    #             return_tensors="pt",
+    #             **self.params
+    #         )
+    #         all_inputs.append(inputs)
 
-        labels = torch.tensor(labels, dtype=torch.long)
-        return {
-            "input": all_inputs,
-            "label": labels,
-        }
+    #     labels = torch.tensor(labels, dtype=torch.long)
+    #     return {
+    #         "input": all_inputs,
+    #         "label": labels,
+    #     }
     
     
     def train_dataloader(self):
