@@ -44,7 +44,7 @@ def parse_args():
 
     # Model args
     parser.add_argument(
-        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2"],
+        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore"],
         help = "Model type to be fine-tuned."
     )
     parser.add_argument(
@@ -126,10 +126,10 @@ def main_program():
     print("Loading data...")
 
     if args.dataset == "vsr":
-        datamodule = VSRDataModule(args, config=model.confifg)
+        datamodule = VSRDataModule(args, config=model.config)
        
     elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
-        datamodule = WhatsUpDataModule(args, config=model.confifg)
+        datamodule = WhatsUpDataModule(args, config=model.config)
 
         # ZeroShot en WhatsUp
         args.train = False

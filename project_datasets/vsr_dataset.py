@@ -111,7 +111,7 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", data_path="data"):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", config=None):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
@@ -126,6 +126,12 @@ class VSRDataset(Dataset):
         self.image_path = Path(self.base_path) / "images"
         self.data_path = Path(self.base_path) / self.dataset_name  / f"{split}.jsonl"
         self.dataset = self._load_jsonl()
+
+        # Input processing
+        self.transform = config["transform"]
+        self.tokenizer = config["tokenizer"]
+        self.processor = config["processor"]
+        self.params = config.get("params", {})
 
     def _load_jsonl(self):
         with open(self.data_path, "r", encoding="utf-8") as f:
@@ -142,12 +148,47 @@ class VSRDataset(Dataset):
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
+
+        if(self.split != "train"):
+            return {
+                "caption": item["caption"],
+                "negated": invert_relation(item["caption"], item["relation"], negate),
+                "image": self._load_image(item["image"]),
+                "label": item["label"]
+            }
+
+        img = self._load_image(item["image"])
+        if item['label'] == 1:
+            text = item["caption"] + ' (True)'
+        else:
+            text = item["caption"] + ' (False)'
+
+
+        # Apply image preprocessing if specified
+        if self.transform is not None:
+            img = self.transform(img)
+        img = img.convert("RGB")
         
+        # Process inputs separately (procesor + tokenizer)
+        if self.tokenizer is not None:
+            img = self.processor(img).unsqueeze(0)
+            text = self.tokenizer(text)
+            return {
+                "image": img,
+                "text": text
+            }
+
+        # Process inputs all together (general processor)
+        else:
+            inputs = self.processor(
+                text=text,
+                images=img,
+                return_tensors="pt",
+                **self.params
+            )
         return {
-            "caption": item["caption"],
-            "negated": invert_relation(item["caption"], item["relation"], negate),
-            "image": self._load_image(item["image"]),
-            "label": item["label"]
+            "image": inputs['pixel_values'].squeeze(0),
+            "text": inputs['input_ids'],
         }
 
     @staticmethod
@@ -172,6 +213,7 @@ class VSRDataModule(pl.LightningDataModule):
         self.root = args.root
 
         # Model config
+        self.config = config
         self.transform = config["transform"]
         self.tokenizer = config["tokenizer"]
         self.processor = config["processor"]
@@ -187,17 +229,20 @@ class VSRDataModule(pl.LightningDataModule):
       self.train_dataset = VSRDataset(
           split="train",
           data_path=self.root,
-          dataset_name=self.dataset_name
+          dataset_name=self.dataset_name,
+          config=self.config 
       )
       self.val_dataset = VSRDataset(
           split="val",
           data_path=self.root,
-          dataset_name=self.dataset_name
+          dataset_name=self.dataset_name,
+          config=self.config 
       )
       self.test_dataset = VSRDataset(
           split="test",
           data_path=self.root,
-          dataset_name=self.dataset_name
+          dataset_name=self.dataset_name,
+          config=self.config 
       )
 
     def pe_collate(self, batch):
@@ -218,7 +263,7 @@ class VSRDataModule(pl.LightningDataModule):
             img_crop = img_crop.convert("RGB")
 
             # 2. Process inputs
-            image = self.processor(img_crop).unsqueeze(0)
+            image = self.processor(img_crop)#.unsqueeze(0)
             text = self.tokenizer([caption, negation])
             inputs = {'pixel_values': image, 'input_ids': text}
             all_inputs.append(inputs)
@@ -289,14 +334,14 @@ class VSRDataModule(pl.LightningDataModule):
             "input": all_inputs,
             "label": labels,
         }
-
+    
+    
     def train_dataloader(self):
         return DataLoader(
             self.train_dataset,
             batch_size=self.batch_size,
             shuffle=True,
             num_workers=self.num_workers,
-            collate_fn=self.collate_fn
         )
 
     def val_dataloader(self):
