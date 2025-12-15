@@ -3,10 +3,8 @@ import torch
 import string
 from utils.constants import PREPROCESS_TRANSFORM
 from transformers import CLIPModel, CLIPProcessor, AutoModel, AutoProcessor, Qwen2VLForConditionalGeneration
-# import core.vision_encoder.pe as pe
-# import core.vision_encoder.transforms as coreTransforms
-
-
+import core.vision_encoder.pe as pe
+import core.vision_encoder.transforms as coreTransforms
 
 def load_vision_model_components(model_name: str, device: str):
     """
@@ -37,16 +35,15 @@ def load_vision_model_components(model_name: str, device: str):
             "params": {"padding": "max_length", "max_length": 64}
         }
     
-     # elif args.model == "pecore":
+    elif model_name == "pecore":
         # https://huggingface.co/facebook/PE-Core-B16-224
-        # self.model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
-        # self.model.to(self.device)
-        # self.config = {
-        #     "processor": coreTransforms.get_image_transform(self.model.image_size),
-        #     "transform": self.preprocess, # crop images for comparable results
-        #     "tokenizer": coreTransforms.get_text_tokenizer(self.model.context_length),
-        #     "params": None
-        # }
+        model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
+        config_output = {
+            "processor": coreTransforms.get_image_transform(model.image_size),
+            "transform": PREPROCESS_TRANSFORM, 
+            "tokenizer": coreTransforms.get_text_tokenizer(model.context_length),
+            "params": None
+      }
     
     elif model_name == "qwen2":
         # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 

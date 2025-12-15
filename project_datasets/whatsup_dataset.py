@@ -3,13 +3,14 @@ from pathlib import Path
 import json
 import os
 from torch.utils.data import Dataset, DataLoader
+from utils.data_helpers import whastup_dual_encoder_collate
 import pytorch_lightning as pl
 from PIL import Image
 import torch
 
 
 # -----------------------------
-# DATASETS
+# What's Up Dataset
 # -----------------------------
 class WhatsUpDataset(Dataset):
     """
@@ -59,10 +60,12 @@ class WhatsUpDataset(Dataset):
         elif score == "set-wise":
             0
         else: 
-            return (logits.argmax(dim=1) == labels).float().mean() 
-    
-
-
+            probs = torch.sigmoid(logits)
+            return (probs.argmax(dim=1) == labels).float().mean() 
+        
+# -----------------------------
+# COCO-spatial Dataset
+# -----------------------------
 class COCOSpatialDataset(Dataset):
     """
     COCO-spatial Dataset
@@ -102,7 +105,10 @@ class COCOSpatialDataset(Dataset):
             "caption_options": [str(item[1]), str(item[2])],
             "correct_option": str(item[1]), # The first option is the correct one
         }
-    
+
+# -----------------------------
+# GQA-spatial Dataset
+# -----------------------------
 class GQASpatialDataset(Dataset):
     """
     GQA-spatial Dataset
@@ -161,24 +167,23 @@ class WhatsUpDataModule(pl.LightningDataModule):
         self.dataset = args.dataset
         self.score = args.score
         self.model = args.model
+        self.config = config
 
-        # Model config
-        self.transform = config["transform"]
-        self.tokenizer = config["tokenizer"]
-        self.processor = config["processor"]
-        self.params = config.get("params", {})
-
-        # Prepare data depending on model
-        # if args.model == "clip":
-        #     self.collate_fn = self.clip_collate
-
-        # if args.model in ["siglip", "siglip2"]:
-        #     self.collate_fn = self.siglip_collate
+        # Setup dataloader
+        self.setup()
 
     def setup(self, stage=None):
         """
         Called once at the beginning of training, to prepare datasets.
         """
+        # Define collate function (for evaluation)
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual Encoders
+            self.collate_fn_eval = lambda batch: whastup_dual_encoder_collate(
+                batch, self.config, self.model # Pasar args y model_name
+            )
+        else: 
+            self.collate_fn_eval = None
+
         if self.dataset == "whatsup":
             self.dataset = WhatsUpDataset(
                 data_path=self.root,
@@ -201,49 +206,91 @@ class WhatsUpDataModule(pl.LightningDataModule):
         else: 
             raise NotImplementedError
         
-    def collate_fn(self, batch):
-        labels = []
-        all_inputs = []
 
-        for item in batch:
-            options = item["caption_options"]         
-            correct_caption = item["correct_option"]  
-            img = item["image"]
+    def test_dataloader(self):
+        return DataLoader(
+            self.dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn_eval
+        )
+    
 
-            # Select correct index
-            correct_idx = options.index(correct_caption)
-            labels.append(correct_idx)
+    # def train_dataloader(self):
+    #     return DataLoader(
+    #         self.dataset,
+    #         batch_size=self.batch_size,
+    #         shuffle=True,
+    #         num_workers=self.num_workers,
+    #         collate_fn=self.collate_fn_eval
+    #     )
 
-            # Preprocess image to CLIP size
-            if self.transform is not None:
-                img = self.transform(img)
-                img = img.convert("RGB")
+    # def val_dataloader(self):
+    #     return DataLoader(
+    #         self.dataset,
+    #         batch_size=self.batch_size,
+    #         shuffle=False,
+    #         num_workers=self.num_workers,
+    #         collate_fn=self.collate_fn_eval
+    #     )
 
-            # Process inputs depending on model
-            if self.model == "pecore":
-                image_tensor = self.processor(img).unsqueeze(0)
-                text_tensor = self.tokenizer(options)
-                inputs = {"image": image_tensor, "captions": text_tensor}
+    # Model config
+    # self.transform = config["transform"]
+    # self.tokenizer = config["tokenizer"]
+    # self.processor = config["processor"]
+    # self.params = config.get("params", {})
 
-            elif self.model in ["siglip", "siglip2", "clip"]:
-                inputs = self.processor(
-                    text=options,
-                    images=img,
-                    return_tensors="pt",
-                    **self.params
-                )
+    # Prepare data depending on model
+    # if args.model == "clip":
+    #     self.collate_fn = self.clip_collate
 
-            else:
-                raise NotImplementedError
+    # if args.model in ["siglip", "siglip2"]:
+    #     self.collate_fn = self.siglip_collate
+    
+    # def collate_fn(self, batch):
+    #     labels = []
+    #     all_inputs = []
 
-            all_inputs.append(inputs)
+    #     for item in batch:
+    #         options = item["caption_options"]         
+    #         correct_caption = item["correct_option"]  
+    #         img = item["image"]
 
-        labels = torch.tensor(labels, dtype=torch.long)
+    #         # Select correct index
+    #         correct_idx = options.index(correct_caption)
+    #         labels.append(correct_idx)
 
-        return {
-            "input": all_inputs,
-            "label": labels
-        }
+    #         # Preprocess image to CLIP size
+    #         if self.transform is not None:
+    #             img = self.transform(img)
+    #             img = img.convert("RGB")
+
+    #         # Process inputs depending on model
+    #         if self.model == "pecore":
+    #             image_tensor = self.processor(img).unsqueeze(0)
+    #             text_tensor = self.tokenizer(options)
+    #             inputs = {"image": image_tensor, "captions": text_tensor}
+
+    #         elif self.model in ["siglip", "siglip2", "clip"]:
+    #             inputs = self.processor(
+    #                 text=options,
+    #                 images=img,
+    #                 return_tensors="pt",
+    #                 **self.params
+    #             )
+
+    #         else:
+    #             raise NotImplementedError
+
+    #         all_inputs.append(inputs)
+
+    #     labels = torch.tensor(labels, dtype=torch.long)
+
+    #     return {
+    #         "input": all_inputs,
+    #         "label": labels
+    #     }
 
     
     # def clip_collate(self, batch):
@@ -306,31 +353,3 @@ class WhatsUpDataModule(pl.LightningDataModule):
     #         "input": all_inputs,
     #         "label": labels,
     #     }
-
-    def train_dataloader(self):
-        return DataLoader(
-            self.dataset,
-            batch_size=self.batch_size,
-            shuffle=True,
-            num_workers=self.num_workers,
-            collate_fn=self.collate_fn
-        )
-
-    def val_dataloader(self):
-        return DataLoader(
-            self.dataset,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=self.num_workers,
-            collate_fn=self.collate_fn
-        )
-
-    def test_dataloader(self):
-        return DataLoader(
-            self.dataset,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=self.num_workers,
-            collate_fn=self.collate_fn
-        )
-    

@@ -61,10 +61,10 @@ class VSRDataset(Dataset):
     def __getitem__(self, idx):
         item = self.dataset[idx]
 
-        if self.model_type in ["clip", "siglip", "siglip2", "pecore"]:
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]:
             return self._dual_encoder_item(item)
         
-        elif self.model_type in ["qwen2"]:
+        elif self.model in ["qwen2"]:
             return self._qwen_item(item)
             
         else:
@@ -83,12 +83,12 @@ class VSRDataset(Dataset):
             return {
                 "caption": item["caption"],
                 "negated": invert_relation(item["caption"], item["relation"]),
-                "image": self._load_image(img_path = self.image_path / item["image"]),
+                "image": self._load_image(item["image"]),
                 "label": item["label"]
             }
 
         # **B. Train (direct input preprocessing):**
-        img = self._load_image(self.image_path / item["image"])
+        img = self._load_image(item["image"])
         text = item["caption"] + (' (True)' if item['label'] == 1 else ' (False)')
 
         if self.transform is not None: # CLIP transform if specified
@@ -170,7 +170,7 @@ class VSRDataModule(pl.LightningDataModule):
         # Define collate function (for evaluation)
         if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual Encoders
             self.collate_fn_eval = lambda batch: vsr_dual_encoder_collate(
-                batch, self.config, self.args # Pasar args y config
+                batch, self.config, self.model # Pasar args y model_name
             )
         else: 
             self.collate_fn_eval = None
