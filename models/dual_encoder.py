@@ -3,17 +3,13 @@ import torch
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 from project_datasets.whatsup_dataset import WhatsUpDataset
-from torchvision import transforms
-from torchvision.transforms import Resize, CenterCrop
 import transformers
-from transformers import CLIPProcessor, CLIPModel
-from transformers import AutoProcessor, AutoModel
-# import core.vision_encoder.pe as pe
-# import core.vision_encoder.transforms as coreTransforms
+from utils.model_helpers import load_vision_model_components
+
 
 class DualEncoder(pl.LightningModule):
     """
-    Wrapper Lightning Module for CLIP model fine-tuning or zero-shot evaluation.
+    Wrapper Lightning Module for dual-encoder models: fine-tuning / zero-shot evaluation.
     """
     def __init__(self, args):
         super().__init__()
@@ -32,60 +28,9 @@ class DualEncoder(pl.LightningModule):
         print(f"args.gpus: {args.gpus}")
         self.device_name = "cpu" if args.gpus == 0 else "cuda"
 
-        # CLIP image processor
-        self.preprocess = transforms.Compose([
-            Resize(size=224, interpolation=transforms.InterpolationMode.BICUBIC, antialias=True),
-            CenterCrop(224),
-        ])
-
         # --- Load Model ---
-        if args.model == "clip":
-            # https://huggingface.co/openai/clip-vit-base-patch32
-            self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-            self.config = {
-                "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
-                "transform": None,
-                "tokenizer": None,
-                "params": {"padding": "max_length", "max_length": 64}
-
-                #"params": {"padding": True, "truncation": True}
-            }
-
-        elif args.model == "siglip":
-            # https://huggingface.co/google/siglip-base-patch16-224
-            self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
-            self.config = {
-                "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
-                "transform": self.preprocess, # crop images for comparable results
-                "tokenizer": None,
-                "params": {"padding": "max_length", "max_length": 64}
-            }
-
-        elif args.model == "siglip2":
-            # https://huggingface.co/google/siglip2-base-patch32-256
-            self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
-            self.config = {
-                "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
-                "transform": self.preprocess, # crop images for comparable results
-                "tokenizer": None,
-                "params": {"padding": "max_length", "max_length": 64}
-            }
-
-        # elif args.model == "pecore":
-            # https://huggingface.co/facebook/PE-Core-B16-224
-            # self.model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
-            # self.model.to(self.device)
-            # self.config = {
-            #     "processor": coreTransforms.get_image_transform(self.model.image_size),
-            #     "transform": self.preprocess, # crop images for comparable results
-            #     "tokenizer": coreTransforms.get_text_tokenizer(self.model.context_length),
-            #     "params": None
-            # }
-
-        else:
-            raise NotImplementedError
-        
         self.model_name = args.model
+        self.model, self.config = load_vision_model_components(self.model_name, self.device_name)
 
         # --- Accuracy depending on dataset ---
         if args.dataset == "whatsup":
@@ -152,7 +97,6 @@ class DualEncoder(pl.LightningModule):
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc
 
-
     # -----------------------------
     # LIGHTNING STEP METHODS
     # -----------------------------
@@ -165,6 +109,9 @@ class DualEncoder(pl.LightningModule):
     def test_step(self, batch, batch_idx):
         return self.step(batch, split="test")
 
+    # -----------------------------
+    # CONFIGURE OPTIMIZER
+    # -----------------------------
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
         if self.scheduler_off:
@@ -175,3 +122,51 @@ class DualEncoder(pl.LightningModule):
                 "interval": "step"
             }
             return [optimizer], [scheduler]
+        
+
+
+# if args.model == "clip":
+        #     # https://huggingface.co/openai/clip-vit-base-patch32
+        #     self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+        #     self.config = {
+        #         "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
+        #         "transform": None,
+        #         "tokenizer": None,
+        #         "params": {"padding": "max_length", "max_length": 64}
+
+        #         #"params": {"padding": True, "truncation": True}
+        #     }
+
+        # elif args.model == "siglip":
+        #     # https://huggingface.co/google/siglip-base-patch16-224
+        #     self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
+        #     self.config = {
+        #         "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
+        #         "transform": self.preprocess, # crop images for comparable results
+        #         "tokenizer": None,
+        #         "params": {"padding": "max_length", "max_length": 64}
+        #     }
+
+        # elif args.model == "siglip2":
+        #     # https://huggingface.co/google/siglip2-base-patch32-256
+        #     self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
+        #     self.config = {
+        #         "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
+        #         "transform": self.preprocess, # crop images for comparable results
+        #         "tokenizer": None,
+        #         "params": {"padding": "max_length", "max_length": 64}
+        #     }
+
+        # # elif args.model == "pecore":
+        #     # https://huggingface.co/facebook/PE-Core-B16-224
+        #     # self.model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
+        #     # self.model.to(self.device)
+        #     # self.config = {
+        #     #     "processor": coreTransforms.get_image_transform(self.model.image_size),
+        #     #     "transform": self.preprocess, # crop images for comparable results
+        #     #     "tokenizer": coreTransforms.get_text_tokenizer(self.model.context_length),
+        #     #     "params": None
+        #     # }
+
+        # else:
+        #     raise NotImplementedError

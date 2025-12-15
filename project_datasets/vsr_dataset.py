@@ -11,99 +11,9 @@ import pytorch_lightning as pl
 from PIL import Image
 import random
 import torch
+from utils.data_helpers import invert_relation, vsr_dual_encoder_collate
+from utils.model_helpers import create_qwen_message
 from qwen_vl_utils import process_vision_info
-
-
-negate = {
-    # Adjacency
-    "adjacent to": "nonadjacent to", 
-    "alongside": "away from", 
-    "at the side of": "away from", 
-    "at the right side of": "at the left side of", 
-    "at the left side of": "at the right side of",
-    "attached to": "disconnect from", 
-    "at the back of": "at the front of", 
-    "ahead of": "not ahead of", 
-    "against": "away from", 
-    "at the edge of": "far from the edge of", 
-    # Directional
-    "off": "on", 
-    "past": "before", 
-    "toward": "away from", 
-    "down": "up", 
-    "away from": "not away from", 
-    "along": "not along", 
-    "around": "not around", 
-    "into": "not into", 
-    "across": "not accross",
-    "across from": "not across from", 
-    "down from": "up from", 
-    # Orientation
-    "facing": "facing away from", 
-    "facing away from": "facing", 
-    "parallel to": "perpendicular to", 
-    "perpendicular to": "parallel to", 
-    # Proximity
-    "by": "far away from", 
-    "close to": "far from", 
-    "near": "far from", 
-    "far from": "close to", 
-    "far away from": "by", 
-    # Topological
-    "connected to": "detached from", 
-    "detached from": "connected to", 
-    "has as a part": "does not have a part", 
-    "part of": "not part of", 
-    "contains": "does not contain", 
-    "within": "outside of", 
-    "at": "not at", 
-    "on": "not on", 
-    "in": "not in",
-    "with": "not with", 
-    "surrounding": "not surrounding", 
-    "among": "not among", 
-    "consists of": "does not consists of", 
-    "out of": "not out of", 
-    "between": "not between", 
-    "inside": "outside", 
-    "outside": "inside", 
-    "touching": "not touching",
-    # Unallocated
-    "beyond": "inside",
-    "next to": "far from", 
-    "opposite to": "not opposite to", 
-    "enclosed by": "not enclosed by", 
-    # missing
-    "above": "below",
-    "below": "above",
-    "behind": "in front of",
-    "on top of": "not on top of",
-    "under": "over",
-    "over": "under",
-    "left of": "right of",
-    "right of": "left of",
-    "in front of": "behind",
-    "beneath": "not beneath",
-    "beside": "not beside",
-    "in the middle of": "not in the middle of",
-    "congruent": "incongruent",
-    "through": "not through",
-}
-
-def invert_relation(caption, relation, inverse_relations):
-    """
-    Reemplaza la relación en el caption por su opuesta según el diccionario.
-    """
-    if relation not in inverse_relations:
-        raise ValueError(f"There is not a negated relation defined for '{relation}'")
-    
-    inverse = inverse_relations[relation]
-    
-    # Reemplazar solo la primera ocurrencia de la relación
-    new_caption = caption.replace(relation, inverse, 1)
-    
-    return new_caption
-
 
 # -----------------------------
 # DATASET
@@ -145,84 +55,74 @@ class VSRDataset(Dataset):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path)
     
-    def _create_message(self, imagepath):
-        if self.model == "qwen2":
-            return [ 
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "image", "image": f"file:///{imagepath}"},
-                        {"type": "text", "text": "Describe this image."},
-                    ],
-                }
-            ]
-        else: raise NotImplementedError
-
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
 
-        if self.model in ["clip", "siglip", "siglip2", "pecore"]:
-            self._dual_encoder_item(item)
-
-        elif self.model in ["qwen2"]:
-            self._qwen_item(item)
+        if self.model_type in ["clip", "siglip", "siglip2", "pecore"]:
+            return self._dual_encoder_item(item)
+        
+        elif self.model_type in ["qwen2"]:
+            return self._qwen_item(item)
+            
         else:
-            raise NotImplementedError
-    
+            raise NotImplementedError()
+
+
+    # --- ITEM METHODS ---
     def _dual_encoder_item(self, item):
-        if(self.split != "train"):
+        """
+        Prepare item for Dual Encoder models.
+            Val/Test --> 1 image n captions
+            Train --> 1 image 1 caption (contrastive loss)
+        """    
+        # **A. Val/Test (return caption-pairs to Collate):**
+        if self.split != "train":
             return {
                 "caption": item["caption"],
-                "negated": invert_relation(item["caption"], item["relation"], negate),
-                "image": self._load_image(item["image"]),
+                "negated": invert_relation(item["caption"], item["relation"]),
+                "image": self._load_image(img_path = self.image_path / item["image"]),
                 "label": item["label"]
             }
 
-        img = self._load_image(item["image"])
-        if item['label'] == 1:
-            text = item["caption"] + ' (True)'
-        else:
-            text = item["caption"] + ' (False)'
+        # **B. Train (direct input preprocessing):**
+        img = self._load_image(self.image_path / item["image"])
+        text = item["caption"] + (' (True)' if item['label'] == 1 else ' (False)')
 
-        # Apply image preprocessing if specified
-        if self.transform is not None:
+        if self.transform is not None: # CLIP transform if specified
             img = self.transform(img)
-        img = img.convert("RGB")
-        
-        # Process inputs separately (procesor + tokenizer)
-        if self.tokenizer is not None:
-            img = self.processor(img).unsqueeze(0)
-            text = self.tokenizer(text)
-            return {
-                "image": img,
-                "text": text
-            }
 
-        # Process inputs all together (general processor)
-        else:
+        if self.tokenizer: # PE-core (image processor + text tokenizer)
+            img_tensor = self.processor(img).unsqueeze(0)
+            text_tokens = self.tokenizer(text)
+            return {
+                "image": img_tensor, 
+                "text": text_tokens
+            }
+        else: # CLIP/SigLIP (unified processor)
             inputs = self.processor(
                 text=text,
                 images=img,
                 return_tensors="pt",
                 **self.params
             )
-        return {
-            "image": inputs['pixel_values'].squeeze(0),
-            "text": inputs['input_ids'],
-        }
-    
-    def _qwen_item(self, item):
-        img_path = self.image_path / item["image"]
-        img = self._load_image(item["image"])
-        caption = item["caption"]
-        messages = self._create_message(imagepath=img_path)
+            return {
+                "image": inputs['pixel_values'].squeeze(0), # delete extra batch dim.
+                "text": inputs['input_ids'],
+            }
 
-        # Process imputs
+
+    def _qwen_item(self, item):
+        """Prepare item for Qwen2-VL model."""
+        img_path = self.image_path / item["image"]
+        caption = item["caption"]
+        negated = invert_relation(caption, item["relation"])
+        messages = create_qwen_message(img_path, [caption, negated])
+
         text = self.processor.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True
+             messages, tokenize=False, add_generation_prompt=True
         )
 
         image_inputs, video_inputs = process_vision_info(messages)
@@ -233,11 +133,12 @@ class VSRDataset(Dataset):
             padding=True,
             return_tensors="pt",
         )
+        # Expected response to be generated by Qwen (ej: "A" or "B")
+        expected_response = "A" if item["label"] == 1 else "B"
         return {
-            "input": inputs,
-            "label": caption #?
+             "input": inputs,
+             "label": expected_response 
         }
-
 
     @staticmethod
     def compute_accuracy(logits, labels, score):
@@ -260,79 +161,43 @@ class VSRDataModule(pl.LightningDataModule):
         self.dataset_name = args.variant
         self.root = args.root
         self.model = args.model
-
-        # Model config
         self.config = config
-        self.transform = config["transform"]
-        self.tokenizer = config["tokenizer"]
-        self.processor = config["processor"]
-        self.params = config.get("params", {})
 
+        # Setup dataloader
+        self.setup()
+        
     def setup(self, stage=None):
-      self.train_dataset = VSRDataset(
-          split="train",
-          data_path=self.root,
-          dataset_name=self.dataset_name,
-          config=self.config 
-      )
-      self.val_dataset = VSRDataset(
-          split="val",
-          data_path=self.root,
-          dataset_name=self.dataset_name,
-          config=self.config 
-      )
-      self.test_dataset = VSRDataset(
-          split="test",
-          data_path=self.root,
-          dataset_name=self.dataset_name,
-          config=self.config 
-      )
+        # Define collate function (for evaluation)
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual Encoders
+            self.collate_fn_eval = lambda batch: vsr_dual_encoder_collate(
+                batch, self.config, self.args # Pasar args y config
+            )
+        else: 
+            self.collate_fn_eval = None
 
-   
+        # Setup train/val/test datasets
+        self.train_dataset = VSRDataset(
+            split="train",
+            data_path=self.root,
+            dataset_name=self.dataset_name,
+            model=self.model,
+            config=self.config 
+        )
+        self.val_dataset = VSRDataset(
+            split="val",
+            data_path=self.root,
+            dataset_name=self.dataset_name,
+            model=self.model,
+            config=self.config 
+        )
+        self.test_dataset = VSRDataset(
+            split="test",
+            data_path=self.root,
+            dataset_name=self.dataset_name,
+            model=self.model,
+            config=self.config 
+        )
 
-    def collate_fn(self, batch):
-        labels = []
-        all_inputs = []
-
-        for item in batch:
-            caption = item["caption"]
-            negation = item["negated"]
-            img = item["image"]
-
-            # Select correct index
-            correct_idx = 0 if item["label"] == 1 else 1
-            labels.append(correct_idx)
-
-            # Preprocess image to CLIP size
-            if self.transform is not None:
-                img = self.transform(img)
-                img = img.convert("RGB")
-
-            # Process inputs depending on model
-            if self.model == "pecore":
-                image_tensor = self.processor(img).unsqueeze(0)
-                text_tensor = self.tokenizer([caption, negation])
-                inputs = {"image": image_tensor, "captions": text_tensor}
-
-            elif self.model in ["siglip", "siglip2", "clip"]:
-                inputs = self.processor(
-                    text=[caption, negation],
-                    images=img,
-                    return_tensors="pt",
-                    **self.params
-                )
-            else:
-                raise NotImplementedError
-
-            all_inputs.append(inputs)
-
-        labels = torch.tensor(labels, dtype=torch.long)
-
-        return {
-            "input": all_inputs,
-            "label": labels
-        }
-    
     def train_dataloader(self):
         return DataLoader(
             self.train_dataset,
@@ -340,21 +205,70 @@ class VSRDataModule(pl.LightningDataModule):
             shuffle=True,
             num_workers=self.num_workers,
         )
-
+    
     def val_dataloader(self):
         return DataLoader(
             self.val_dataset,
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
-            collate_fn=self.collate_fn
+            collate_fn=self.collate_fn_eval
         )
-
+    
     def test_dataloader(self):
         return DataLoader(
             self.test_dataset,
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
-            collate_fn=self.collate_fn
+            collate_fn=self.collate_fn_eval
         )
+    
+
+# self.transform = config["transform"]
+# self.tokenizer = config["tokenizer"]
+# self.processor = config["processor"]
+# self.params = config.get("params", {})
+
+# def collate_fn(self, batch):
+    #     labels = []
+    #     all_inputs = []
+
+    #     for item in batch:
+    #         caption = item["caption"]
+    #         negation = item["negated"]
+    #         img = item["image"]
+
+    #         # Select correct index
+    #         correct_idx = 0 if item["label"] == 1 else 1
+    #         labels.append(correct_idx)
+
+    #         # Preprocess image to CLIP size
+    #         if self.transform is not None:
+    #             img = self.transform(img)
+    #             img = img.convert("RGB")
+
+    #         # Process inputs depending on model
+    #         if self.model == "pecore":
+    #             image_tensor = self.processor(img).unsqueeze(0)
+    #             text_tensor = self.tokenizer([caption, negation])
+    #             inputs = {"image": image_tensor, "captions": text_tensor}
+
+    #         elif self.model in ["siglip", "siglip2", "clip"]:
+    #             inputs = self.processor(
+    #                 text=[caption, negation],
+    #                 images=img,
+    #                 return_tensors="pt",
+    #                 **self.params
+    #             )
+    #         else:
+    #             raise NotImplementedError
+
+    #         all_inputs.append(inputs)
+
+    #     labels = torch.tensor(labels, dtype=torch.long)
+
+    #     return {
+    #         "input": all_inputs,
+    #         "label": labels
+    #     }

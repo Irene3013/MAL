@@ -10,6 +10,7 @@ import torch.serialization
 import sys
 
 
+
 ## Parse arguments
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -113,20 +114,21 @@ def main_program():
     print("Loading model...")
 
     if args.model in ["clip", "siglip", "siglip2", "pecore"]:
-        if args.ckpt is None:
-            model = DualEncoder(args)
-        else:
-            model = DualEncoder.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
-        model.float()
-
+        ModelClass = DualEncoder
     elif args.model in ["qwen2"]:
-        if args.ckpt is None:
-            model = Qwen2_VL(args)
-        else:
-            model = Qwen2_VL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
-
+        ModelClass = Qwen2_VL
     else: 
+        print(f"Model {args.model} not implemented.")
         sys.exit()
+
+    if args.ckpt is None:
+        model = ModelClass(args)
+    else:
+        model = ModelClass.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
+
+    # Modelos como Qwen2-VL pueden no necesitar float()
+    if args.model in ["clip", "siglip", "siglip2", "pecore"]:
+         model.float() 
 
     print("Model loaded!")
 
@@ -135,18 +137,13 @@ def main_program():
 
     if args.dataset == "vsr":
         datamodule = VSRDataModule(args, config=model.config)
-       
     elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
         datamodule = WhatsUpDataModule(args, config=model.config)
-
-        # ZeroShot en WhatsUp
-        args.train = False
-        args.evaluate = True
     else:
-        raise NotImplementedError
-    
+        print(f"Dataset {args.dataset} not implemented.")
+        sys.exit()
     # Setup datamodule
-    datamodule.setup()   
+    #datamodule.setup()   
        
     print("Data loaded!")
 
