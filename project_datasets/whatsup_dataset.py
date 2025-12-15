@@ -160,6 +160,7 @@ class WhatsUpDataModule(pl.LightningDataModule):
         self.image_path = args.image_path
         self.dataset = args.dataset
         self.score = args.score
+        self.model = args.model
 
         # Model config
         self.transform = config["transform"]

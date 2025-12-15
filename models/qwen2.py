@@ -1,4 +1,4 @@
-#models/dual_encoder.py
+#models/vqascore.py
 import torch
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
@@ -6,12 +6,12 @@ from project_datasets.whatsup_dataset import WhatsUpDataset
 from torchvision import transforms
 from torchvision.transforms import Resize, CenterCrop
 import transformers
-from transformers import CLIPProcessor, CLIPModel
-from transformers import AutoProcessor, AutoModel
+from transformers import Qwen2VLForConditionalGeneration, AutoTokenizer, AutoProcessor
+from qwen_vl_utils import process_vision_info
 # import core.vision_encoder.pe as pe
 # import core.vision_encoder.transforms as coreTransforms
 
-class DualEncoder(pl.LightningModule):
+class Qwen2_VL(pl.LightningModule):
     """
     Wrapper Lightning Module for CLIP model fine-tuning or zero-shot evaluation.
     """
@@ -38,52 +38,21 @@ class DualEncoder(pl.LightningModule):
             CenterCrop(224),
         ])
 
-        # --- Load Model ---
-        if args.model == "clip":
-            # https://huggingface.co/openai/clip-vit-base-patch32
-            self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-            self.config = {
-                "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
-                "transform": None,
-                "tokenizer": None,
-                "params": {"padding": "max_length", "max_length": 64}
+        # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
+        self.model = Qwen2VLForConditionalGeneration.from_pretrained(
+            "Qwen/Qwen2-VL-7B-Instruct",
+            torch_dtype=torch.bfloat16,
+            attn_implementation="flash_attention_2",
+            device_map="auto",
+        )
 
-                #"params": {"padding": True, "truncation": True}
-            }
-
-        elif args.model == "siglip":
-            # https://huggingface.co/google/siglip-base-patch16-224
-            self.model = AutoModel.from_pretrained("google/siglip-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
-            self.config = {
-                "processor": AutoProcessor.from_pretrained("google/siglip-base-patch16-224"),
-                "transform": self.preprocess, # crop images for comparable results
-                "tokenizer": None,
-                "params": {"padding": "max_length", "max_length": 64}
-            }
-
-        elif args.model == "siglip2":
-            # https://huggingface.co/google/siglip2-base-patch32-256
-            self.model = AutoModel.from_pretrained("google/siglip2-base-patch16-224", dtype=torch.float16, device_map="auto", attn_implementation="sdpa")
-            self.config = {
-                "processor": AutoProcessor.from_pretrained("google/siglip2-base-patch16-224"),
-                "transform": self.preprocess, # crop images for comparable results
-                "tokenizer": None,
-                "params": {"padding": "max_length", "max_length": 64}
-            }
-
-        # elif args.model == "pecore":
-            # https://huggingface.co/facebook/PE-Core-B16-224
-            # self.model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
-            # self.model.to(self.device)
-            # self.config = {
-            #     "processor": coreTransforms.get_image_transform(self.model.image_size),
-            #     "transform": self.preprocess, # crop images for comparable results
-            #     "tokenizer": coreTransforms.get_text_tokenizer(self.model.context_length),
-            #     "params": None
-            # }
-
-        else:
-            raise NotImplementedError
+        self.model.to(self.device)
+        self.config = {
+            "processor": AutoProcessor.from_pretrained("Qwen/Qwen2-VL-7B-Instruct"),
+            "transform": None, #self.preprocess, # crop images for comparable results
+            "tokenizer": None,
+            "params": None
+        }
         
         self.model_name = args.model
 
@@ -125,32 +94,44 @@ class DualEncoder(pl.LightningModule):
 
 
     def eval_step(self, batch, split):
-        labels = batch["label"].to(self.device)
-        inputs_list = batch["input"]
+        labels = batch["label"]
+        inputs = batch["input"].to(self.device)
 
-        # Forward pass each input
-        logits_list = []
-        for inputs in inputs_list:
+        # Inference: Generation of the output
+        generated_ids = self.model.generate(**inputs, max_new_tokens=128)
+        generated_ids_trimmed = [
+            out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
+        ]
+        output_text = self.config["processor"].batch_decode(
+            generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
+        )
+        
+        print(output_text)
+        print(labels)
 
-            if self.model_name == "pecore":
-                image = inputs['image'].to(self.device)
-                captions = inputs['captions'].to(self.device)
-                image_features, text_features, logit_scale = self.model(image, captions)
-                I2T_logits = logit_scale * image_features @ text_features.T
+        # # Forward pass each input
+        # logits_list = []
+        # for inputs in inputs_list:
 
-            else:
-                inputs = inputs.to(self.device)
-                outputs = self.model(**inputs)
-                I2T_logits = outputs.logits_per_image
+        #     if self.model_name == "pecore":
+        #         image = inputs['image'].to(self.device)
+        #         captions = inputs['captions'].to(self.device)
+        #         image_features, text_features, logit_scale = self.model(image, captions)
+        #         I2T_logits = logit_scale * image_features @ text_features.T
 
-            logits_list.append(I2T_logits)
+        #     else:
+        #         inputs = inputs.to(self.device)
+        #         outputs = self.model(**inputs)
+        #         I2T_logits = outputs.logits_per_image
 
-        logits = torch.cat(logits_list, dim=0)
-        acc = self.compute_accuracy(logits, labels, self.score)
+        #     logits_list.append(I2T_logits)
+
+        # logits = torch.cat(logits_list, dim=0)
+        # acc = self.compute_accuracy(logits, labels, self.score)
 
         # Logging
-        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-        return acc
+        #self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        return 0 #acc
 
 
     # -----------------------------

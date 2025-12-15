@@ -11,6 +11,7 @@ import pytorch_lightning as pl
 from PIL import Image
 import random
 import torch
+from qwen_vl_utils import process_vision_info
 
 
 negate = {
@@ -111,7 +112,7 @@ class VSRDataset(Dataset):
     """
     Visual Spatial Relations (VSR) Dataset
     """
-    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", config=None):
+    def __init__(self, dataset_name="zeroshot", split="train", data_path="data", model=None, config=None):
 
         # Validations
         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
@@ -122,6 +123,7 @@ class VSRDataset(Dataset):
         # Data / Images path
         self.dataset_name = dataset_name # [zeroshot, random]
         self.split = split
+        self.model = model
 
         self.image_path = Path(self.base_path) / "images"
         self.data_path = Path(self.base_path) / self.dataset_name  / f"{split}.jsonl"
@@ -143,12 +145,34 @@ class VSRDataset(Dataset):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path)
     
+    def _create_message(self, imagepath):
+        if self.model == "qwen2":
+            return [ 
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": f"file:///{imagepath}"},
+                        {"type": "text", "text": "Describe this image."},
+                    ],
+                }
+            ]
+        else: raise NotImplementedError
+
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
 
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]:
+            self._dual_encoder_item(item)
+
+        elif self.model in ["qwen2"]:
+            self._qwen_item(item)
+        else:
+            raise NotImplementedError
+    
+    def _dual_encoder_item(self, item):
         if(self.split != "train"):
             return {
                 "caption": item["caption"],
@@ -162,7 +186,6 @@ class VSRDataset(Dataset):
             text = item["caption"] + ' (True)'
         else:
             text = item["caption"] + ' (False)'
-
 
         # Apply image preprocessing if specified
         if self.transform is not None:
@@ -190,6 +213,31 @@ class VSRDataset(Dataset):
             "image": inputs['pixel_values'].squeeze(0),
             "text": inputs['input_ids'],
         }
+    
+    def _qwen_item(self, item):
+        img_path = self.image_path / item["image"]
+        img = self._load_image(item["image"])
+        caption = item["caption"]
+        messages = self._create_message(imagepath=img_path)
+
+        # Process imputs
+        text = self.processor.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+
+        image_inputs, video_inputs = process_vision_info(messages)
+        inputs = self.processor(
+            text=[text],
+            images=image_inputs,
+            videos=video_inputs,
+            padding=True,
+            return_tensors="pt",
+        )
+        return {
+            "input": inputs,
+            "label": caption #?
+        }
+
 
     @staticmethod
     def compute_accuracy(logits, labels, score):
@@ -220,15 +268,6 @@ class VSRDataModule(pl.LightningDataModule):
         self.processor = config["processor"]
         self.params = config.get("params", {})
 
-        # if args.model == "clip":
-        #     self.collate_fn = self.clip_collate
-
-        # if args.model in ["siglip", "siglip2"]:
-        #     self.collate_fn = self.siglip_collate
-        
-        # if args.model == "pecore":
-        #     self.collate_fn = self.pecore_collate
-
     def setup(self, stage=None):
       self.train_dataset = VSRDataset(
           split="train",
@@ -248,6 +287,8 @@ class VSRDataModule(pl.LightningDataModule):
           dataset_name=self.dataset_name,
           config=self.config 
       )
+
+   
 
     def collate_fn(self, batch):
         labels = []
@@ -280,7 +321,6 @@ class VSRDataModule(pl.LightningDataModule):
                     return_tensors="pt",
                     **self.params
                 )
-
             else:
                 raise NotImplementedError
 
@@ -292,98 +332,6 @@ class VSRDataModule(pl.LightningDataModule):
             "input": all_inputs,
             "label": labels
         }
-
-
-    # def pecore_collate(self, batch):
-    #     labels = []          
-    #     all_inputs = []
-
-    #     for item in batch:
-    #         caption = item["caption"]         
-    #         negation = item["negated"]  
-    #         img = item["image"]
-
-    #         # Choose correct index
-    #         correct_idx = 0 if item["label"] == 1 else 1
-    #         labels.append(correct_idx)
-
-    #         # 1. CROP image (like CLIP)
-    #         img_crop = self.transform(img)
-    #         img_crop = img_crop.convert("RGB")
-
-    #         # 2. Process inputs
-    #         image = self.processor(img_crop)#.unsqueeze(0)
-    #         text = self.tokenizer([caption, negation])
-    #         inputs = {'pixel_values': image, 'input_ids': text}
-    #         all_inputs.append(inputs)
-        
-    #     labels = torch.tensor(labels, dtype=torch.long)
-    #     return {
-    #         "input": all_inputs,
-    #         "label": labels,
-    #     }
-
-
-    # def siglip_collate(self, batch):
-    #     labels = []          
-    #     all_inputs = []
-
-    #     for item in batch:
-    #         caption = item["caption"]         
-    #         negation = item["negated"]  
-    #         img = item["image"]
-
-    #         # Choose correct index
-    #         correct_idx = 0 if item["label"] == 1 else 1
-    #         labels.append(correct_idx)
-
-    #         # 1. CROP image (like CLIP)
-    #         img_crop = self.transform(img)
-    #         img_crop = img_crop.convert("RGB")
-
-    #         # 2. Process inputs
-    #         inputs = self.processor(
-    #             text=[caption, negation],
-    #             images=img_crop,
-    #             return_tensors="pt",
-    #             **self.params
-    #         )
-    #         all_inputs.append(inputs)
-
-    #     labels = torch.tensor(labels, dtype=torch.long)
-    #     return {
-    #         "input": all_inputs,
-    #         "label": labels,
-    #     }
-
-    # def clip_collate(self, batch):
-    #     labels = []          
-    #     all_inputs = []
-
-    #     for item in batch:
-    #         caption = item["caption"]         
-    #         negation = item["negated"]  
-    #         img = item["image"]
-
-    #         # Choose correct index
-    #         correct_idx = 0 if item["label"] == 1 else 1
-    #         labels.append(correct_idx)
-
-    #         # Process inputs
-    #         inputs = self.processor(
-    #             text=[caption, negation],
-    #             images=img,
-    #             return_tensors="pt",
-    #             **self.params
-    #         )
-    #         all_inputs.append(inputs)
-
-    #     labels = torch.tensor(labels, dtype=torch.long)
-    #     return {
-    #         "input": all_inputs,
-    #         "label": labels,
-    #     }
-    
     
     def train_dataloader(self):
         return DataLoader(

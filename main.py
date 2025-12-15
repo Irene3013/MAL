@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.dual_encoder import DualEncoder
+from models.qwen2 import Qwen2_VL
 from project_datasets.vsr_dataset import VSRDataModule
 from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
@@ -44,7 +45,7 @@ def parse_args():
 
     # Model args
     parser.add_argument(
-        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore"],
+        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore", "qwen2"],
         help = "Model type to be fine-tuned."
     )
     parser.add_argument(
@@ -115,8 +116,15 @@ def main_program():
         if args.ckpt is None:
             model = DualEncoder(args)
         else:
-            model = DualEncoder.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) #antes era false
+            model = DualEncoder.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
         model.float()
+
+    elif args.model in ["qwen2"]:
+        if args.ckpt is None:
+            model = Qwen2_VL(args)
+        else:
+            model = Qwen2_VL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
+
     else: 
         sys.exit()
 
