@@ -63,9 +63,9 @@ def load_vision_model_components(model_name: str, device: str):
 
 # GENERATION MESSAGES ----------------------------------------------------------------------------------
 
-def create_qwen_message(imagepath, options):
+def create_MC_qwen_message(imagepath, options):
     """
-    Create generation message for Qwen2-VL model.
+    Create multipple choice generation message for Qwen2-VL model.
     """
     n = len(options)
     letters = string.ascii_uppercase[:n]
@@ -92,18 +92,30 @@ def create_qwen_message(imagepath, options):
         }
     ]
 
-    # return [{
-    #             "role": "user",
-    #             "content": [
-    #                 {"type": "image", "image": f"file:///{imagepath}"},
-    #                 {"type": "text", 
-    #                 "text": (
-    #                         "Which caption best describes the image?\n"
-    #                         "A. " + options[0] + "\n"
-    #                         "B. " + options[1] + "\n"
-    #                         "Answer with the letter only (A or B)."
-    #                     )
-    #                 },
-    #             ],
-    #         }
-    #     ]
+def create_qwen_message(imagepath, options):
+    """
+    Create generation message for Qwen2-VL model.
+    """
+    n = len(options)
+
+    messages = []
+    for caption in options:
+        text = (
+            "Caption:\n"
+            f"\"{caption}\"\n\n"
+            "Question:\n"
+            "Does the caption accurately describe the image?\n\n"
+            "Answer with one word only: True or False."
+        )
+
+        messages.append([
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image", "image": f"file:///{imagepath}"},
+                    {"type": "text", "text": text},
+                ],
+            }
+        ])
+
+    return messages

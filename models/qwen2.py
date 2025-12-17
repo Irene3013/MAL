@@ -29,10 +29,10 @@ class Qwen2_VL(pl.LightningModule):
         self.score = args.score
 
         print(f"args.gpus: {args.gpus}")
-        self.device_name = "cpu" if args.gpus == 0 else "cuda"
+        self.device = "cpu" if args.gpus == 0 else "cuda"
 
         # --- Load Model ---
-        self.model, self.config = load_vision_model_components(args.model, self.device_name)
+        self.model, self.config = load_vision_model_components(args.model, self.device)
         self.model_name = args.model
 
         # --- Accuracy depending on dataset ---
@@ -57,29 +57,39 @@ class Qwen2_VL(pl.LightningModule):
         return 0
 
     def eval_step(self, batch, split):
-        
+        inputs = batch["input"]   
         labels = batch["label"]
-        inputs = batch["input"]
+        labels = labels.to(self.device)
 
-        # Asegúrate de que todos los tensores están en el dispositivo correcto
-        # Los `inputs` de Qwen2 son un diccionario de tensores.
-        for key in inputs:
-            if isinstance(inputs[key], torch.Tensor):
-                 inputs[key] = inputs[key].to(self.device) # Asumiendo self.device existe
-            
         # Inference: Generation of the output
-        generated_ids = self.model.generate(**inputs, max_new_tokens=128)
-        generated_ids_trimmed = [
-            out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
-        ]
-        output_text = self.config["processor"].batch_decode(
-            generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
-        )
-        
+        if self.score == "mc":
+            inputs = inputs.to(self.device)
+
+            generated_ids = self.model.generate(**inputs, max_new_tokens=128)
+            generated_ids_trimmed = [
+                out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
+            ]
+            output_text = self.config["processor"].batch_decode(
+                generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
+            )
+            print(output_text)
+            print(labels)
+
+        else:
+            for input in inputs:
+                input = input.to(self.device)
+                generated_ids = self.model.generate(**input, max_new_tokens=128)
+                generated_ids_trimmed = [
+                    out_ids[len(in_ids) :] for in_ids, out_ids in zip(input.input_ids, generated_ids)
+                ]
+                output_text = self.config["processor"].batch_decode(
+                    generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
+                )
+                print(output_text)
+
         # TODO: Implementar el cálculo de la precisión (acc) comparando output_text con labels
         
-        print(output_text)
-        print(labels)
+        
         return 0 # Devolver la métrica de precisión
 
 
@@ -106,23 +116,3 @@ class Qwen2_VL(pl.LightningModule):
             }
             return [optimizer], [scheduler]
         
-# # CLIP image processor
-# self.preprocess = transforms.Compose([
-#     Resize(size=224, interpolation=transforms.InterpolationMode.BICUBIC, antialias=True),
-#     CenterCrop(224),
-# ])
-
-# # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
-# self.model = Qwen2VLForConditionalGeneration.from_pretrained(
-#   "Qwen/Qwen2-VL-7B-Instruct", torch_dtype="auto"
-# )
-
-# self.model.to(self.device)
-# self.config = {
-#     "processor": AutoProcessor.from_pretrained("Qwen/Qwen2-VL-7B-Instruct"),
-#     "transform": None, #self.preprocess, # crop images for comparable results
-#     "tokenizer": None,
-#     "params": None
-# }
-
-# self.model_name = args.model

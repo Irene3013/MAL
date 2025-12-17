@@ -2,11 +2,11 @@
 from pathlib import Path
 import json
 import os
+import torch
 from torch.utils.data import Dataset, DataLoader
 from utils.data_helpers import whastup_dual_encoder_collate
 import pytorch_lightning as pl
 from PIL import Image
-import torch
 
 
 # -----------------------------
@@ -215,141 +215,3 @@ class WhatsUpDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             collate_fn=self.collate_fn_eval
         )
-    
-
-    # def train_dataloader(self):
-    #     return DataLoader(
-    #         self.dataset,
-    #         batch_size=self.batch_size,
-    #         shuffle=True,
-    #         num_workers=self.num_workers,
-    #         collate_fn=self.collate_fn_eval
-    #     )
-
-    # def val_dataloader(self):
-    #     return DataLoader(
-    #         self.dataset,
-    #         batch_size=self.batch_size,
-    #         shuffle=False,
-    #         num_workers=self.num_workers,
-    #         collate_fn=self.collate_fn_eval
-    #     )
-
-    # Model config
-    # self.transform = config["transform"]
-    # self.tokenizer = config["tokenizer"]
-    # self.processor = config["processor"]
-    # self.params = config.get("params", {})
-
-    # Prepare data depending on model
-    # if args.model == "clip":
-    #     self.collate_fn = self.clip_collate
-
-    # if args.model in ["siglip", "siglip2"]:
-    #     self.collate_fn = self.siglip_collate
-    
-    # def collate_fn(self, batch):
-    #     labels = []
-    #     all_inputs = []
-
-    #     for item in batch:
-    #         options = item["caption_options"]         
-    #         correct_caption = item["correct_option"]  
-    #         img = item["image"]
-
-    #         # Select correct index
-    #         correct_idx = options.index(correct_caption)
-    #         labels.append(correct_idx)
-
-    #         # Preprocess image to CLIP size
-    #         if self.transform is not None:
-    #             img = self.transform(img)
-    #             img = img.convert("RGB")
-
-    #         # Process inputs depending on model
-    #         if self.model == "pecore":
-    #             image_tensor = self.processor(img).unsqueeze(0)
-    #             text_tensor = self.tokenizer(options)
-    #             inputs = {"image": image_tensor, "captions": text_tensor}
-
-    #         elif self.model in ["siglip", "siglip2", "clip"]:
-    #             inputs = self.processor(
-    #                 text=options,
-    #                 images=img,
-    #                 return_tensors="pt",
-    #                 **self.params
-    #             )
-
-    #         else:
-    #             raise NotImplementedError
-
-    #         all_inputs.append(inputs)
-
-    #     labels = torch.tensor(labels, dtype=torch.long)
-
-    #     return {
-    #         "input": all_inputs,
-    #         "label": labels
-    #     }
-
-    
-    # def clip_collate(self, batch):
-    #     labels = []          
-    #     all_inputs = []
-
-    #     for item in batch:
-    #         options = item["caption_options"]         
-    #         correct_caption = item["correct_option"]  
-    #         img = item["image"]
-
-    #         # Choose correct index
-    #         correct_idx = options.index(correct_caption)
-    #         labels.append(correct_idx)
-
-    #         # Procesamos todo el texto junto
-    #         inputs = self.processor(
-    #             text=options,
-    #             images=img,
-    #             return_tensors="pt",
-    #             **self.params
-    #         )
-    #         all_inputs.append(inputs)
-
-    #     labels = torch.tensor(labels, dtype=torch.long)
-
-    #     return {
-    #         "input": all_inputs,
-    #         "label": labels,
-    #     }
-    
-    # def siglip_collate(self, batch):
-    #     labels = []          
-    #     all_inputs = []
-
-    #     for item in batch:
-    #         options = item["caption_options"]         
-    #         correct_caption = item["correct_option"]  
-    #         img = item["image"]
-
-    #         # Choose correct index
-    #         correct_idx = options.index(correct_caption)
-    #         labels.append(correct_idx)
-
-    #         # 1. CROP image (like CLIP)
-    #         img_crop = self.transform(img)
-    #         img_crop = img_crop.convert("RGB")
-
-    #         # 2. Process inputs
-    #         inputs = self.processor(
-    #             text=options,
-    #             images=img_crop,
-    #             return_tensors="pt",
-    #             **self.params
-    #         )
-    #         all_inputs.append(inputs)
-
-    #     labels = torch.tensor(labels, dtype=torch.long)
-    #     return {
-    #         "input": all_inputs,
-    #         "label": labels,
-    #     }
