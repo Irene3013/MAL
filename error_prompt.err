@@ -1,50 +1,10 @@
 /gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
   warnings.warn(
-Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:00<00:00, 53.40it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
 GPU available: True (cuda), used: True
 TPU available: False, using: 0 TPU cores
-/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /gaueko0/users/ietxarri010/out exists and is not empty.
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-
-  | Name    | Type             | Params | Mode 
------------------------------------------------------
-0 | loss_fn | CrossEntropyLoss | 0      | train
-1 | model   | SiglipModel      | 203 M  | train
------------------------------------------------------
-203 M     Trainable params
-0         Non-trainable params
-203 M     Total params
-812.624   Total estimated model params size (MB)
-313       Modules in train mode
-0         Modules in eval mode
-SLURM auto-requeueing enabled. Setting signal handlers.
-`Trainer.fit` stopped: `max_steps=20000` reached.
-Restoring states from the checkpoint path at /gaueko0/users/ietxarri010/out/vsr_zs_clip_finetuning-epoch=01-val_accuracy=0.61.ckpt
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-Loaded model weights from the checkpoint at /gaueko0/users/ietxarri010/out/vsr_zs_clip_finetuning-epoch=01-val_accuracy=0.61.ckpt
-SLURM auto-requeueing enabled. Setting signal handlers.
-/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
-GPU available: True (cuda), used: True
-TPU available: False, using: 0 TPU cores
-/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /gaueko0/users/ietxarri010/out exists and is not empty.
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-
-  | Name    | Type             | Params | Mode 
------------------------------------------------------
-0 | loss_fn | CrossEntropyLoss | 0      | train
-1 | model   | SiglipModel      | 203 M  | train
------------------------------------------------------
-203 M     Trainable params
-0         Non-trainable params
-203 M     Total params
-812.624   Total estimated model params size (MB)
-313       Modules in train mode
-0         Modules in eval mode
-SLURM auto-requeueing enabled. Setting signal handlers.
-`Trainer.fit` stopped: `max_steps=20000` reached.
-Restoring states from the checkpoint path at /gaueko0/users/ietxarri010/out/vsr_rd_clip_finetuning-epoch=07-val_accuracy=0.67.ckpt
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-Loaded model weights from the checkpoint at /gaueko0/users/ietxarri010/out/vsr_rd_clip_finetuning-epoch=07-val_accuracy=0.67.ckpt
+You are using a CUDA device ('NVIDIA A30') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1]
 SLURM auto-requeueing enabled. Setting signal handlers.
