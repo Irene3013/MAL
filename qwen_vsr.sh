@@ -15,6 +15,6 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
 srun python main.py --model "qwen2" \
-   --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
    --run_name vsr_qwen_generation --evaluate --dataset vsr \
    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant zeroshot
