@@ -6,7 +6,7 @@ from transformers import CLIPModel, CLIPProcessor, AutoModel, AutoProcessor, Qwe
 #import core.vision_encoder.pe as pe
 #import core.vision_encoder.transforms as coreTransforms
 
-def load_vision_model_components(model_name: str, device: str):
+def load_vision_model_components(model_name: str):
     """
     Load: model, el processor/tokenizer and specified model configuration.
     return (model, config).
@@ -27,7 +27,7 @@ def load_vision_model_components(model_name: str, device: str):
         # https://huggingface.co/google/siglip-base-patch16-224
         # https://huggingface.co/google/siglip2-base-patch32-256
         model_id = "google/siglip-base-patch16-224" if model_name == "siglip" else "google/siglip2-base-patch16-224"
-        model = AutoModel.from_pretrained(model_id, torch_dtype=torch.float16, device_map=device, attn_implementation="sdpa")
+        model = AutoModel.from_pretrained(model_id, torch_dtype=torch.float16, attn_implementation="sdpa")
         config_output = {
             "processor": AutoProcessor.from_pretrained(model_id),
             "transform": PREPROCESS_TRANSFORM,

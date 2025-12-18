@@ -26,11 +26,11 @@ class DualEncoder(pl.LightningModule):
         self.score = args.score
 
         print(f"args.gpus: {args.gpus}")
-        self.device = "cpu" if args.gpus == 0 else "cuda"
+        #self.device = "cpu" if args.gpus == 0 else "cuda"
 
         # --- Load Model ---
         self.model_name = args.model
-        self.model, self.config = load_vision_model_components(self.model_name, self.device)
+        self.model, self.config = load_vision_model_components(self.model_name)
 
         # --- Accuracy depending on dataset ---
         if args.dataset == "whatsup":
