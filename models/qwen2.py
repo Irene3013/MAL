@@ -57,8 +57,8 @@ class Qwen2_VL(pl.LightningModule):
         return 0
 
     def eval_step(self, batch, split):
-        inputs = batch["input"][0]
-        labels = batch["label"][0]
+        inputs = batch["input"]
+        labels = batch["label"]
 
         # Mover inputs al device
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
