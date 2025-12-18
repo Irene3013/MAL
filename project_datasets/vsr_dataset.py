@@ -196,12 +196,13 @@ class VSRDataModule(pl.LightningDataModule):
                 batch, self.config, self.model # Pasar args y model_name
             )
         else: #qwen
-            def qwen_collate_fn(batch):
-                return {
-                    "input": [item["input"] for item in batch],
-                    "label": [item["label"] for item in batch],
-                }
-            self.collate_fn_eval = qwen_collate_fn
+            # def qwen_collate_fn(batch):
+            #     return {
+            #         "input": [item["input"] for item in batch],
+            #         "label": [item["label"] for item in batch],
+            #     }
+            # self.collate_fn_eval = qwen_collate_fn
+            self.collate_fn_eval = None
 
         # Setup train/val/test datasets
         self.train_dataset = VSRDataset(

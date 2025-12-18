@@ -62,7 +62,7 @@ class Qwen2_VL(pl.LightningModule):
 
         # Mover inputs al device
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
-
+        print(inputs)
         # Convertir label a tensor
         # label_map = {"A": 0, "B": 1}
         # label = torch.tensor(label_map[label], device=self.device)
