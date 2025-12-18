@@ -26,7 +26,7 @@ class Qwen2_VL(pl.LightningModule):
         self.scheduler_off = args.scheduler_off
         self.batch_size = args.batch_size
         self.cross_entropy = torch.nn.CrossEntropyLoss()
-        self.score = args.score
+        self.score = "mc"#args.score
 
         print(f"args.gpus: {args.gpus}")
         self.device = "cpu" if args.gpus == 0 else "cuda"

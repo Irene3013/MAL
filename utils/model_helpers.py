@@ -69,14 +69,11 @@ def create_MC_qwen_message(imagepath, options):
     """
     n = len(options)
     letters = string.ascii_uppercase[:n]
-
     formatted_options = [
         f"{letters[i]}. {options[i]}" for i in range(n)
     ]
-
     options_text_block = "\n".join(formatted_options)
     instruction_suffix = " or ".join(letters)
-
     full_text_content = (
         "Which caption best describes the image?\n\n"
         f"{options_text_block}\n\n"
@@ -96,8 +93,6 @@ def create_qwen_message(imagepath, options):
     """
     Create generation message for Qwen2-VL model.
     """
-    n = len(options)
-
     messages = []
     for caption in options:
         text = (
@@ -107,7 +102,6 @@ def create_qwen_message(imagepath, options):
             "Does the caption accurately describe the image?\n\n"
             "Answer with one word only: True or False."
         )
-
         messages.append([
             {
                 "role": "user",
@@ -117,5 +111,4 @@ def create_qwen_message(imagepath, options):
                 ],
             }
         ])
-
     return messages
