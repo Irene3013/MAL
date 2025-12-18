@@ -29,10 +29,10 @@ class Qwen2_VL(pl.LightningModule):
         self.score = "mc"#args.score
 
         print(f"args.gpus: {args.gpus}")
-        self.device = "cpu" if args.gpus == 0 else "cuda"
+        #self.device = "cpu" if args.gpus == 0 else "cuda"
 
         # --- Load Model ---
-        self.model, self.config = load_vision_model_components(args.model, self.device)
+        self.model, self.config = load_vision_model_components(args.model)
         self.model_name = args.model
 
         # --- Accuracy depending on dataset ---
