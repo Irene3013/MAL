@@ -48,7 +48,7 @@ def load_vision_model_components(model_name: str):
     elif model_name == "qwen2":
         # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
         model_id = "Qwen/Qwen2-VL-7B-Instruct"
-        model = Qwen2VLForConditionalGeneration.from_pretrained(model, torch_dtype="auto")
+        model = Qwen2VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
         config_output = {
             "processor": AutoProcessor.from_pretrained("Qwen/Qwen2-VL-7B-Instruct"),
             "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
