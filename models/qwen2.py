@@ -62,6 +62,7 @@ class Qwen2_VL(pl.LightningModule):
 
         # Mover inputs al device
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        inputs = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in inputs.items()}
         print(inputs)
         # Convertir label a tensor
         # label_map = {"A": 0, "B": 1}
