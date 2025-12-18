@@ -195,8 +195,13 @@ class VSRDataModule(pl.LightningDataModule):
             self.collate_fn_eval = lambda batch: vsr_dual_encoder_collate(
                 batch, self.config, self.model # Pasar args y model_name
             )
-        else: 
-            self.collate_fn_eval = None
+        else: #qwen
+            def qwen_collate_fn(batch):
+                return {
+                    "input": [item["input"] for item in batch],
+                    "label": [item["label"] for item in batch],
+                }
+            self.collate_fn_eval = qwen_collate_fn
 
         # Setup train/val/test datasets
         self.train_dataset = VSRDataset(
