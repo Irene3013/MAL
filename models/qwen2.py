@@ -63,15 +63,7 @@ class Qwen2_VL(pl.LightningModule):
         # Mover inputs al device
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         inputs = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in inputs.items()}
-        # Convertir label a tensor
-        # label_map = {"A": 0, "B": 1}
-        # label = torch.tensor(label_map[label], device=self.device)
-
-        #inputs = batch["input"]   
-        #labels = batch["label"]
-        # labels = labels.to(self.device)
-        # inputs = inputs.to(self.device)
-
+        
         # Inference: Generation of the output
         # if self.score == "mc":
         #inputs = inputs.to(self.device)
@@ -85,6 +77,7 @@ class Qwen2_VL(pl.LightningModule):
         )
         print(output_text)
         print(labels)
+        acc = output_text == labels
 
         # else:
         #     for input in inputs:
@@ -98,10 +91,8 @@ class Qwen2_VL(pl.LightningModule):
         #         )
         #         print(output_text)
 
-        # TODO: Implementar el cálculo de la precisión (acc) comparando output_text con labels
-        
-        
-        return 0 # Devolver la métrica de precisión
+        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        return acc # Devolver la métrica de precisión
 
 
     # -----------------------------
