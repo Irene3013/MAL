@@ -63,7 +63,6 @@ class Qwen2_VL(pl.LightningModule):
         # Mover inputs al device
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         inputs = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in inputs.items()}
-        print(inputs)
         # Convertir label a tensor
         # label_map = {"A": 0, "B": 1}
         # label = torch.tensor(label_map[label], device=self.device)
@@ -79,7 +78,7 @@ class Qwen2_VL(pl.LightningModule):
 
         generated_ids = self.model.generate(**inputs, max_new_tokens=128)
         generated_ids_trimmed = [
-            out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
+            out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs['input_ids'], generated_ids)
         ]
         output_text = self.config["processor"].batch_decode(
             generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
