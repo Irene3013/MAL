@@ -75,8 +75,6 @@ class Qwen2_VL(pl.LightningModule):
         output_text = self.config["processor"].batch_decode(
             generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
         )
-        print(output_text)
-        print(labels)
         acc = output_text == labels
 
         # else:
