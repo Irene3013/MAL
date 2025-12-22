@@ -121,7 +121,6 @@ class VSRDataset(Dataset):
         caption = item["caption"]
         negated = invert_relation(caption, item["relation"])
         
-
         # messages = create_MC_qwen_message(img_path, [caption, negated])
         # text = self.processor.apply_chat_template(
         #     messages, tokenize=False, add_generation_prompt=True
