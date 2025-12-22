@@ -76,7 +76,7 @@ class WhatsUpDataset(Dataset):
     
     def _qwen_item(self, item):
         """Prepare item for Qwen2-VL model."""
-        img_path = self.image_path / item["image"]
+        img_path = self.image_path / str(item["image_path"]).split("/")[-1]
         correct = item["caption_options"][0]
         options = item["caption_options"]
         random.shuffle(options)
