@@ -89,8 +89,8 @@ class Qwen2_VL(pl.LightningModule):
             output_text = self.config["processor"].batch_decode(
                 generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
             )
-            output_text = output_text.strip(string.punctuation)
-            outputs.append(output_text[0])
+            output_text = output_text[0].strip(string.punctuation)
+            outputs.append(output_text)
         
         acc = 0
         for pred, gt in zip(output_text, labels):
