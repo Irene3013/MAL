@@ -77,8 +77,8 @@ class Qwen2_VL(pl.LightningModule):
         outputs = []
         for input in inputs:
             # Inputs to device
-            inputs = {k: v.to(self.device) for k, v in inputs.items()}
-            inputs = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in inputs.items()}
+            input = {k: v.to(self.device) for k, v in input.items()}
+            input = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in input.items()}
 
             # Inference: Generation of the output
             generated_ids = self.model.generate(**input, max_new_tokens=128)
