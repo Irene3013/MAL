@@ -1,10 +1,130 @@
 /gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
   warnings.warn(
 `torch_dtype` is deprecated! Use `dtype` instead!
-Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:00<00:00, 53.40it/s]
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:03<00:13,  3.36s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:05<00:07,  2.54s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:07<00:04,  2.26s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:09<00:02,  2.17s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:09<00:00,  1.43s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:09<00:00,  1.88s/it]
 The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
 GPU available: True (cuda), used: True
 TPU available: False, using: 0 TPU cores
 You are using a CUDA device ('NVIDIA A30') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
 LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1]
 SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:03<00:13,  3.36s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:05<00:07,  2.52s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:06<00:03,  1.92s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:07<00:01,  1.36s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:07<00:00,  1.10it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:07<00:00,  1.42s/it]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+You are using a CUDA device ('NVIDIA A30') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1]
+SLURM auto-requeueing enabled. Setting signal handlers.
+Traceback (most recent call last):
+  File "/gaueko0/users/ietxarri010/MAL/main.py", line 206, in <module>
+    main_program()
+  File "/gaueko0/users/ietxarri010/MAL/main.py", line 200, in main_program
+    trainer.test(model=model, dataloaders=datamodule.test_dataloader(), verbose=False)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 774, in test
+    return call._call_and_handle_interrupt(
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 816, in _test_impl
+    results = self._run(model, ckpt_path=ckpt_path)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 1048, in _run_stage
+    return self._evaluation_loop.run()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/utilities.py", line 179, in _decorator
+    return loop_run(self, *args, **kwargs)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/evaluation_loop.py", line 138, in run
+    batch, batch_idx, dataloader_idx = next(data_fetcher)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/fetchers.py", line 134, in __next__
+    batch = super().__next__()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/fetchers.py", line 61, in __next__
+    batch = next(self.iterator)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/utilities/combined_loader.py", line 341, in __next__
+    out = next(self._iterator)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/utilities/combined_loader.py", line 142, in __next__
+    out = next(self.iterators[0])
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 734, in __next__
+    data = self._next_data()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 1516, in _next_data
+    return self._process_data(data, worker_id)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 1551, in _process_data
+    data.reraise()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/_utils.py", line 769, in reraise
+    raise exception
+KeyError: Caught KeyError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/_utils/worker.py", line 349, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 52, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 52, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/gaueko0/users/ietxarri010/MAL/project_datasets/whatsup_dataset.py", line 63, in __getitem__
+    return self._qwen_item(item)
+  File "/gaueko0/users/ietxarri010/MAL/project_datasets/whatsup_dataset.py", line 79, in _qwen_item
+    img_path = self.image_path / item["image"]
+KeyError: 'image'
+
+srun: error: localhost: task 0: Exited with exit code 1
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:00<00:00, 24.66it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:00<00:00, 31.20it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+You are using a CUDA device ('NVIDIA A30') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1]
+SLURM auto-requeueing enabled. Setting signal handlers.
+Traceback (most recent call last):
+  File "/gaueko0/users/ietxarri010/MAL/main.py", line 206, in <module>
+    main_program()
+  File "/gaueko0/users/ietxarri010/MAL/main.py", line 200, in main_program
+    trainer.test(model=model, dataloaders=datamodule.test_dataloader(), verbose=False)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 774, in test
+    return call._call_and_handle_interrupt(
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 816, in _test_impl
+    results = self._run(model, ckpt_path=ckpt_path)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py", line 1048, in _run_stage
+    return self._evaluation_loop.run()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/utilities.py", line 179, in _decorator
+    return loop_run(self, *args, **kwargs)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/evaluation_loop.py", line 138, in run
+    batch, batch_idx, dataloader_idx = next(data_fetcher)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/fetchers.py", line 134, in __next__
+    batch = super().__next__()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/loops/fetchers.py", line 61, in __next__
+    batch = next(self.iterator)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/utilities/combined_loader.py", line 341, in __next__
+    out = next(self._iterator)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/pytorch_lightning/utilities/combined_loader.py", line 142, in __next__
+    out = next(self.iterators[0])
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 734, in __next__
+    data = self._next_data()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 1516, in _next_data
+    return self._process_data(data, worker_id)
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 1551, in _process_data
+    data.reraise()
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/_utils.py", line 769, in reraise
+    raise exception
+KeyError: Caught KeyError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/_utils/worker.py", line 349, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 52, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 52, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/gaueko0/users/ietxarri010/MAL/project_datasets/whatsup_dataset.py", line 63, in __getitem__
+    return self._qwen_item(item)
+  File "/gaueko0/users/ietxarri010/MAL/project_datasets/whatsup_dataset.py", line 79, in _qwen_item
+    img_path = self.image_path / item["image"]
+KeyError: 'image'
+
+srun: error: localhost: task 0: Exited with exit code 1
