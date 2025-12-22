@@ -100,7 +100,7 @@ def create_qwen_message(imagepath, options):
             f"\"{caption}\"\n\n"
             "Question:\n"
             "Does the caption accurately describe the image?\n\n"
-            "Answer with one word only: True or False."
+            "Answer with one word only: True or False"
         )
         messages.append([
             {

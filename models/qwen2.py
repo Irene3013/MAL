@@ -1,5 +1,6 @@
 #models/qwen2.py
 import torch
+import string
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 from project_datasets.whatsup_dataset import WhatsUpDataset
@@ -88,11 +89,13 @@ class Qwen2_VL(pl.LightningModule):
             output_text = self.config["processor"].batch_decode(
                 generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
             )
-            print(output_text)
-            outputs.append(output_text)
+            output_text = output_text.strip(string.punctuation)
+            outputs.append(output_text[0])
         
+        acc = 0
+        for pred, gt in zip(output_text, labels):
+            acc += (pred == gt) / len(inputs)
         print(outputs, labels)
-        acc = outputs == labels
 
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc # Devolver la métrica de precisión
