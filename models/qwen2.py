@@ -90,12 +90,12 @@ class Qwen2_VL(pl.LightningModule):
                 generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
             )
             output_text = output_text[0].strip(string.punctuation)
-            outputs.append([output_text])
+            outputs.append(output_text)
         
         acc = 0
         for pred, gt in zip(output_text, labels):
-            print(pred, gt)
-            acc += (pred == gt) / len(inputs)
+            print(pred, gt[0])
+            acc += (pred == gt[0]) / len(inputs)
         print(outputs, labels)
 
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
