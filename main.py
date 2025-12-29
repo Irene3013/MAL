@@ -3,6 +3,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.dual_encoder import DualEncoder
 from models.qwen2 import Qwen2_VL
+from models.clip_flant5_xl import CLIP_FlanT5_XL
 from project_datasets.vsr_dataset import VSRDataModule
 from project_datasets.whatsup_dataset import WhatsUpDataModule
 import argparse
@@ -46,7 +47,7 @@ def parse_args():
 
     # Model args
     parser.add_argument(
-        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore", "qwen2"],
+        "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore", "qwen2", "clip-flant5"],
         help = "Model type to be fine-tuned."
     )
     parser.add_argument(
@@ -117,6 +118,8 @@ def main_program():
         ModelClass = DualEncoder
     elif args.model in ["qwen2"]:
         ModelClass = Qwen2_VL
+    elif args.model in ["clip-flant5"]:
+        ModelClass = CLIP_FlanT5_XL
     else: 
         print(f"Model {args.model} not implemented.")
         sys.exit()

@@ -67,7 +67,9 @@ class VSRDataset(Dataset):
         
         elif self.model in ["qwen2"]:
             return self._qwen_item(item)
-            
+        
+        elif self.model == "clip-flant5":
+            return self._vqascore_item(item)
         else:
             raise NotImplementedError()
 
@@ -158,6 +160,15 @@ class VSRDataset(Dataset):
         return {
              "input": inputs,
              "label": expected_response 
+        }
+    
+    def _vqascore_item(self, item):
+        img_path = self.image_path / item["image"]
+        caption = item["caption"]
+        negated = invert_relation(caption, item["relation"])
+        return {
+            "input": [img_path, caption, negated],
+            "label": 0 if item["label"] == 1 else 1 
         }
 
     @staticmethod
