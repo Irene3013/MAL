@@ -106,7 +106,7 @@ class Qwen2_VL(pl.LightningModule):
         for pred, gt in zip(outputs, labels):
             if pred != gt[0]: acc=0
         
-        print(f"\n\n options: {options}\ncorrect: {correct}\noutput: {outputs}\n\n")
+        print(f"\n\n options: {options}\ncorrect: {correct}\noutput: {outputs}\nground-truth: {gt}\n\n")
 
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc # Devolver la métrica de precisión
