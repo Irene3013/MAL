@@ -2,10 +2,6 @@
 import torch
 import string
 from utils.constants import PREPROCESS_TRANSFORM
-from transformers import CLIPModel, CLIPProcessor, AutoModel, AutoProcessor, Qwen2VLForConditionalGeneration
-#import t2v_metrics
-#import core.vision_encoder.pe as pe
-#import core.vision_encoder.transforms as coreTransforms
 
 def load_vision_model_components(model_name: str):
     """
@@ -16,6 +12,8 @@ def load_vision_model_components(model_name: str):
     
     if model_name == "clip":
         # https://huggingface.co/openai/clip-vit-base-patch32
+        from transformers import CLIPModel, CLIPProcessor
+
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
         config_output = {
             "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
@@ -27,6 +25,8 @@ def load_vision_model_components(model_name: str):
     elif model_name in ["siglip", "siglip2"]:
         # https://huggingface.co/google/siglip-base-patch16-224
         # https://huggingface.co/google/siglip2-base-patch32-256
+        from transformers import AutoModel, AutoProcessor
+
         model_id = "google/siglip-base-patch16-224" if model_name == "siglip" else "google/siglip2-base-patch16-224"
         model = AutoModel.from_pretrained(model_id, torch_dtype=torch.float16, attn_implementation="sdpa")
         config_output = {
@@ -36,18 +36,23 @@ def load_vision_model_components(model_name: str):
             "params": {"padding": "max_length", "max_length": 64}
         }
     
-    # elif model_name == "pecore":
-    #     # https://huggingface.co/facebook/PE-Core-B16-224
-    #     model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
-    #     config_output = {
-    #         "processor": coreTransforms.get_image_transform(model.image_size),
-    #         "transform": PREPROCESS_TRANSFORM, 
-    #         "tokenizer": coreTransforms.get_text_tokenizer(model.context_length),
-    #         "params": None
-    #   }
+    elif model_name == "pecore":
+        # https://huggingface.co/facebook/PE-Core-B16-224
+        import core.vision_encoder.pe as pe
+        import core.vision_encoder.transforms as coreTransforms
+
+        model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
+        config_output = {
+            "processor": coreTransforms.get_image_transform(model.image_size),
+            "transform": PREPROCESS_TRANSFORM, 
+            "tokenizer": coreTransforms.get_text_tokenizer(model.context_length),
+            "params": None
+      }
     
     elif model_name == "qwen2":
         # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
+        from transformers import Qwen2VLForConditionalGeneration
+
         model_id = "Qwen/Qwen2-VL-7B-Instruct"
         model = Qwen2VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
         config_output = {
@@ -60,14 +65,16 @@ def load_vision_model_components(model_name: str):
     elif model_name == "clip-flant5":
         # https://github.com/linzhiqiu/CLIP-FlanT5
         # https://huggingface.co/zhiqiulin/clip-flant5-xxl
-    #     model = t2v_metrics.VQAScore(model='clip-flant5-xl')
-    #     config_output = {
-    #         "processor": None,
-    #         "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
-    #         "tokenizer": None,
-    #         "params": None
-    #     }
-    # else:
+        import t2v_metrics
+
+        model = t2v_metrics.VQAScore(model='clip-flant5-xl')
+        config_output = {
+            "processor": None,
+            "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
+            "tokenizer": None,
+            "params": None
+        }
+    else:
         raise NotImplementedError(f"Model {model_name} not implemented.")
         
     return model, config_output
