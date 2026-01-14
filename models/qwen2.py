@@ -95,7 +95,9 @@ class Qwen2_VL(pl.LightningModule):
         
         acc = 0
         for pred, gt in zip(outputs, labels):
+            print(f"pred: {pred}\tgt: {gt[0]}")
             acc += (pred == gt[0]) / len(inputs)
+        print(f"acc: {acc}\tlen:{len(inputs)}\n\n")
 
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc # Devolver la métrica de precisión

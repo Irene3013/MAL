@@ -20,7 +20,7 @@ class VSRDataset(Dataset):
     def __init__(self, dataset_name="zeroshot", split="train", data_path="data", model=None, config=None):
 
         # Validations
-        self.base_path = Path(data_path) / "raw" / "vsr" #relative path
+        self.base_path = Path(data_path) / "raw" / "vsr" # relative path
         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
@@ -57,10 +57,10 @@ class VSRDataset(Dataset):
     def __getitem__(self, idx):
         item = self.dataset[idx]
 
-        if self.model in ["clip", "siglip", "siglip2", "pecore"]:
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
             return self._dual_encoder_item(item)
         
-        elif self.model in ["qwen2"]:
+        elif self.model == "qwen2":
             return self._qwen_item(item)
         
         elif self.model == "clip-flant5":
@@ -69,12 +69,12 @@ class VSRDataset(Dataset):
             raise NotImplementedError()
 
 
-    # --- ITEM METHODS ---
+    # --- GET ITEM METHODS ---
     def _dual_encoder_item(self, item):
         """
         Prepare item for Dual Encoder models.
-            Val/Test --> 1 image n captions
-            Train --> 1 image 1 caption (contrastive loss)
+            Val/Test: 1 image - n captions
+            Train:    1 image - 1 caption (contrastive loss)
         """    
         # **A. Val/Test (return caption-pairs to Collate):**
         if self.split != "train":
@@ -158,6 +158,7 @@ class VSRDataset(Dataset):
         }
     
     def _vqascore_item(self, item):
+        """Prepare item for FlanT5-VL model."""
         img_path = self.image_path / item["image"]
         caption = item["caption"]
         negated = invert_relation(caption, item["relation"])
@@ -198,7 +199,7 @@ class VSRDataModule(pl.LightningDataModule):
             self.collate_fn_eval = lambda batch: vsr_dual_encoder_collate(
                 batch, self.config, self.model # Pasar args y model_name
             )
-        else: #qwen
+        else: # qwen / vqascore
             self.collate_fn_eval = None
 
         # Setup train/val/test datasets

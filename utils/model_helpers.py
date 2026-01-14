@@ -2,8 +2,8 @@
 import torch
 import string
 from utils.constants import PREPROCESS_TRANSFORM
-from transformers import CLIPModel, CLIPProcessor, AutoModel, AutoProcessor#, Qwen2VLForConditionalGeneration
-import t2v_metrics
+from transformers import CLIPModel, CLIPProcessor, AutoModel, AutoProcessor, Qwen2VLForConditionalGeneration
+#import t2v_metrics
 #import core.vision_encoder.pe as pe
 #import core.vision_encoder.transforms as coreTransforms
 
@@ -47,28 +47,27 @@ def load_vision_model_components(model_name: str):
     #   }
     
     elif model_name == "qwen2":
-        0
         # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
-        # model_id = "Qwen/Qwen2-VL-7B-Instruct"
-        # model = Qwen2VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
-        # config_output = {
-        #     "processor": AutoProcessor.from_pretrained("Qwen/Qwen2-VL-7B-Instruct"),
-        #     "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
-        #     "tokenizer": None,
-        #     "params": None
-        # }
-
-    elif model_name == "clip-flant5":
-        # https://github.com/linzhiqiu/CLIP-FlanT5
-        # https://huggingface.co/zhiqiulin/clip-flant5-xxl
-        model = t2v_metrics.VQAScore(model='clip-flant5-xl')
+        model_id = "Qwen/Qwen2-VL-7B-Instruct"
+        model = Qwen2VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
         config_output = {
-            "processor": None,
+            "processor": AutoProcessor.from_pretrained("Qwen/Qwen2-VL-7B-Instruct"),
             "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
             "tokenizer": None,
             "params": None
         }
-    else:
+
+    elif model_name == "clip-flant5":
+        # https://github.com/linzhiqiu/CLIP-FlanT5
+        # https://huggingface.co/zhiqiulin/clip-flant5-xxl
+    #     model = t2v_metrics.VQAScore(model='clip-flant5-xl')
+    #     config_output = {
+    #         "processor": None,
+    #         "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
+    #         "tokenizer": None,
+    #         "params": None
+    #     }
+    # else:
         raise NotImplementedError(f"Model {model_name} not implemented.")
         
     return model, config_output
