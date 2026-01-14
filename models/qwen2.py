@@ -2,8 +2,8 @@
 import torch
 import string
 import pytorch_lightning as pl
-from project_datasets.vsr_dataset import VSRDataset
-from project_datasets.whatsup_dataset import WhatsUpDataset
+from data.processed.vsr_dataset import VSRDataset
+from data.processed.whatsup_dataset import WhatsUpDataset
 import transformers
 from utils.model_helpers import load_vision_model_components
 

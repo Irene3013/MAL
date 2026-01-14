@@ -1,4 +1,4 @@
-# project_datasets/whatsup_dataset.py
+# data/processed/whatsup_dataset.py
 from pathlib import Path
 import random
 import json

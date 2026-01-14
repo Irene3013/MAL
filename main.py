@@ -4,8 +4,8 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from models.dual_encoder import DualEncoder
 from models.qwen2 import Qwen2_VL
 from models.clip_flant5_xl import CLIP_FlanT5_XL
-from project_datasets.vsr_dataset import VSRDataModule
-from project_datasets.whatsup_dataset import WhatsUpDataModule
+from data.processed.vsr_dataset import VSRDataModule
+from data.processed.whatsup_dataset import WhatsUpDataModule
 import argparse
 import torch.serialization
 import sys
