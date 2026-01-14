@@ -1,0 +1,25 @@
+args: !!python/object:argparse.Namespace
+  accumulate_grad_batches: 2
+  batch_size: 1
+  ckpt: null
+  dataset: cocospatial
+  deepspeed: false
+  evaluate: true
+  gpus: 1
+  image_path: /gaueko0/users/ietxarri010/MAL/data/raw/COCO_spatial/val2017
+  lr: 2.0e-05
+  max_steps: 20000
+  model: qwen2
+  num_workers: 2
+  output_path: /gaueko0/users/ietxarri010/out/
+  precision: 32
+  root: /gaueko0/users/ietxarri010/MAL/data
+  run_name: coco_qwen2_one
+  scheduler_off: false
+  score: precision
+  seed: -1
+  target_model: null
+  train: false
+  val_check_interval: 1.0
+  variant: one
+  warmup_steps: 2000

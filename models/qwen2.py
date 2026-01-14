@@ -1,5 +1,6 @@
 #models/qwen2.py
 import torch
+import string
 import pytorch_lightning as pl
 from project_datasets.vsr_dataset import VSRDataset
 from project_datasets.whatsup_dataset import WhatsUpDataset
@@ -59,35 +60,42 @@ class Qwen2_VL(pl.LightningModule):
     def eval_step(self, batch, split):
         inputs = batch["input"]
         labels = batch["label"]
+        
 
         # Mover inputs al device
-        inputs = {k: v.to(self.device) for k, v in inputs.items()}
-        inputs = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in inputs.items()}
+        # inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        # inputs = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in inputs.items()}
         
         # Inference: Generation of the output
-        # if self.score == "mc":
-        #inputs = inputs.to(self.device)
+        # generated_ids = self.model.generate(**inputs, max_new_tokens=128)
+        # generated_ids_trimmed = [
+        #     out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs['input_ids'], generated_ids)
+        # ]
+        # output_text = self.config["processor"].batch_decode(
+        #     generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
+        # )
+        # acc = output_text == labels
 
-        generated_ids = self.model.generate(**inputs, max_new_tokens=128)
-        generated_ids_trimmed = [
-            out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs['input_ids'], generated_ids)
-        ]
-        output_text = self.config["processor"].batch_decode(
-            generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
-        )
-        acc = output_text == labels
+        outputs = []
+        for input in inputs:
+            # Inputs to device
+            input = {k: v.to(self.device) for k, v in input.items()}
+            input = {k: v.squeeze(0) if v.dim() == 3 else v for k, v in input.items()}
 
-        # else:
-        #     for input in inputs:
-        #         input = input.to(self.device)
-        #         generated_ids = self.model.generate(**input, max_new_tokens=128)
-        #         generated_ids_trimmed = [
-        #             out_ids[len(in_ids) :] for in_ids, out_ids in zip(input.input_ids, generated_ids)
-        #         ]
-        #         output_text = self.config["processor"].batch_decode(
-        #             generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
-        #         )
-        #         print(output_text)
+            # Inference: Generation of the output
+            generated_ids = self.model.generate(**input, max_new_tokens=128)
+            generated_ids_trimmed = [
+                out_ids[len(in_ids) :] for in_ids, out_ids in zip(input['input_ids'], generated_ids)
+            ]
+            output_text = self.config["processor"].batch_decode(
+                generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
+            )
+            output_text = output_text[0].strip(string.punctuation)
+            outputs.append(output_text)
+        
+        acc = 0
+        for pred, gt in zip(outputs, labels):
+            acc += (pred == gt[0]) / len(inputs)
 
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc # Devolver la métrica de precisión

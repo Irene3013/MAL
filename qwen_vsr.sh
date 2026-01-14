@@ -14,17 +14,51 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
+# srun python main.py --model "qwen2" \
+#    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+#    --run_name probak --evaluate --dataset vsr \
+#    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant zeroshot
+
 srun python main.py --model "qwen2" \
    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name vsr_qwen_random --evaluate --dataset vsr \
+   --run_name vsr_qwen2_zeroshot --evaluate --dataset vsr \
    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant zeroshot
 
 srun python main.py --model "qwen2" \
    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name whatsup_qwen_images --evaluate --dataset whatsup \
+   --run_name vsr_qwen2_random --evaluate --dataset vsr \
+   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant random
+
+srun python main.py --model "qwen2" \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+   --run_name whatsup_qwen2_images --evaluate --dataset whatsup \
    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant images
 
 srun python main.py --model "qwen2" \
    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name whatsup_qwen_clevr --evaluate --dataset whatsup \
+   --run_name whatsup_qwen2_clevr --evaluate --dataset whatsup \
    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant clevr
+
+srun python main.py --model "qwen2" \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+   --image_path /gaueko0/users/ietxarri010/MAL/data/raw/COCO_spatial/val2017 \
+   --run_name coco_qwen2_one --evaluate --dataset cocospatial \
+   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant one
+
+srun python main.py --model "qwen2" \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+   --image_path /gaueko0/users/ietxarri010/MAL/data/raw/COCO_spatial/val2017 \
+   --run_name coco_qwen2_two --evaluate --dataset cocospatial \
+   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant two
+
+srun python main.py --model "qwen2" \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+   --image_path /gaueko0/users/ietxarri010/MAL/data/raw/GQA_spatial/vg_images \
+   --run_name gqa_qwen2_one --evaluate --dataset gqaspatial \
+   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant one
+
+srun python main.py --model "qwen2" \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+   --image_path /gaueko0/users/ietxarri010/MAL/data/raw/GQA_spatial/vg_images \
+   --run_name gqa_qwen2_two --evaluate --dataset gqaspatial \
+   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant two
