@@ -60,6 +60,8 @@ class Qwen2_VL(pl.LightningModule):
     def eval_step(self, batch, split):
         inputs = batch["input"]
         labels = batch["label"]
+        options = batch["options"]
+        correct = batch["correct"]
         
 
         # Mover inputs al device
@@ -93,11 +95,18 @@ class Qwen2_VL(pl.LightningModule):
             output_text = output_text[0].strip(string.punctuation)
             outputs.append(output_text)
         
-        acc = 0
+        # acc = 0
+        # for pred, gt in zip(outputs, labels):
+        #     print(f"pred: {pred}\tgt: {gt[0]}")
+        #     acc += (pred == gt[0]) / len(inputs)
+        # print(f"acc: {acc}\tlen:{len(inputs)}\n\n")
+
+        # Hard-eval
+        acc = 1
         for pred, gt in zip(outputs, labels):
-            print(f"pred: {pred}\tgt: {gt[0]}")
-            acc += (pred == gt[0]) / len(inputs)
-        print(f"acc: {acc}\tlen:{len(inputs)}\n\n")
+            if pred != gt[0]: acc=0
+        
+        print(f"\n\n options: {options}\ncorrect: {correct}\noutput: {outputs}\n\n")
 
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc # Devolver la métrica de precisión
