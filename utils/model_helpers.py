@@ -51,7 +51,7 @@ def load_vision_model_components(model_name: str):
     
     elif model_name == "qwen2":
         # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
-        from transformers import Qwen2VLForConditionalGeneration
+        from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
 
         model_id = "Qwen/Qwen2-VL-7B-Instruct"
         model = Qwen2VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
