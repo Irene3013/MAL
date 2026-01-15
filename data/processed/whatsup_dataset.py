@@ -119,9 +119,9 @@ class WhatsUpDataset(Dataset):
 
         return {
              "input": inputs,
-             "label": expected_response,
-             "options": options,
-             "correct": [correct]
+             "label": expected_response
+            #  "options": options,
+            #  "correct": [correct]
         }
 
     @staticmethod
