@@ -1,0 +1,3306 @@
+Parsing args...
+Loading model...
+args.gpus: 1
+Model loaded!
+Loading data...
+Data loaded!
+Run name: print
+Testing starts!
+Testing: |          | 0/? [00:00<?, ?it/s]Testing: |          | 0/? [00:00<?, ?it/s]Testing DataLoader 0:   0%|          | 0/412 [00:00<?, ?it/s]
+
+ options: [('A beer bottle under a armchair',), ('A beer bottle to the left of a armchair',), ('A beer bottle on a armchair',), ('A beer bottle to the right of a armchair',)]
+correct: [('A beer bottle on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   0%|          | 1/412 [00:22<2:32:15,  0.04it/s]
+
+ options: [('A wineglass to the left of a table',), ('A wineglass to the right of a table',), ('A wineglass under a table',), ('A wineglass on a table',)]
+correct: [('A wineglass on a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   0%|          | 2/412 [00:44<2:30:37,  0.05it/s]
+
+ options: [('A scarf under a armchair',), ('A scarf on a armchair',), ('A scarf to the left of a armchair',), ('A scarf to the right of a armchair',)]
+correct: [('A scarf to the right of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   1%|          | 3/412 [01:05<2:29:54,  0.05it/s]
+
+ options: [('A orange on a armchair',), ('A orange under a armchair',), ('A orange to the left of a armchair',), ('A orange to the right of a armchair',)]
+correct: [('A orange to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   1%|          | 4/412 [01:27<2:29:24,  0.05it/s]
+
+ options: [('A glass under a armchair',), ('A glass to the right of a armchair',), ('A glass to the left of a armchair',), ('A glass on a armchair',)]
+correct: [('A glass on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   1%|          | 5/412 [01:49<2:28:56,  0.05it/s]
+
+ options: [('A scarf on a table',), ('A scarf under a table',), ('A scarf to the right of a table',), ('A scarf to the left of a table',)]
+correct: [('A scarf under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   1%|▏         | 6/412 [02:11<2:28:30,  0.05it/s]
+
+ options: [('A sunglasses under a chair',), ('A sunglasses to the right of a chair',), ('A sunglasses on a chair',), ('A sunglasses to the left of a chair',)]
+correct: [('A sunglasses to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   2%|▏         | 7/412 [02:33<2:28:05,  0.05it/s]
+
+ options: [('A toilet roll to the left of a table',), ('A toilet roll to the right of a table',), ('A toilet roll on a table',), ('A toilet roll under a table',)]
+correct: [('A toilet roll to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   2%|▏         | 8/412 [02:55<2:27:41,  0.05it/s]
+
+ options: [('A bottle to the right of a chair',), ('A bottle under a chair',), ('A bottle on a chair',), ('A bottle to the left of a chair',)]
+correct: [('A bottle to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   2%|▏         | 9/412 [03:17<2:27:16,  0.05it/s]
+
+ options: [('A cup to the right of a chair',), ('A cup on a chair',), ('A cup to the left of a chair',), ('A cup under a chair',)]
+correct: [('A cup to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   2%|▏         | 10/412 [03:39<2:26:54,  0.05it/s]
+
+ options: [('A bowl to the right of a armchair',), ('A bowl under a armchair',), ('A bowl to the left of a armchair',), ('A bowl on a armchair',)]
+correct: [('A bowl to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   3%|▎         | 11/412 [04:01<2:26:31,  0.05it/s]
+
+ options: [('A mug under a armchair',), ('A mug on a armchair',), ('A mug to the right of a armchair',), ('A mug to the left of a armchair',)]
+correct: [('A mug on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   3%|▎         | 12/412 [04:23<2:26:07,  0.05it/s]
+
+ options: [('A mug under a table',), ('A mug to the left of a table',), ('A mug on a table',), ('A mug to the right of a table',)]
+correct: [('A mug to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   3%|▎         | 13/412 [04:44<2:25:44,  0.05it/s]
+
+ options: [('A hat on a chair',), ('A hat to the right of a chair',), ('A hat to the left of a chair',), ('A hat under a chair',)]
+correct: [('A hat to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   3%|▎         | 14/412 [05:06<2:25:21,  0.05it/s]
+
+ options: [('A bottle on a chair',), ('A bottle under a chair',), ('A bottle to the right of a chair',), ('A bottle to the left of a chair',)]
+correct: [('A bottle to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   4%|▎         | 15/412 [05:28<2:24:59,  0.05it/s]
+
+ options: [('A cap on a chair',), ('A cap under a chair',), ('A cap to the right of a chair',), ('A cap to the left of a chair',)]
+correct: [('A cap under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   4%|▍         | 16/412 [05:50<2:24:36,  0.05it/s]
+
+ options: [('A mug to the left of a table',), ('A mug to the right of a table',), ('A mug under a table',), ('A mug on a table',)]
+correct: [('A mug on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   4%|▍         | 17/412 [06:12<2:24:13,  0.05it/s]
+
+ options: [('A plant to the right of a table',), ('A plant on a table',), ('A plant under a table',), ('A plant to the left of a table',)]
+correct: [('A plant to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   4%|▍         | 18/412 [06:34<2:23:50,  0.05it/s]
+
+ options: [('A cup to the right of a armchair',), ('A cup to the left of a armchair',), ('A cup under a armchair',), ('A cup on a armchair',)]
+correct: [('A cup on a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   5%|▍         | 19/412 [06:56<2:23:28,  0.05it/s]
+
+ options: [('A shoes to the right of a chair',), ('A shoes under a chair',), ('A shoes on a chair',), ('A shoes to the left of a chair',)]
+correct: [('A shoes to the left of a chair',)]
+output: ['False', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   5%|▍         | 20/412 [07:18<2:23:05,  0.05it/s]
+
+ options: [('A orange on a chair',), ('A orange to the left of a chair',), ('A orange under a chair',), ('A orange to the right of a chair',)]
+correct: [('A orange to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   5%|▌         | 21/412 [07:39<2:22:43,  0.05it/s]
+
+ options: [('A helmet on a table',), ('A helmet under a table',), ('A helmet to the right of a table',), ('A helmet to the left of a table',)]
+correct: [('A helmet to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   5%|▌         | 22/412 [08:01<2:22:21,  0.05it/s]
+
+ options: [('A water filter to the right of a chair',), ('A water filter on a chair',), ('A water filter under a chair',), ('A water filter to the left of a chair',)]
+correct: [('A water filter to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   6%|▌         | 23/412 [08:23<2:21:58,  0.05it/s]
+
+ options: [('A glove to the left of a armchair',), ('A glove on a armchair',), ('A glove under a armchair',), ('A glove to the right of a armchair',)]
+correct: [('A glove to the left of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   6%|▌         | 24/412 [08:45<2:21:36,  0.05it/s]
+
+ options: [('A dragonfruit on a table',), ('A dragonfruit under a table',), ('A dragonfruit to the right of a table',), ('A dragonfruit to the left of a table',)]
+correct: [('A dragonfruit to the left of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   6%|▌         | 25/412 [09:07<2:21:14,  0.05it/s]
+
+ options: [('A scarf under a table',), ('A scarf to the right of a table',), ('A scarf on a table',), ('A scarf to the left of a table',)]
+correct: [('A scarf to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   6%|▋         | 26/412 [09:29<2:20:51,  0.05it/s]
+
+ options: [('A water filter to the right of a chair',), ('A water filter to the left of a chair',), ('A water filter under a chair',), ('A water filter on a chair',)]
+correct: [('A water filter on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   7%|▋         | 27/412 [09:51<2:20:29,  0.05it/s]
+
+ options: [('A dragonfruit under a chair',), ('A dragonfruit on a chair',), ('A dragonfruit to the right of a chair',), ('A dragonfruit to the left of a chair',)]
+correct: [('A dragonfruit to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   7%|▋         | 28/412 [10:13<2:20:07,  0.05it/s]
+
+ options: [('A phone under a table',), ('A phone on a table',), ('A phone to the left of a table',), ('A phone to the right of a table',)]
+correct: [('A phone to the left of a table',)]
+output: ['True', 'False', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   7%|▋         | 29/412 [10:34<2:19:45,  0.05it/s]
+
+ options: [('A pan on a chair',), ('A pan to the right of a chair',), ('A pan under a chair',), ('A pan to the left of a chair',)]
+correct: [('A pan on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   7%|▋         | 30/412 [10:56<2:19:23,  0.05it/s]
+
+ options: [('A cap to the left of a table',), ('A cap on a table',), ('A cap under a table',), ('A cap to the right of a table',)]
+correct: [('A cap to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   8%|▊         | 31/412 [11:18<2:19:00,  0.05it/s]
+
+ options: [('A yarn to the left of a armchair',), ('A yarn on a armchair',), ('A yarn under a armchair',), ('A yarn to the right of a armchair',)]
+correct: [('A yarn under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   8%|▊         | 32/412 [11:40<2:18:38,  0.05it/s]
+
+ options: [('A orange to the right of a table',), ('A orange on a table',), ('A orange under a table',), ('A orange to the left of a table',)]
+correct: [('A orange under a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   8%|▊         | 33/412 [12:02<2:18:16,  0.05it/s]
+
+ options: [('A banana to the right of a table',), ('A banana to the left of a table',), ('A banana under a table',), ('A banana on a table',)]
+correct: [('A banana on a table',)]
+output: ['True', 'False', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   8%|▊         | 34/412 [12:24<2:17:54,  0.05it/s]
+
+ options: [('A orange under a armchair',), ('A orange to the left of a armchair',), ('A orange to the right of a armchair',), ('A orange on a armchair',)]
+correct: [('A orange on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   8%|▊         | 35/412 [12:46<2:17:32,  0.05it/s]
+
+ options: [('A rose to the left of a armchair',), ('A rose to the right of a armchair',), ('A rose under a armchair',), ('A rose on a armchair',)]
+correct: [('A rose to the left of a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   9%|▊         | 36/412 [13:08<2:17:10,  0.05it/s]
+
+ options: [('A water bottle under a armchair',), ('A water bottle to the right of a armchair',), ('A water bottle to the left of a armchair',), ('A water bottle on a armchair',)]
+correct: [('A water bottle to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:   9%|▉         | 37/412 [13:29<2:16:49,  0.05it/s]
+
+ options: [('A lemon under a table',), ('A lemon to the right of a table',), ('A lemon on a table',), ('A lemon to the left of a table',)]
+correct: [('A lemon to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:   9%|▉         | 38/412 [13:51<2:16:27,  0.05it/s]
+
+ options: [('A bottle under a armchair',), ('A bottle to the left of a armchair',), ('A bottle on a armchair',), ('A bottle to the right of a armchair',)]
+correct: [('A bottle to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:   9%|▉         | 39/412 [14:13<2:16:05,  0.05it/s]
+
+ options: [('A plate to the left of a armchair',), ('A plate to the right of a armchair',), ('A plate under a armchair',), ('A plate on a armchair',)]
+correct: [('A plate on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  10%|▉         | 40/412 [14:35<2:15:43,  0.05it/s]
+
+ options: [('A soda can to the right of a armchair',), ('A soda can to the left of a armchair',), ('A soda can under a armchair',), ('A soda can on a armchair',)]
+correct: [('A soda can to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  10%|▉         | 41/412 [14:57<2:15:21,  0.05it/s]
+
+ options: [('A painting to the left of a table',), ('A painting on a table',), ('A painting under a table',), ('A painting to the right of a table',)]
+correct: [('A painting under a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  10%|█         | 42/412 [15:19<2:14:59,  0.05it/s]
+
+ options: [('A bottle of orange juice to the right of a chair',), ('A bottle of orange juice to the left of a chair',), ('A bottle of orange juice under a chair',), ('A bottle of orange juice on a chair',)]
+correct: [('A bottle of orange juice under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  10%|█         | 43/412 [15:41<2:14:37,  0.05it/s]
+
+ options: [('A wineglass on a chair',), ('A wineglass under a chair',), ('A wineglass to the right of a chair',), ('A wineglass to the left of a chair',)]
+correct: [('A wineglass on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  11%|█         | 44/412 [16:03<2:14:15,  0.05it/s]
+
+ options: [('A rose to the right of a armchair',), ('A rose under a armchair',), ('A rose on a armchair',), ('A rose to the left of a armchair',)]
+correct: [('A rose under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  11%|█         | 45/412 [16:25<2:13:53,  0.05it/s]
+
+ options: [('A spatula to the right of a chair',), ('A spatula under a chair',), ('A spatula to the left of a chair',), ('A spatula on a chair',)]
+correct: [('A spatula on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  11%|█         | 46/412 [16:46<2:13:31,  0.05it/s]
+
+ options: [('A banana under a table',), ('A banana to the left of a table',), ('A banana on a table',), ('A banana to the right of a table',)]
+correct: [('A banana under a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  11%|█▏        | 47/412 [17:08<2:13:09,  0.05it/s]
+
+ options: [('A mug to the left of a chair',), ('A mug to the right of a chair',), ('A mug under a chair',), ('A mug on a chair',)]
+correct: [('A mug on a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  12%|█▏        | 48/412 [17:30<2:12:47,  0.05it/s]
+
+ options: [('A cap under a armchair',), ('A cap to the left of a armchair',), ('A cap to the right of a armchair',), ('A cap on a armchair',)]
+correct: [('A cap to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  12%|█▏        | 49/412 [17:52<2:12:25,  0.05it/s]
+
+ options: [('A plant to the left of a chair',), ('A plant on a chair',), ('A plant under a chair',), ('A plant to the right of a chair',)]
+correct: [('A plant to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  12%|█▏        | 50/412 [18:14<2:12:03,  0.05it/s]
+
+ options: [('A blanket to the left of a chair',), ('A blanket to the right of a chair',), ('A blanket on a chair',), ('A blanket under a chair',)]
+correct: [('A blanket on a chair',)]
+output: ['False', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  12%|█▏        | 51/412 [18:36<2:11:41,  0.05it/s]
+
+ options: [('A oven mitt under a chair',), ('A oven mitt to the right of a chair',), ('A oven mitt on a chair',), ('A oven mitt to the left of a chair',)]
+correct: [('A oven mitt under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  13%|█▎        | 52/412 [18:58<2:11:19,  0.05it/s]
+
+ options: [('A book on a armchair',), ('A book to the left of a armchair',), ('A book to the right of a armchair',), ('A book under a armchair',)]
+correct: [('A book on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  13%|█▎        | 53/412 [19:20<2:10:57,  0.05it/s]
+
+ options: [('A plate to the right of a table',), ('A plate to the left of a table',), ('A plate on a table',), ('A plate under a table',)]
+correct: [('A plate to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  13%|█▎        | 54/412 [19:41<2:10:36,  0.05it/s]
+
+ options: [('A dragonfruit on a chair',), ('A dragonfruit under a chair',), ('A dragonfruit to the right of a chair',), ('A dragonfruit to the left of a chair',)]
+correct: [('A dragonfruit on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  13%|█▎        | 55/412 [20:03<2:10:14,  0.05it/s]
+
+ options: [('A bottle under a armchair',), ('A bottle to the left of a armchair',), ('A bottle on a armchair',), ('A bottle to the right of a armchair',)]
+correct: [('A bottle to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  14%|█▎        | 56/412 [20:25<2:09:52,  0.05it/s]
+
+ options: [('A orange on a armchair',), ('A orange to the left of a armchair',), ('A orange under a armchair',), ('A orange to the right of a armchair',)]
+correct: [('A orange under a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  14%|█▍        | 57/412 [20:47<2:09:30,  0.05it/s]
+
+ options: [('A plate on a chair',), ('A plate under a chair',), ('A plate to the right of a chair',), ('A plate to the left of a chair',)]
+correct: [('A plate to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  14%|█▍        | 58/412 [21:09<2:09:08,  0.05it/s]
+
+ options: [('A cup under a armchair',), ('A cup to the right of a armchair',), ('A cup on a armchair',), ('A cup to the left of a armchair',)]
+correct: [('A cup under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  14%|█▍        | 59/412 [21:31<2:08:46,  0.05it/s]
+
+ options: [('A apple on a armchair',), ('A apple to the left of a armchair',), ('A apple under a armchair',), ('A apple to the right of a armchair',)]
+correct: [('A apple to the left of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  15%|█▍        | 60/412 [21:53<2:08:24,  0.05it/s]
+
+ options: [('A scissors on a table',), ('A scissors to the right of a table',), ('A scissors to the left of a table',), ('A scissors under a table',)]
+correct: [('A scissors on a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  15%|█▍        | 61/412 [22:15<2:08:02,  0.05it/s]
+
+ options: [('A banana to the right of a chair',), ('A banana under a chair',), ('A banana to the left of a chair',), ('A banana on a chair',)]
+correct: [('A banana to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  15%|█▌        | 62/412 [22:37<2:07:40,  0.05it/s]
+
+ options: [('A kettle on a table',), ('A kettle under a table',), ('A kettle to the right of a table',), ('A kettle to the left of a table',)]
+correct: [('A kettle to the left of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  15%|█▌        | 63/412 [22:58<2:07:18,  0.05it/s]
+
+ options: [('A can to the left of a armchair',), ('A can under a armchair',), ('A can on a armchair',), ('A can to the right of a armchair',)]
+correct: [('A can under a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  16%|█▌        | 64/412 [23:20<2:06:56,  0.05it/s]
+
+ options: [('A toilet roll on a chair',), ('A toilet roll under a chair',), ('A toilet roll to the left of a chair',), ('A toilet roll to the right of a chair',)]
+correct: [('A toilet roll to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  16%|█▌        | 65/412 [23:42<2:06:34,  0.05it/s]
+
+ options: [('A painting to the left of a table',), ('A painting under a table',), ('A painting on a table',), ('A painting to the right of a table',)]
+correct: [('A painting to the left of a table',)]
+output: ['True', 'False', 'False', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  16%|█▌        | 66/412 [24:04<2:06:13,  0.05it/s]
+
+ options: [('A painting on a chair',), ('A painting under a chair',), ('A painting to the right of a chair',), ('A painting to the left of a chair',)]
+correct: [('A painting under a chair',)]
+output: ['False', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  16%|█▋        | 67/412 [24:26<2:05:51,  0.05it/s]
+
+ options: [('A ball of yarn on a table',), ('A ball of yarn to the right of a table',), ('A ball of yarn under a table',), ('A ball of yarn to the left of a table',)]
+correct: [('A ball of yarn to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  17%|█▋        | 68/412 [24:48<2:05:29,  0.05it/s]
+
+ options: [('A orange under a chair',), ('A orange on a chair',), ('A orange to the right of a chair',), ('A orange to the left of a chair',)]
+correct: [('A orange under a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  17%|█▋        | 69/412 [25:10<2:05:08,  0.05it/s]
+
+ options: [('A knife to the right of a table',), ('A knife to the left of a table',), ('A knife under a table',), ('A knife on a table',)]
+correct: [('A knife on a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  17%|█▋        | 70/412 [25:32<2:04:46,  0.05it/s]
+
+ options: [('A laptop to the left of a chair',), ('A laptop under a chair',), ('A laptop to the right of a chair',), ('A laptop on a chair',)]
+correct: [('A laptop to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  17%|█▋        | 71/412 [25:54<2:04:24,  0.05it/s]
+
+ options: [('A kettle on a chair',), ('A kettle to the left of a chair',), ('A kettle under a chair',), ('A kettle to the right of a chair',)]
+correct: [('A kettle to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  17%|█▋        | 72/412 [26:16<2:04:03,  0.05it/s]
+
+ options: [('A water bottle on a chair',), ('A water bottle to the left of a chair',), ('A water bottle to the right of a chair',), ('A water bottle under a chair',)]
+correct: [('A water bottle to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  18%|█▊        | 73/412 [26:38<2:03:41,  0.05it/s]
+
+ options: [('A cup on a table',), ('A cup to the left of a table',), ('A cup under a table',), ('A cup to the right of a table',)]
+correct: [('A cup on a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  18%|█▊        | 74/412 [27:00<2:03:19,  0.05it/s]
+
+ options: [('A vase on a chair',), ('A vase under a chair',), ('A vase to the right of a chair',), ('A vase to the left of a chair',)]
+correct: [('A vase on a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  18%|█▊        | 75/412 [27:21<2:02:57,  0.05it/s]
+
+ options: [('A water filter to the right of a chair',), ('A water filter on a chair',), ('A water filter to the left of a chair',), ('A water filter under a chair',)]
+correct: [('A water filter under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  18%|█▊        | 76/412 [27:43<2:02:36,  0.05it/s]
+
+ options: [('A hat under a chair',), ('A hat to the left of a chair',), ('A hat on a chair',), ('A hat to the right of a chair',)]
+correct: [('A hat on a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  19%|█▊        | 77/412 [28:05<2:02:14,  0.05it/s]
+
+ options: [('A lamp on a chair',), ('A lamp to the right of a chair',), ('A lamp under a chair',), ('A lamp to the left of a chair',)]
+correct: [('A lamp on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  19%|█▉        | 78/412 [28:27<2:01:52,  0.05it/s]
+
+ options: [('A glasses to the right of a armchair',), ('A glasses to the left of a armchair',), ('A glasses on a armchair',), ('A glasses under a armchair',)]
+correct: [('A glasses to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  19%|█▉        | 79/412 [28:49<2:01:30,  0.05it/s]
+
+ options: [('A scissors to the right of a chair',), ('A scissors on a chair',), ('A scissors under a chair',), ('A scissors to the left of a chair',)]
+correct: [('A scissors under a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  19%|█▉        | 80/412 [29:11<2:01:09,  0.05it/s]
+
+ options: [('A spatula to the left of a table',), ('A spatula on a table',), ('A spatula under a table',), ('A spatula to the right of a table',)]
+correct: [('A spatula under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  20%|█▉        | 81/412 [29:33<2:00:47,  0.05it/s]
+
+ options: [('A microphone on a chair',), ('A microphone under a chair',), ('A microphone to the right of a chair',), ('A microphone to the left of a chair',)]
+correct: [('A microphone on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  20%|█▉        | 82/412 [29:55<2:00:25,  0.05it/s]
+
+ options: [('A mug under a armchair',), ('A mug to the left of a armchair',), ('A mug on a armchair',), ('A mug to the right of a armchair',)]
+correct: [('A mug to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  20%|██        | 83/412 [30:17<2:00:03,  0.05it/s]
+
+ options: [('A yarn on a armchair',), ('A yarn to the left of a armchair',), ('A yarn under a armchair',), ('A yarn to the right of a armchair',)]
+correct: [('A yarn on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  20%|██        | 84/412 [30:39<1:59:42,  0.05it/s]
+
+ options: [('A headphones on a chair',), ('A headphones under a chair',), ('A headphones to the right of a chair',), ('A headphones to the left of a chair',)]
+correct: [('A headphones under a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  21%|██        | 85/412 [31:01<1:59:20,  0.05it/s]
+
+ options: [('A painting to the right of a table',), ('A painting under a table',), ('A painting on a table',), ('A painting to the left of a table',)]
+correct: [('A painting on a table',)]
+output: ['False', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  21%|██        | 86/412 [31:23<1:58:58,  0.05it/s]
+
+ options: [('A scarf under a table',), ('A scarf to the left of a table',), ('A scarf to the right of a table',), ('A scarf on a table',)]
+correct: [('A scarf to the left of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  21%|██        | 87/412 [31:45<1:58:36,  0.05it/s]
+
+ options: [('A lemon under a chair',), ('A lemon on a chair',), ('A lemon to the left of a chair',), ('A lemon to the right of a chair',)]
+correct: [('A lemon to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  21%|██▏       | 88/412 [32:07<1:58:14,  0.05it/s]
+
+ options: [('A photograph on a chair',), ('A photograph to the left of a chair',), ('A photograph under a chair',), ('A photograph to the right of a chair',)]
+correct: [('A photograph to the left of a chair',)]
+output: ['False', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  22%|██▏       | 89/412 [32:28<1:57:53,  0.05it/s]
+
+ options: [('A headphones on a armchair',), ('A headphones to the right of a armchair',), ('A headphones to the left of a armchair',), ('A headphones under a armchair',)]
+correct: [('A headphones to the left of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  22%|██▏       | 90/412 [32:50<1:57:31,  0.05it/s]
+
+ options: [('A can on a chair',), ('A can to the left of a chair',), ('A can to the right of a chair',), ('A can under a chair',)]
+correct: [('A can on a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  22%|██▏       | 91/412 [33:12<1:57:09,  0.05it/s]
+
+ options: [('A pot to the left of a chair',), ('A pot on a chair',), ('A pot to the right of a chair',), ('A pot under a chair',)]
+correct: [('A pot to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  22%|██▏       | 92/412 [33:34<1:56:47,  0.05it/s]
+
+ options: [('A sunglasses under a chair',), ('A sunglasses on a chair',), ('A sunglasses to the right of a chair',), ('A sunglasses to the left of a chair',)]
+correct: [('A sunglasses on a chair',)]
+output: ['True', 'True', 'False', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  23%|██▎       | 93/412 [33:56<1:56:25,  0.05it/s]
+
+ options: [('A wineglass to the left of a armchair',), ('A wineglass on a armchair',), ('A wineglass under a armchair',), ('A wineglass to the right of a armchair',)]
+correct: [('A wineglass on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  23%|██▎       | 94/412 [34:18<1:56:04,  0.05it/s]
+
+ options: [('A bottle under a chair',), ('A bottle on a chair',), ('A bottle to the right of a chair',), ('A bottle to the left of a chair',)]
+correct: [('A bottle on a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  23%|██▎       | 95/412 [34:40<1:55:42,  0.05it/s]
+
+ options: [('A can under a chair',), ('A can to the right of a chair',), ('A can to the left of a chair',), ('A can on a chair',)]
+correct: [('A can under a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  23%|██▎       | 96/412 [35:02<1:55:20,  0.05it/s]
+
+ options: [('A cap to the right of a armchair',), ('A cap to the left of a armchair',), ('A cap under a armchair',), ('A cap on a armchair',)]
+correct: [('A cap on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  24%|██▎       | 97/412 [35:24<1:54:58,  0.05it/s]
+
+ options: [('A scarf to the left of a chair',), ('A scarf to the right of a chair',), ('A scarf under a chair',), ('A scarf on a chair',)]
+correct: [('A scarf under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  24%|██▍       | 98/412 [35:46<1:54:36,  0.05it/s]
+
+ options: [('A scissors to the left of a chair',), ('A scissors on a chair',), ('A scissors to the right of a chair',), ('A scissors under a chair',)]
+correct: [('A scissors to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  24%|██▍       | 99/412 [36:08<1:54:14,  0.05it/s]
+
+ options: [('A lamp to the left of a table',), ('A lamp to the right of a table',), ('A lamp on a table',), ('A lamp under a table',)]
+correct: [('A lamp to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  24%|██▍       | 100/412 [36:30<1:53:53,  0.05it/s]
+
+ options: [('A ball of yarn to the left of a table',), ('A ball of yarn to the right of a table',), ('A ball of yarn under a table',), ('A ball of yarn on a table',)]
+correct: [('A ball of yarn to the left of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  25%|██▍       | 101/412 [36:52<1:53:31,  0.05it/s]
+
+ options: [('A toilet roll under a chair',), ('A toilet roll on a chair',), ('A toilet roll to the right of a chair',), ('A toilet roll to the left of a chair',)]
+correct: [('A toilet roll on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  25%|██▍       | 102/412 [37:13<1:53:09,  0.05it/s]
+
+ options: [('A scissors to the right of a chair',), ('A scissors under a chair',), ('A scissors to the left of a chair',), ('A scissors on a chair',)]
+correct: [('A scissors to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  25%|██▌       | 103/412 [37:35<1:52:47,  0.05it/s]
+
+ options: [('A dragonfruit to the right of a chair',), ('A dragonfruit under a chair',), ('A dragonfruit on a chair',), ('A dragonfruit to the left of a chair',)]
+correct: [('A dragonfruit to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  25%|██▌       | 104/412 [37:57<1:52:25,  0.05it/s]
+
+ options: [('A pot to the left of a chair',), ('A pot under a chair',), ('A pot to the right of a chair',), ('A pot on a chair',)]
+correct: [('A pot to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  25%|██▌       | 105/412 [38:19<1:52:03,  0.05it/s]
+
+ options: [('A scarf on a chair',), ('A scarf under a chair',), ('A scarf to the right of a chair',), ('A scarf to the left of a chair',)]
+correct: [('A scarf to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  26%|██▌       | 106/412 [38:41<1:51:42,  0.05it/s]
+
+ options: [('A knife to the left of a table',), ('A knife on a table',), ('A knife under a table',), ('A knife to the right of a table',)]
+correct: [('A knife to the left of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  26%|██▌       | 107/412 [39:03<1:51:20,  0.05it/s]
+
+ options: [('A plate to the left of a chair',), ('A plate under a chair',), ('A plate to the right of a chair',), ('A plate on a chair',)]
+correct: [('A plate under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  26%|██▌       | 108/412 [39:25<1:50:58,  0.05it/s]
+
+ options: [('A wineglass under a chair',), ('A wineglass on a chair',), ('A wineglass to the right of a chair',), ('A wineglass to the left of a chair',)]
+correct: [('A wineglass to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  26%|██▋       | 109/412 [39:47<1:50:36,  0.05it/s]
+
+ options: [('A lemon under a chair',), ('A lemon on a chair',), ('A lemon to the left of a chair',), ('A lemon to the right of a chair',)]
+correct: [('A lemon to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  27%|██▋       | 110/412 [40:09<1:50:14,  0.05it/s]
+
+ options: [('A water bottle to the left of a chair',), ('A water bottle on a chair',), ('A water bottle under a chair',), ('A water bottle to the right of a chair',)]
+correct: [('A water bottle under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  27%|██▋       | 111/412 [40:31<1:49:53,  0.05it/s]
+
+ options: [('A hat on a chair',), ('A hat to the left of a chair',), ('A hat under a chair',), ('A hat to the right of a chair',)]
+correct: [('A hat to the left of a chair',)]
+output: ['False', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  27%|██▋       | 112/412 [40:53<1:49:31,  0.05it/s]
+
+ options: [('A notepad on a armchair',), ('A notepad under a armchair',), ('A notepad to the left of a armchair',), ('A notepad to the right of a armchair',)]
+correct: [('A notepad to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  27%|██▋       | 113/412 [41:15<1:49:09,  0.05it/s]
+
+ options: [('A tape to the right of a armchair',), ('A tape under a armchair',), ('A tape on a armchair',), ('A tape to the left of a armchair',)]
+correct: [('A tape to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  28%|██▊       | 114/412 [41:37<1:48:47,  0.05it/s]
+
+ options: [('A blanket to the right of a chair',), ('A blanket under a chair',), ('A blanket to the left of a chair',), ('A blanket on a chair',)]
+correct: [('A blanket to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  28%|██▊       | 115/412 [41:59<1:48:25,  0.05it/s]
+
+ options: [('A glasses to the left of a armchair',), ('A glasses under a armchair',), ('A glasses on a armchair',), ('A glasses to the right of a armchair',)]
+correct: [('A glasses under a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  28%|██▊       | 116/412 [42:21<1:48:03,  0.05it/s]
+
+ options: [('A toy cactus on a chair',), ('A toy cactus to the right of a chair',), ('A toy cactus to the left of a chair',), ('A toy cactus under a chair',)]
+correct: [('A toy cactus under a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  28%|██▊       | 117/412 [42:42<1:47:42,  0.05it/s]
+
+ options: [('A book under a chair',), ('A book to the right of a chair',), ('A book to the left of a chair',), ('A book on a chair',)]
+correct: [('A book on a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  29%|██▊       | 118/412 [43:04<1:47:20,  0.05it/s]
+
+ options: [('A plate under a table',), ('A plate on a table',), ('A plate to the left of a table',), ('A plate to the right of a table',)]
+correct: [('A plate to the left of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  29%|██▉       | 119/412 [43:26<1:46:58,  0.05it/s]
+
+ options: [('A painting to the left of a chair',), ('A painting on a chair',), ('A painting to the right of a chair',), ('A painting under a chair',)]
+correct: [('A painting on a chair',)]
+output: ['False', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  29%|██▉       | 120/412 [43:48<1:46:36,  0.05it/s]
+
+ options: [('A banana under a chair',), ('A banana on a chair',), ('A banana to the right of a chair',), ('A banana to the left of a chair',)]
+correct: [('A banana to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  29%|██▉       | 121/412 [44:10<1:46:14,  0.05it/s]
+
+ options: [('A wineglass under a armchair',), ('A wineglass to the left of a armchair',), ('A wineglass on a armchair',), ('A wineglass to the right of a armchair',)]
+correct: [('A wineglass to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  30%|██▉       | 122/412 [44:32<1:45:52,  0.05it/s]
+
+ options: [('A yarn under a armchair',), ('A yarn to the left of a armchair',), ('A yarn to the right of a armchair',), ('A yarn on a armchair',)]
+correct: [('A yarn to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  30%|██▉       | 123/412 [44:54<1:45:30,  0.05it/s]
+
+ options: [('A book to the left of a chair',), ('A book to the right of a chair',), ('A book under a chair',), ('A book on a chair',)]
+correct: [('A book under a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  30%|███       | 124/412 [45:16<1:45:08,  0.05it/s]
+
+ options: [('A plant to the left of a table',), ('A plant on a table',), ('A plant to the right of a table',), ('A plant under a table',)]
+correct: [('A plant on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  30%|███       | 125/412 [45:38<1:44:46,  0.05it/s]
+
+ options: [('A wineglass under a chair',), ('A wineglass on a chair',), ('A wineglass to the right of a chair',), ('A wineglass to the left of a chair',)]
+correct: [('A wineglass under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  31%|███       | 126/412 [46:00<1:44:25,  0.05it/s]
+
+ options: [('A toy cactus to the right of a chair',), ('A toy cactus to the left of a chair',), ('A toy cactus on a chair',), ('A toy cactus under a chair',)]
+correct: [('A toy cactus on a chair',)]
+output: ['False', 'False', 'False', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  31%|███       | 127/412 [46:22<1:44:03,  0.05it/s]
+
+ options: [('A plate to the left of a chair',), ('A plate to the right of a chair',), ('A plate under a chair',), ('A plate on a chair',)]
+correct: [('A plate to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  31%|███       | 128/412 [46:44<1:43:41,  0.05it/s]
+
+ options: [('A knife to the left of a chair',), ('A knife under a chair',), ('A knife to the right of a chair',), ('A knife on a chair',)]
+correct: [('A knife to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  31%|███▏      | 129/412 [47:05<1:43:19,  0.05it/s]
+
+ options: [('A knife on a table',), ('A knife to the right of a table',), ('A knife under a table',), ('A knife to the left of a table',)]
+correct: [('A knife to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  32%|███▏      | 130/412 [47:27<1:42:57,  0.05it/s]
+
+ options: [('A bottle of mustard to the left of a chair',), ('A bottle of mustard to the right of a chair',), ('A bottle of mustard on a chair',), ('A bottle of mustard under a chair',)]
+correct: [('A bottle of mustard under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  32%|███▏      | 131/412 [47:49<1:42:35,  0.05it/s]
+
+ options: [('A glove to the right of a armchair',), ('A glove under a armchair',), ('A glove to the left of a armchair',), ('A glove on a armchair',)]
+correct: [('A glove to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  32%|███▏      | 132/412 [48:11<1:42:13,  0.05it/s]
+
+ options: [('A bottle of orange juice under a chair',), ('A bottle of orange juice on a chair',), ('A bottle of orange juice to the right of a chair',), ('A bottle of orange juice to the left of a chair',)]
+correct: [('A bottle of orange juice to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  32%|███▏      | 133/412 [48:33<1:41:52,  0.05it/s]
+
+ options: [('A dragonfruit on a chair',), ('A dragonfruit under a chair',), ('A dragonfruit to the left of a chair',), ('A dragonfruit to the right of a chair',)]
+correct: [('A dragonfruit under a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  33%|███▎      | 134/412 [48:55<1:41:30,  0.05it/s]
+
+ options: [('A sunglasses under a chair',), ('A sunglasses on a chair',), ('A sunglasses to the left of a chair',), ('A sunglasses to the right of a chair',)]
+correct: [('A sunglasses under a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  33%|███▎      | 135/412 [49:17<1:41:08,  0.05it/s]
+
+ options: [('A shoes on a chair',), ('A shoes to the left of a chair',), ('A shoes under a chair',), ('A shoes to the right of a chair',)]
+correct: [('A shoes to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  33%|███▎      | 136/412 [49:39<1:40:46,  0.05it/s]
+
+ options: [('A pan to the right of a armchair',), ('A pan on a armchair',), ('A pan to the left of a armchair',), ('A pan under a armchair',)]
+correct: [('A pan to the right of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  33%|███▎      | 137/412 [50:01<1:40:24,  0.05it/s]
+
+ options: [('A headphones to the left of a armchair',), ('A headphones on a armchair',), ('A headphones under a armchair',), ('A headphones to the right of a armchair',)]
+correct: [('A headphones under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  33%|███▎      | 138/412 [50:23<1:40:02,  0.05it/s]
+
+ options: [('A beer bottle under a chair',), ('A beer bottle to the right of a chair',), ('A beer bottle on a chair',), ('A beer bottle to the left of a chair',)]
+correct: [('A beer bottle on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  34%|███▎      | 139/412 [50:45<1:39:40,  0.05it/s]
+
+ options: [('A phone to the left of a table',), ('A phone under a table',), ('A phone to the right of a table',), ('A phone on a table',)]
+correct: [('A phone to the right of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  34%|███▍      | 140/412 [51:07<1:39:19,  0.05it/s]
+
+ options: [('A photograph under a chair',), ('A photograph on a chair',), ('A photograph to the left of a chair',), ('A photograph to the right of a chair',)]
+correct: [('A photograph under a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  34%|███▍      | 141/412 [51:29<1:38:57,  0.05it/s]
+
+ options: [('A lemon to the right of a table',), ('A lemon under a table',), ('A lemon on a table',), ('A lemon to the left of a table',)]
+correct: [('A lemon on a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  34%|███▍      | 142/412 [51:51<1:38:35,  0.05it/s]
+
+ options: [('A phone to the right of a armchair',), ('A phone on a armchair',), ('A phone to the left of a armchair',), ('A phone under a armchair',)]
+correct: [('A phone to the left of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  35%|███▍      | 143/412 [52:12<1:38:13,  0.05it/s]
+
+ options: [('A soda can on a armchair',), ('A soda can under a armchair',), ('A soda can to the left of a armchair',), ('A soda can to the right of a armchair',)]
+correct: [('A soda can to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  35%|███▍      | 144/412 [52:34<1:37:51,  0.05it/s]
+
+ options: [('A banana to the left of a table',), ('A banana to the right of a table',), ('A banana on a table',), ('A banana under a table',)]
+correct: [('A banana to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  35%|███▌      | 145/412 [52:56<1:37:29,  0.05it/s]
+
+ options: [('A beer bottle on a chair',), ('A beer bottle to the right of a chair',), ('A beer bottle to the left of a chair',), ('A beer bottle under a chair',)]
+correct: [('A beer bottle to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  35%|███▌      | 146/412 [53:18<1:37:07,  0.05it/s]
+
+ options: [('A pan to the left of a armchair',), ('A pan under a armchair',), ('A pan on a armchair',), ('A pan to the right of a armchair',)]
+correct: [('A pan on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  36%|███▌      | 147/412 [53:40<1:36:45,  0.05it/s]
+
+ options: [('A cap to the right of a chair',), ('A cap to the left of a chair',), ('A cap under a chair',), ('A cap on a chair',)]
+correct: [('A cap to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  36%|███▌      | 148/412 [54:02<1:36:23,  0.05it/s]
+
+ options: [('A pan under a armchair',), ('A pan to the left of a armchair',), ('A pan on a armchair',), ('A pan to the right of a armchair',)]
+correct: [('A pan under a armchair',)]
+output: ['False', 'False', 'False', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  36%|███▌      | 149/412 [54:24<1:36:01,  0.05it/s]
+
+ options: [('A can under a armchair',), ('A can to the right of a armchair',), ('A can to the left of a armchair',), ('A can on a armchair',)]
+correct: [('A can on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  36%|███▋      | 150/412 [54:46<1:35:39,  0.05it/s]
+
+ options: [('A helmet to the left of a chair',), ('A helmet on a chair',), ('A helmet to the right of a chair',), ('A helmet under a chair',)]
+correct: [('A helmet to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  37%|███▋      | 151/412 [55:08<1:35:17,  0.05it/s]
+
+ options: [('A orange to the right of a chair',), ('A orange to the left of a chair',), ('A orange on a chair',), ('A orange under a chair',)]
+correct: [('A orange to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  37%|███▋      | 152/412 [55:30<1:34:56,  0.05it/s]
+
+ options: [('A mug on a chair',), ('A mug under a chair',), ('A mug to the right of a chair',), ('A mug to the left of a chair',)]
+correct: [('A mug under a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  37%|███▋      | 153/412 [55:51<1:34:34,  0.05it/s]
+
+ options: [('A kettle on a chair',), ('A kettle to the left of a chair',), ('A kettle to the right of a chair',), ('A kettle under a chair',)]
+correct: [('A kettle under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  37%|███▋      | 154/412 [56:13<1:34:12,  0.05it/s]
+
+ options: [('A cap to the left of a table',), ('A cap under a table',), ('A cap to the right of a table',), ('A cap on a table',)]
+correct: [('A cap under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  38%|███▊      | 155/412 [56:35<1:33:50,  0.05it/s]
+
+ options: [('A scarf on a armchair',), ('A scarf to the right of a armchair',), ('A scarf under a armchair',), ('A scarf to the left of a armchair',)]
+correct: [('A scarf under a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  38%|███▊      | 156/412 [56:57<1:33:28,  0.05it/s]
+
+ options: [('A yarn under a armchair',), ('A yarn to the right of a armchair',), ('A yarn to the left of a armchair',), ('A yarn on a armchair',)]
+correct: [('A yarn to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  38%|███▊      | 157/412 [57:19<1:33:06,  0.05it/s]
+
+ options: [('A mug to the right of a chair',), ('A mug to the left of a chair',), ('A mug under a chair',), ('A mug on a chair',)]
+correct: [('A mug to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  38%|███▊      | 158/412 [57:41<1:32:44,  0.05it/s]
+
+ options: [('A pot on a chair',), ('A pot to the right of a chair',), ('A pot under a chair',), ('A pot to the left of a chair',)]
+correct: [('A pot under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  39%|███▊      | 159/412 [58:03<1:32:22,  0.05it/s]
+
+ options: [('A lemon on a table',), ('A lemon under a table',), ('A lemon to the left of a table',), ('A lemon to the right of a table',)]
+correct: [('A lemon under a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  39%|███▉      | 160/412 [58:25<1:32:00,  0.05it/s]
+
+ options: [('A glass under a armchair',), ('A glass to the right of a armchair',), ('A glass to the left of a armchair',), ('A glass on a armchair',)]
+correct: [('A glass to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  39%|███▉      | 161/412 [58:47<1:31:39,  0.05it/s]
+
+ options: [('A bottle on a table',), ('A bottle to the right of a table',), ('A bottle to the left of a table',), ('A bottle under a table',)]
+correct: [('A bottle to the left of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  39%|███▉      | 162/412 [59:09<1:31:17,  0.05it/s]
+
+ options: [('A notepad under a armchair',), ('A notepad to the right of a armchair',), ('A notepad on a armchair',), ('A notepad to the left of a armchair',)]
+correct: [('A notepad to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  40%|███▉      | 163/412 [59:31<1:30:55,  0.05it/s]
+
+ options: [('A toilet roll on a chair',), ('A toilet roll to the left of a chair',), ('A toilet roll under a chair',), ('A toilet roll to the right of a chair',)]
+correct: [('A toilet roll to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  40%|███▉      | 164/412 [59:53<1:30:33,  0.05it/s]
+
+ options: [('A bowl on a table',), ('A bowl to the left of a table',), ('A bowl under a table',), ('A bowl to the right of a table',)]
+correct: [('A bowl on a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  40%|████      | 165/412 [1:00:14<1:30:11,  0.05it/s]
+
+ options: [('A lamp on a table',), ('A lamp under a table',), ('A lamp to the right of a table',), ('A lamp to the left of a table',)]
+correct: [('A lamp under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  40%|████      | 166/412 [1:00:36<1:29:49,  0.05it/s]
+
+ options: [('A laptop to the right of a armchair',), ('A laptop under a armchair',), ('A laptop to the left of a armchair',), ('A laptop on a armchair',)]
+correct: [('A laptop on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  41%|████      | 167/412 [1:00:58<1:29:27,  0.05it/s]
+
+ options: [('A wineglass on a table',), ('A wineglass under a table',), ('A wineglass to the right of a table',), ('A wineglass to the left of a table',)]
+correct: [('A wineglass to the left of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  41%|████      | 168/412 [1:01:20<1:29:05,  0.05it/s]
+
+ options: [('A phone to the left of a armchair',), ('A phone to the right of a armchair',), ('A phone on a armchair',), ('A phone under a armchair',)]
+correct: [('A phone on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  41%|████      | 169/412 [1:01:42<1:28:43,  0.05it/s]
+
+ options: [('A phone on a table',), ('A phone to the right of a table',), ('A phone under a table',), ('A phone to the left of a table',)]
+correct: [('A phone under a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  41%|████▏     | 170/412 [1:02:04<1:28:21,  0.05it/s]
+
+ options: [('A banjo to the left of a armchair',), ('A banjo on a armchair',), ('A banjo to the right of a armchair',), ('A banjo under a armchair',)]
+correct: [('A banjo to the left of a armchair',)]
+output: ['False', 'False', 'False', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  42%|████▏     | 171/412 [1:02:26<1:27:59,  0.05it/s]
+
+ options: [('A banana to the left of a chair',), ('A banana to the right of a chair',), ('A banana under a chair',), ('A banana on a chair',)]
+correct: [('A banana on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  42%|████▏     | 172/412 [1:02:48<1:27:37,  0.05it/s]
+
+ options: [('A wineglass on a table',), ('A wineglass under a table',), ('A wineglass to the left of a table',), ('A wineglass to the right of a table',)]
+correct: [('A wineglass to the right of a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  42%|████▏     | 173/412 [1:03:10<1:27:15,  0.05it/s]
+
+ options: [('A vase to the right of a chair',), ('A vase on a chair',), ('A vase to the left of a chair',), ('A vase under a chair',)]
+correct: [('A vase under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  42%|████▏     | 174/412 [1:03:31<1:26:54,  0.05it/s]
+
+ options: [('A laptop to the left of a chair',), ('A laptop on a chair',), ('A laptop to the right of a chair',), ('A laptop under a chair',)]
+correct: [('A laptop under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  42%|████▏     | 175/412 [1:03:53<1:26:32,  0.05it/s]
+
+ options: [('A bowl on a chair',), ('A bowl to the left of a chair',), ('A bowl under a chair',), ('A bowl to the right of a chair',)]
+correct: [('A bowl to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  43%|████▎     | 176/412 [1:04:15<1:26:10,  0.05it/s]
+
+ options: [('A cup under a chair',), ('A cup to the right of a chair',), ('A cup on a chair',), ('A cup to the left of a chair',)]
+correct: [('A cup to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  43%|████▎     | 177/412 [1:04:37<1:25:48,  0.05it/s]
+
+ options: [('A pillow on a chair',), ('A pillow to the right of a chair',), ('A pillow to the left of a chair',), ('A pillow under a chair',)]
+correct: [('A pillow under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  43%|████▎     | 178/412 [1:04:59<1:25:26,  0.05it/s]
+
+ options: [('A bowl to the left of a chair',), ('A bowl on a chair',), ('A bowl to the right of a chair',), ('A bowl under a chair',)]
+correct: [('A bowl under a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  43%|████▎     | 179/412 [1:05:21<1:25:04,  0.05it/s]
+
+ options: [('A dog under a table',), ('A dog to the right of a table',), ('A dog to the left of a table',), ('A dog on a table',)]
+correct: [('A dog to the left of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  44%|████▎     | 180/412 [1:05:43<1:24:42,  0.05it/s]
+
+ options: [('A pillow under a chair',), ('A pillow to the left of a chair',), ('A pillow to the right of a chair',), ('A pillow on a chair',)]
+correct: [('A pillow to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  44%|████▍     | 181/412 [1:06:05<1:24:20,  0.05it/s]
+
+ options: [('A pan on a armchair',), ('A pan to the left of a armchair',), ('A pan to the right of a armchair',), ('A pan under a armchair',)]
+correct: [('A pan to the left of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  44%|████▍     | 182/412 [1:06:27<1:23:58,  0.05it/s]
+
+ options: [('A plant on a table',), ('A plant to the right of a table',), ('A plant under a table',), ('A plant to the left of a table',)]
+correct: [('A plant under a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  44%|████▍     | 183/412 [1:06:49<1:23:36,  0.05it/s]
+
+ options: [('A glass under a armchair',), ('A glass to the right of a armchair',), ('A glass on a armchair',), ('A glass to the left of a armchair',)]
+correct: [('A glass under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  45%|████▍     | 184/412 [1:07:10<1:23:14,  0.05it/s]
+
+ options: [('A box to the right of a chair',), ('A box under a chair',), ('A box on a chair',), ('A box to the left of a chair',)]
+correct: [('A box under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  45%|████▍     | 185/412 [1:07:32<1:22:52,  0.05it/s]
+
+ options: [('A dog to the right of a table',), ('A dog on a table',), ('A dog to the left of a table',), ('A dog under a table',)]
+correct: [('A dog to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  45%|████▌     | 186/412 [1:07:54<1:22:30,  0.05it/s]
+
+ options: [('A cup to the right of a table',), ('A cup under a table',), ('A cup on a table',), ('A cup to the left of a table',)]
+correct: [('A cup to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  45%|████▌     | 187/412 [1:08:16<1:22:08,  0.05it/s]
+
+ options: [('A book to the right of a table',), ('A book under a table',), ('A book on a table',), ('A book to the left of a table',)]
+correct: [('A book to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  46%|████▌     | 188/412 [1:08:38<1:21:47,  0.05it/s]
+
+ options: [('A lemon to the left of a table',), ('A lemon under a table',), ('A lemon to the right of a table',), ('A lemon on a table',)]
+correct: [('A lemon to the right of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  46%|████▌     | 189/412 [1:09:00<1:21:25,  0.05it/s]
+
+ options: [('A microphone to the right of a chair',), ('A microphone on a chair',), ('A microphone to the left of a chair',), ('A microphone under a chair',)]
+correct: [('A microphone under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  46%|████▌     | 190/412 [1:09:22<1:21:03,  0.05it/s]
+
+ options: [('A sunglasses to the left of a armchair',), ('A sunglasses under a armchair',), ('A sunglasses to the right of a armchair',), ('A sunglasses on a armchair',)]
+correct: [('A sunglasses under a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  46%|████▋     | 191/412 [1:09:44<1:20:41,  0.05it/s]
+
+ options: [('A water bottle to the left of a chair',), ('A water bottle on a chair',), ('A water bottle under a chair',), ('A water bottle to the right of a chair',)]
+correct: [('A water bottle on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  47%|████▋     | 192/412 [1:10:05<1:20:19,  0.05it/s]
+
+ options: [('A helmet to the right of a chair',), ('A helmet under a chair',), ('A helmet on a chair',), ('A helmet to the left of a chair',)]
+correct: [('A helmet to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  47%|████▋     | 193/412 [1:10:27<1:19:57,  0.05it/s]
+
+ options: [('A cap under a table',), ('A cap on a table',), ('A cap to the left of a table',), ('A cap to the right of a table',)]
+correct: [('A cap to the left of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  47%|████▋     | 194/412 [1:10:49<1:19:35,  0.05it/s]
+
+ options: [('A plate on a table',), ('A plate under a table',), ('A plate to the right of a table',), ('A plate to the left of a table',)]
+correct: [('A plate under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  47%|████▋     | 195/412 [1:11:11<1:19:13,  0.05it/s]
+
+ options: [('A wineglass under a armchair',), ('A wineglass to the right of a armchair',), ('A wineglass to the left of a armchair',), ('A wineglass on a armchair',)]
+correct: [('A wineglass to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  48%|████▊     | 196/412 [1:11:33<1:18:51,  0.05it/s]
+
+ options: [('A pillow to the right of a armchair',), ('A pillow under a armchair',), ('A pillow to the left of a armchair',), ('A pillow on a armchair',)]
+correct: [('A pillow under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  48%|████▊     | 197/412 [1:11:55<1:18:29,  0.05it/s]
+
+ options: [('A banjo to the right of a armchair',), ('A banjo under a armchair',), ('A banjo on a armchair',), ('A banjo to the left of a armchair',)]
+correct: [('A banjo to the right of a armchair',)]
+output: ['False', 'False', 'False', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  48%|████▊     | 198/412 [1:12:17<1:18:07,  0.05it/s]
+
+ options: [('A water bottle on a chair',), ('A water bottle to the left of a chair',), ('A water bottle to the right of a chair',), ('A water bottle under a chair',)]
+correct: [('A water bottle to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  48%|████▊     | 199/412 [1:12:39<1:17:45,  0.05it/s]
+
+ options: [('A bread under a armchair',), ('A bread to the left of a armchair',), ('A bread on a armchair',), ('A bread to the right of a armchair',)]
+correct: [('A bread under a armchair',)]
+output: ['False', 'False', 'False', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  49%|████▊     | 200/412 [1:13:01<1:17:23,  0.05it/s]
+
+ options: [('A ball of yarn to the right of a chair',), ('A ball of yarn under a chair',), ('A ball of yarn to the left of a chair',), ('A ball of yarn on a chair',)]
+correct: [('A ball of yarn to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  49%|████▉     | 201/412 [1:13:23<1:17:02,  0.05it/s]
+
+ options: [('A bowl to the left of a armchair',), ('A bowl under a armchair',), ('A bowl on a armchair',), ('A bowl to the right of a armchair',)]
+correct: [('A bowl under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  49%|████▉     | 202/412 [1:13:44<1:16:40,  0.05it/s]
+
+ options: [('A cup under a armchair',), ('A cup to the left of a armchair',), ('A cup on a armchair',), ('A cup to the right of a armchair',)]
+correct: [('A cup to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  49%|████▉     | 203/412 [1:14:06<1:16:18,  0.05it/s]
+
+ options: [('A sunglasses on a table',), ('A sunglasses under a table',), ('A sunglasses to the left of a table',), ('A sunglasses to the right of a table',)]
+correct: [('A sunglasses under a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  50%|████▉     | 204/412 [1:14:28<1:15:56,  0.05it/s]
+
+ options: [('A pillow on a chair',), ('A pillow under a chair',), ('A pillow to the left of a chair',), ('A pillow to the right of a chair',)]
+correct: [('A pillow on a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  50%|████▉     | 205/412 [1:14:50<1:15:34,  0.05it/s]
+
+ options: [('A pan under a chair',), ('A pan to the left of a chair',), ('A pan on a chair',), ('A pan to the right of a chair',)]
+correct: [('A pan under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  50%|█████     | 206/412 [1:15:12<1:15:12,  0.05it/s]
+
+ options: [('A toilet roll to the left of a table',), ('A toilet roll to the right of a table',), ('A toilet roll under a table',), ('A toilet roll on a table',)]
+correct: [('A toilet roll on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  50%|█████     | 207/412 [1:15:34<1:14:50,  0.05it/s]
+
+ options: [('A book to the left of a armchair',), ('A book to the right of a armchair',), ('A book under a armchair',), ('A book on a armchair',)]
+correct: [('A book under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  50%|█████     | 208/412 [1:15:56<1:14:28,  0.05it/s]
+
+ options: [('A soda can under a armchair',), ('A soda can on a armchair',), ('A soda can to the right of a armchair',), ('A soda can to the left of a armchair',)]
+correct: [('A soda can under a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  51%|█████     | 209/412 [1:16:18<1:14:06,  0.05it/s]
+
+ options: [('A book under a table',), ('A book on a table',), ('A book to the left of a table',), ('A book to the right of a table',)]
+correct: [('A book to the left of a table',)]
+output: ['True', 'False', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  51%|█████     | 210/412 [1:16:40<1:13:44,  0.05it/s]
+
+ options: [('A lamp under a table',), ('A lamp to the right of a table',), ('A lamp on a table',), ('A lamp to the left of a table',)]
+correct: [('A lamp on a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  51%|█████     | 211/412 [1:17:01<1:13:22,  0.05it/s]
+
+ options: [('A scarf to the right of a chair',), ('A scarf to the left of a chair',), ('A scarf under a chair',), ('A scarf on a chair',)]
+correct: [('A scarf on a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  51%|█████▏    | 212/412 [1:17:23<1:13:00,  0.05it/s]
+
+ options: [('A water filter under a chair',), ('A water filter to the left of a chair',), ('A water filter on a chair',), ('A water filter to the right of a chair',)]
+correct: [('A water filter to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  52%|█████▏    | 213/412 [1:17:45<1:12:39,  0.05it/s]
+
+ options: [('A kettle to the right of a table',), ('A kettle on a table',), ('A kettle under a table',), ('A kettle to the left of a table',)]
+correct: [('A kettle under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  52%|█████▏    | 214/412 [1:18:07<1:12:17,  0.05it/s]
+
+ options: [('A beer bottle to the left of a chair',), ('A beer bottle to the right of a chair',), ('A beer bottle under a chair',), ('A beer bottle on a chair',)]
+correct: [('A beer bottle under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  52%|█████▏    | 215/412 [1:18:29<1:11:55,  0.05it/s]
+
+ options: [('A scissors to the right of a table',), ('A scissors on a table',), ('A scissors to the left of a table',), ('A scissors under a table',)]
+correct: [('A scissors to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  52%|█████▏    | 216/412 [1:18:51<1:11:33,  0.05it/s]
+
+ options: [('A wineglass under a armchair',), ('A wineglass to the left of a armchair',), ('A wineglass on a armchair',), ('A wineglass to the right of a armchair',)]
+correct: [('A wineglass under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  53%|█████▎    | 217/412 [1:19:13<1:11:11,  0.05it/s]
+
+ options: [('A cup to the left of a chair',), ('A cup to the right of a chair',), ('A cup under a chair',), ('A cup on a chair',)]
+correct: [('A cup on a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  53%|█████▎    | 218/412 [1:19:35<1:10:49,  0.05it/s]
+
+ options: [('A book to the left of a table',), ('A book to the right of a table',), ('A book under a table',), ('A book on a table',)]
+correct: [('A book on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  53%|█████▎    | 219/412 [1:19:57<1:10:27,  0.05it/s]
+
+ options: [('A headphones to the right of a chair',), ('A headphones under a chair',), ('A headphones to the left of a chair',), ('A headphones on a chair',)]
+correct: [('A headphones to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  53%|█████▎    | 220/412 [1:20:18<1:10:05,  0.05it/s]
+
+ options: [('A remote under a chair',), ('A remote to the right of a chair',), ('A remote to the left of a chair',), ('A remote on a chair',)]
+correct: [('A remote to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  54%|█████▎    | 221/412 [1:20:40<1:09:43,  0.05it/s]
+
+ options: [('A banjo to the right of a armchair',), ('A banjo to the left of a armchair',), ('A banjo on a armchair',), ('A banjo under a armchair',)]
+correct: [('A banjo on a armchair',)]
+output: ['False', 'False', 'False', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  54%|█████▍    | 222/412 [1:21:02<1:09:21,  0.05it/s]
+
+ options: [('A lamp to the left of a chair',), ('A lamp under a chair',), ('A lamp on a chair',), ('A lamp to the right of a chair',)]
+correct: [('A lamp to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  54%|█████▍    | 223/412 [1:21:24<1:08:59,  0.05it/s]
+
+ options: [('A plate to the left of a armchair',), ('A plate to the right of a armchair',), ('A plate under a armchair',), ('A plate on a armchair',)]
+correct: [('A plate to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  54%|█████▍    | 224/412 [1:21:46<1:08:38,  0.05it/s]
+
+ options: [('A glasses to the left of a armchair',), ('A glasses on a armchair',), ('A glasses under a armchair',), ('A glasses to the right of a armchair',)]
+correct: [('A glasses to the left of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  55%|█████▍    | 225/412 [1:22:08<1:08:16,  0.05it/s]
+
+ options: [('A orange on a chair',), ('A orange to the right of a chair',), ('A orange to the left of a chair',), ('A orange under a chair',)]
+correct: [('A orange on a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  55%|█████▍    | 226/412 [1:22:30<1:07:54,  0.05it/s]
+
+ options: [('A toy cactus to the left of a chair',), ('A toy cactus on a chair',), ('A toy cactus to the right of a chair',), ('A toy cactus under a chair',)]
+correct: [('A toy cactus to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  55%|█████▌    | 227/412 [1:22:52<1:07:32,  0.05it/s]
+
+ options: [('A can to the right of a armchair',), ('A can under a armchair',), ('A can to the left of a armchair',), ('A can on a armchair',)]
+correct: [('A can to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  55%|█████▌    | 228/412 [1:23:14<1:07:10,  0.05it/s]
+
+ options: [('A plate under a table',), ('A plate to the right of a table',), ('A plate to the left of a table',), ('A plate on a table',)]
+correct: [('A plate on a table',)]
+output: ['True', 'False', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  56%|█████▌    | 229/412 [1:23:36<1:06:48,  0.05it/s]
+
+ options: [('A box to the left of a chair',), ('A box under a chair',), ('A box on a chair',), ('A box to the right of a chair',)]
+correct: [('A box to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  56%|█████▌    | 230/412 [1:23:57<1:06:26,  0.05it/s]
+
+ options: [('A pan on a chair',), ('A pan to the right of a chair',), ('A pan under a chair',), ('A pan to the left of a chair',)]
+correct: [('A pan to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  56%|█████▌    | 231/412 [1:24:19<1:06:04,  0.05it/s]
+
+ options: [('A cap to the right of a table',), ('A cap on a table',), ('A cap to the left of a table',), ('A cap under a table',)]
+correct: [('A cap on a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  56%|█████▋    | 232/412 [1:24:41<1:05:42,  0.05it/s]
+
+ options: [('A tape to the left of a armchair',), ('A tape under a armchair',), ('A tape on a armchair',), ('A tape to the right of a armchair',)]
+correct: [('A tape under a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  57%|█████▋    | 233/412 [1:25:03<1:05:20,  0.05it/s]
+
+ options: [('A headphones to the right of a armchair',), ('A headphones under a armchair',), ('A headphones to the left of a armchair',), ('A headphones on a armchair',)]
+correct: [('A headphones on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  57%|█████▋    | 234/412 [1:25:25<1:04:58,  0.05it/s]
+
+ options: [('A helmet to the right of a chair',), ('A helmet under a chair',), ('A helmet on a chair',), ('A helmet to the left of a chair',)]
+correct: [('A helmet under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  57%|█████▋    | 235/412 [1:25:47<1:04:36,  0.05it/s]
+
+ options: [('A ball of yarn on a table',), ('A ball of yarn under a table',), ('A ball of yarn to the right of a table',), ('A ball of yarn to the left of a table',)]
+correct: [('A ball of yarn under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  57%|█████▋    | 236/412 [1:26:09<1:04:15,  0.05it/s]
+
+ options: [('A apple to the left of a armchair',), ('A apple to the right of a armchair',), ('A apple on a armchair',), ('A apple under a armchair',)]
+correct: [('A apple on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  58%|█████▊    | 237/412 [1:26:31<1:03:53,  0.05it/s]
+
+ options: [('A knife to the left of a chair',), ('A knife under a chair',), ('A knife on a chair',), ('A knife to the right of a chair',)]
+correct: [('A knife to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  58%|█████▊    | 238/412 [1:26:53<1:03:31,  0.05it/s]
+
+ options: [('A ball of yarn to the left of a chair',), ('A ball of yarn to the right of a chair',), ('A ball of yarn on a chair',), ('A ball of yarn under a chair',)]
+correct: [('A ball of yarn on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  58%|█████▊    | 239/412 [1:27:14<1:03:09,  0.05it/s]
+
+ options: [('A helmet to the left of a table',), ('A helmet under a table',), ('A helmet to the right of a table',), ('A helmet on a table',)]
+correct: [('A helmet to the left of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  58%|█████▊    | 240/412 [1:27:36<1:02:47,  0.05it/s]
+
+ options: [('A phone under a table',), ('A phone to the right of a table',), ('A phone on a table',), ('A phone to the left of a table',)]
+correct: [('A phone on a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  58%|█████▊    | 241/412 [1:27:58<1:02:25,  0.05it/s]
+
+ options: [('A bottle to the left of a table',), ('A bottle on a table',), ('A bottle under a table',), ('A bottle to the right of a table',)]
+correct: [('A bottle under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  59%|█████▊    | 242/412 [1:28:20<1:02:03,  0.05it/s]
+
+ options: [('A can on a chair',), ('A can to the right of a chair',), ('A can to the left of a chair',), ('A can under a chair',)]
+correct: [('A can to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  59%|█████▉    | 243/412 [1:28:42<1:01:41,  0.05it/s]
+
+ options: [('A mug on a chair',), ('A mug to the right of a chair',), ('A mug under a chair',), ('A mug to the left of a chair',)]
+correct: [('A mug to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  59%|█████▉    | 244/412 [1:29:04<1:01:19,  0.05it/s]
+
+ options: [('A wineglass to the right of a chair',), ('A wineglass under a chair',), ('A wineglass on a chair',), ('A wineglass to the left of a chair',)]
+correct: [('A wineglass to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  59%|█████▉    | 245/412 [1:29:26<1:00:57,  0.05it/s]
+
+ options: [('A remote on a armchair',), ('A remote under a armchair',), ('A remote to the left of a armchair',), ('A remote to the right of a armchair',)]
+correct: [('A remote under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  60%|█████▉    | 246/412 [1:29:48<1:00:35,  0.05it/s]
+
+ options: [('A toilet roll under a table',), ('A toilet roll to the right of a table',), ('A toilet roll on a table',), ('A toilet roll to the left of a table',)]
+correct: [('A toilet roll under a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  60%|█████▉    | 247/412 [1:30:10<1:00:14,  0.05it/s]
+
+ options: [('A book to the right of a chair',), ('A book to the left of a chair',), ('A book on a chair',), ('A book under a chair',)]
+correct: [('A book to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  60%|██████    | 248/412 [1:30:31<59:52,  0.05it/s]  
+
+ options: [('A painting to the right of a chair',), ('A painting to the left of a chair',), ('A painting on a chair',), ('A painting under a chair',)]
+correct: [('A painting to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  60%|██████    | 249/412 [1:30:53<59:30,  0.05it/s]
+
+ options: [('A box to the right of a chair',), ('A box on a chair',), ('A box to the left of a chair',), ('A box under a chair',)]
+correct: [('A box to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  61%|██████    | 250/412 [1:31:15<59:08,  0.05it/s]
+
+ options: [('A ball of yarn to the right of a chair',), ('A ball of yarn under a chair',), ('A ball of yarn on a chair',), ('A ball of yarn to the left of a chair',)]
+correct: [('A ball of yarn to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  61%|██████    | 251/412 [1:31:37<58:46,  0.05it/s]
+
+ options: [('A painting to the right of a chair',), ('A painting on a chair',), ('A painting under a chair',), ('A painting to the left of a chair',)]
+correct: [('A painting to the left of a chair',)]
+output: ['False', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  61%|██████    | 252/412 [1:31:59<58:24,  0.05it/s]
+
+ options: [('A plant on a chair',), ('A plant under a chair',), ('A plant to the right of a chair',), ('A plant to the left of a chair',)]
+correct: [('A plant under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  61%|██████▏   | 253/412 [1:32:21<58:02,  0.05it/s]
+
+ options: [('A sunglasses to the left of a armchair',), ('A sunglasses under a armchair',), ('A sunglasses to the right of a armchair',), ('A sunglasses on a armchair',)]
+correct: [('A sunglasses to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  62%|██████▏   | 254/412 [1:32:43<57:40,  0.05it/s]
+
+ options: [('A glove under a armchair',), ('A glove to the left of a armchair',), ('A glove on a armchair',), ('A glove to the right of a armchair',)]
+correct: [('A glove under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  62%|██████▏   | 255/412 [1:33:05<57:18,  0.05it/s]
+
+ options: [('A bottle of orange juice to the right of a chair',), ('A bottle of orange juice under a chair',), ('A bottle of orange juice to the left of a chair',), ('A bottle of orange juice on a chair',)]
+correct: [('A bottle of orange juice to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  62%|██████▏   | 256/412 [1:33:27<56:56,  0.05it/s]
+
+ options: [('A bottle to the right of a chair',), ('A bottle to the left of a chair',), ('A bottle on a chair',), ('A bottle under a chair',)]
+correct: [('A bottle under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  62%|██████▏   | 257/412 [1:33:48<56:34,  0.05it/s]
+
+ options: [('A cap to the left of a chair',), ('A cap on a chair',), ('A cap under a chair',), ('A cap to the right of a chair',)]
+correct: [('A cap to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  63%|██████▎   | 258/412 [1:34:10<56:13,  0.05it/s]
+
+ options: [('A sunglasses to the left of a table',), ('A sunglasses on a table',), ('A sunglasses to the right of a table',), ('A sunglasses under a table',)]
+correct: [('A sunglasses to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  63%|██████▎   | 259/412 [1:34:32<55:51,  0.05it/s]
+
+ options: [('A scarf to the left of a armchair',), ('A scarf on a armchair',), ('A scarf to the right of a armchair',), ('A scarf under a armchair',)]
+correct: [('A scarf to the left of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  63%|██████▎   | 260/412 [1:34:54<55:29,  0.05it/s]
+
+ options: [('A water bottle to the right of a armchair',), ('A water bottle to the left of a armchair',), ('A water bottle on a armchair',), ('A water bottle under a armchair',)]
+correct: [('A water bottle on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  63%|██████▎   | 261/412 [1:35:16<55:07,  0.05it/s]
+
+ options: [('A cup on a table',), ('A cup to the right of a table',), ('A cup under a table',), ('A cup to the left of a table',)]
+correct: [('A cup under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  64%|██████▎   | 262/412 [1:35:38<54:45,  0.05it/s]
+
+ options: [('A oven mitt under a chair',), ('A oven mitt on a chair',), ('A oven mitt to the left of a chair',), ('A oven mitt to the right of a chair',)]
+correct: [('A oven mitt to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  64%|██████▍   | 263/412 [1:36:00<54:23,  0.05it/s]
+
+ options: [('A pillow on a table',), ('A pillow to the left of a table',), ('A pillow under a table',), ('A pillow to the right of a table',)]
+correct: [('A pillow on a table',)]
+output: ['True', 'False', 'False', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  64%|██████▍   | 264/412 [1:36:22<54:01,  0.05it/s]
+
+ options: [('A kettle to the left of a chair',), ('A kettle to the right of a chair',), ('A kettle under a chair',), ('A kettle on a chair',)]
+correct: [('A kettle on a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  64%|██████▍   | 265/412 [1:36:44<53:39,  0.05it/s]
+
+ options: [('A kettle on a table',), ('A kettle under a table',), ('A kettle to the left of a table',), ('A kettle to the right of a table',)]
+correct: [('A kettle on a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  65%|██████▍   | 266/412 [1:37:05<53:17,  0.05it/s]
+
+ options: [('A pillow to the left of a table',), ('A pillow to the right of a table',), ('A pillow under a table',), ('A pillow on a table',)]
+correct: [('A pillow under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  65%|██████▍   | 267/412 [1:37:27<52:55,  0.05it/s]
+
+ options: [('A vase to the right of a chair',), ('A vase on a chair',), ('A vase under a chair',), ('A vase to the left of a chair',)]
+correct: [('A vase to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  65%|██████▌   | 268/412 [1:37:49<52:33,  0.05it/s]
+
+ options: [('A spatula on a chair',), ('A spatula to the left of a chair',), ('A spatula to the right of a chair',), ('A spatula under a chair',)]
+correct: [('A spatula to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  65%|██████▌   | 269/412 [1:38:11<52:12,  0.05it/s]
+
+ options: [('A banana under a table',), ('A banana to the right of a table',), ('A banana to the left of a table',), ('A banana on a table',)]
+correct: [('A banana to the right of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  66%|██████▌   | 270/412 [1:38:33<51:50,  0.05it/s]
+
+ options: [('A wineglass under a table',), ('A wineglass on a table',), ('A wineglass to the left of a table',), ('A wineglass to the right of a table',)]
+correct: [('A wineglass under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  66%|██████▌   | 271/412 [1:38:55<51:28,  0.05it/s]
+
+ options: [('A scissors on a table',), ('A scissors under a table',), ('A scissors to the left of a table',), ('A scissors to the right of a table',)]
+correct: [('A scissors under a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  66%|██████▌   | 272/412 [1:39:17<51:06,  0.05it/s]
+
+ options: [('A notepad on a armchair',), ('A notepad to the right of a armchair',), ('A notepad under a armchair',), ('A notepad to the left of a armchair',)]
+correct: [('A notepad on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  66%|██████▋   | 273/412 [1:39:39<50:44,  0.05it/s]
+
+ options: [('A spatula to the right of a table',), ('A spatula under a table',), ('A spatula to the left of a table',), ('A spatula on a table',)]
+correct: [('A spatula on a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  67%|██████▋   | 274/412 [1:40:01<50:22,  0.05it/s]
+
+ options: [('A spatula under a table',), ('A spatula on a table',), ('A spatula to the right of a table',), ('A spatula to the left of a table',)]
+correct: [('A spatula to the left of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  67%|██████▋   | 275/412 [1:40:23<50:00,  0.05it/s]
+
+ options: [('A bottle of mustard on a chair',), ('A bottle of mustard to the right of a chair',), ('A bottle of mustard to the left of a chair',), ('A bottle of mustard under a chair',)]
+correct: [('A bottle of mustard to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  67%|██████▋   | 276/412 [1:40:44<49:38,  0.05it/s]
+
+ options: [('A pillow to the left of a chair',), ('A pillow under a chair',), ('A pillow on a chair',), ('A pillow to the right of a chair',)]
+correct: [('A pillow to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  67%|██████▋   | 277/412 [1:41:06<49:16,  0.05it/s]
+
+ options: [('A oven mitt under a chair',), ('A oven mitt to the left of a chair',), ('A oven mitt on a chair',), ('A oven mitt to the right of a chair',)]
+correct: [('A oven mitt to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  67%|██████▋   | 278/412 [1:41:28<48:54,  0.05it/s]
+
+ options: [('A beer bottle to the left of a armchair',), ('A beer bottle under a armchair',), ('A beer bottle to the right of a armchair',), ('A beer bottle on a armchair',)]
+correct: [('A beer bottle to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  68%|██████▊   | 279/412 [1:41:50<48:32,  0.05it/s]
+
+ options: [('A lemon to the left of a chair',), ('A lemon to the right of a chair',), ('A lemon on a chair',), ('A lemon under a chair',)]
+correct: [('A lemon on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  68%|██████▊   | 280/412 [1:42:12<48:11,  0.05it/s]
+
+ options: [('A plant to the left of a table',), ('A plant on a table',), ('A plant to the right of a table',), ('A plant under a table',)]
+correct: [('A plant to the left of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  68%|██████▊   | 281/412 [1:42:34<47:49,  0.05it/s]
+
+ options: [('A water bottle under a armchair',), ('A water bottle to the right of a armchair',), ('A water bottle to the left of a armchair',), ('A water bottle on a armchair',)]
+correct: [('A water bottle to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  68%|██████▊   | 282/412 [1:42:56<47:27,  0.05it/s]
+
+ options: [('A helmet on a table',), ('A helmet under a table',), ('A helmet to the right of a table',), ('A helmet to the left of a table',)]
+correct: [('A helmet on a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  69%|██████▊   | 283/412 [1:43:18<47:05,  0.05it/s]
+
+ options: [('A scissors to the left of a table',), ('A scissors under a table',), ('A scissors on a table',), ('A scissors to the right of a table',)]
+correct: [('A scissors to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  69%|██████▉   | 284/412 [1:43:40<46:43,  0.05it/s]
+
+ options: [('A plant to the left of a chair',), ('A plant on a chair',), ('A plant to the right of a chair',), ('A plant under a chair',)]
+correct: [('A plant to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  69%|██████▉   | 285/412 [1:44:02<46:21,  0.05it/s]
+
+ options: [('A toilet roll under a chair',), ('A toilet roll to the right of a chair',), ('A toilet roll on a chair',), ('A toilet roll to the left of a chair',)]
+correct: [('A toilet roll under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  69%|██████▉   | 286/412 [1:44:23<45:59,  0.05it/s]
+
+ options: [('A box to the left of a chair',), ('A box to the right of a chair',), ('A box on a chair',), ('A box under a chair',)]
+correct: [('A box on a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  70%|██████▉   | 287/412 [1:44:45<45:37,  0.05it/s]
+
+ options: [('A ball of yarn under a table',), ('A ball of yarn to the right of a table',), ('A ball of yarn on a table',), ('A ball of yarn to the left of a table',)]
+correct: [('A ball of yarn on a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  70%|██████▉   | 288/412 [1:45:07<45:15,  0.05it/s]
+
+ options: [('A mug to the left of a table',), ('A mug to the right of a table',), ('A mug on a table',), ('A mug under a table',)]
+correct: [('A mug to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  70%|███████   | 289/412 [1:45:29<44:53,  0.05it/s]
+
+ options: [('A kettle on a chair',), ('A kettle under a chair',), ('A kettle to the right of a chair',), ('A kettle to the left of a chair',)]
+correct: [('A kettle to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  70%|███████   | 290/412 [1:45:51<44:32,  0.05it/s]
+
+ options: [('A banana on a chair',), ('A banana under a chair',), ('A banana to the left of a chair',), ('A banana to the right of a chair',)]
+correct: [('A banana under a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  71%|███████   | 291/412 [1:46:13<44:10,  0.05it/s]
+
+ options: [('A orange to the left of a table',), ('A orange under a table',), ('A orange on a table',), ('A orange to the right of a table',)]
+correct: [('A orange to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  71%|███████   | 292/412 [1:46:35<43:48,  0.05it/s]
+
+ options: [('A blanket on a chair',), ('A blanket under a chair',), ('A blanket to the right of a chair',), ('A blanket to the left of a chair',)]
+correct: [('A blanket under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  71%|███████   | 293/412 [1:46:57<43:26,  0.05it/s]
+
+ options: [('A spatula under a chair',), ('A spatula to the left of a chair',), ('A spatula on a chair',), ('A spatula to the right of a chair',)]
+correct: [('A spatula to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  71%|███████▏  | 294/412 [1:47:19<43:04,  0.05it/s]
+
+ options: [('A pillow on a table',), ('A pillow under a table',), ('A pillow to the right of a table',), ('A pillow to the left of a table',)]
+correct: [('A pillow to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  72%|███████▏  | 295/412 [1:47:41<42:42,  0.05it/s]
+
+ options: [('A blanket to the right of a chair',), ('A blanket to the left of a chair',), ('A blanket under a chair',), ('A blanket on a chair',)]
+correct: [('A blanket to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  72%|███████▏  | 296/412 [1:48:02<42:20,  0.05it/s]
+
+ options: [('A remote to the left of a chair',), ('A remote under a chair',), ('A remote on a chair',), ('A remote to the right of a chair',)]
+correct: [('A remote under a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  72%|███████▏  | 297/412 [1:48:24<41:58,  0.05it/s]
+
+ options: [('A bread under a armchair',), ('A bread to the right of a armchair',), ('A bread on a armchair',), ('A bread to the left of a armchair',)]
+correct: [('A bread on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  72%|███████▏  | 298/412 [1:48:46<41:36,  0.05it/s]
+
+ options: [('A cap under a chair',), ('A cap to the left of a chair',), ('A cap on a chair',), ('A cap to the right of a chair',)]
+correct: [('A cap on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  73%|███████▎  | 299/412 [1:49:08<41:14,  0.05it/s]
+
+ options: [('A microphone to the right of a chair',), ('A microphone on a chair',), ('A microphone to the left of a chair',), ('A microphone under a chair',)]
+correct: [('A microphone to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  73%|███████▎  | 300/412 [1:49:30<40:52,  0.05it/s]
+
+ options: [('A cup under a table',), ('A cup to the left of a table',), ('A cup to the right of a table',), ('A cup on a table',)]
+correct: [('A cup to the right of a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  73%|███████▎  | 301/412 [1:49:52<40:31,  0.05it/s]
+
+ options: [('A bottle of mustard to the right of a chair',), ('A bottle of mustard on a chair',), ('A bottle of mustard under a chair',), ('A bottle of mustard to the left of a chair',)]
+correct: [('A bottle of mustard on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  73%|███████▎  | 302/412 [1:50:14<40:09,  0.05it/s]
+
+ options: [('A bowl on a table',), ('A bowl to the left of a table',), ('A bowl to the right of a table',), ('A bowl under a table',)]
+correct: [('A bowl to the left of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  74%|███████▎  | 303/412 [1:50:36<39:47,  0.05it/s]
+
+ options: [('A bread under a armchair',), ('A bread to the right of a armchair',), ('A bread on a armchair',), ('A bread to the left of a armchair',)]
+correct: [('A bread to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  74%|███████▍  | 304/412 [1:50:58<39:25,  0.05it/s]
+
+ options: [('A dragonfruit to the left of a table',), ('A dragonfruit on a table',), ('A dragonfruit under a table',), ('A dragonfruit to the right of a table',)]
+correct: [('A dragonfruit to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  74%|███████▍  | 305/412 [1:51:19<39:03,  0.05it/s]
+
+ options: [('A tape to the right of a armchair',), ('A tape under a armchair',), ('A tape on a armchair',), ('A tape to the left of a armchair',)]
+correct: [('A tape to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  74%|███████▍  | 306/412 [1:51:41<38:41,  0.05it/s]
+
+ options: [('A glass to the left of a armchair',), ('A glass under a armchair',), ('A glass on a armchair',), ('A glass to the right of a armchair',)]
+correct: [('A glass to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  75%|███████▍  | 307/412 [1:52:03<38:19,  0.05it/s]
+
+ options: [('A cup under a chair',), ('A cup to the left of a chair',), ('A cup to the right of a chair',), ('A cup on a chair',)]
+correct: [('A cup under a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  75%|███████▍  | 308/412 [1:52:25<37:57,  0.05it/s]
+
+ options: [('A rose to the right of a armchair',), ('A rose on a armchair',), ('A rose to the left of a armchair',), ('A rose under a armchair',)]
+correct: [('A rose to the right of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  75%|███████▌  | 309/412 [1:52:47<37:35,  0.05it/s]
+
+ options: [('A sunglasses on a chair',), ('A sunglasses under a chair',), ('A sunglasses to the left of a chair',), ('A sunglasses to the right of a chair',)]
+correct: [('A sunglasses to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  75%|███████▌  | 310/412 [1:53:09<37:13,  0.05it/s]
+
+ options: [('A notepad to the right of a armchair',), ('A notepad under a armchair',), ('A notepad to the left of a armchair',), ('A notepad on a armchair',)]
+correct: [('A notepad under a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  75%|███████▌  | 311/412 [1:53:31<36:52,  0.05it/s]
+
+ options: [('A beer bottle to the right of a chair',), ('A beer bottle under a chair',), ('A beer bottle on a chair',), ('A beer bottle to the left of a chair',)]
+correct: [('A beer bottle to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  76%|███████▌  | 312/412 [1:53:53<36:30,  0.05it/s]
+
+ options: [('A bottle under a armchair',), ('A bottle on a armchair',), ('A bottle to the right of a armchair',), ('A bottle to the left of a armchair',)]
+correct: [('A bottle on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  76%|███████▌  | 313/412 [1:54:15<36:08,  0.05it/s]
+
+ options: [('A orange to the left of a table',), ('A orange on a table',), ('A orange to the right of a table',), ('A orange under a table',)]
+correct: [('A orange on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  76%|███████▌  | 314/412 [1:54:37<35:46,  0.05it/s]
+
+ options: [('A laptop on a armchair',), ('A laptop under a armchair',), ('A laptop to the right of a armchair',), ('A laptop to the left of a armchair',)]
+correct: [('A laptop to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  76%|███████▋  | 315/412 [1:54:59<35:24,  0.05it/s]
+
+ options: [('A glasses on a armchair',), ('A glasses to the left of a armchair',), ('A glasses under a armchair',), ('A glasses to the right of a armchair',)]
+correct: [('A glasses on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  77%|███████▋  | 316/412 [1:55:21<35:02,  0.05it/s]
+
+ options: [('A lamp to the right of a table',), ('A lamp on a table',), ('A lamp under a table',), ('A lamp to the left of a table',)]
+correct: [('A lamp to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  77%|███████▋  | 317/412 [1:55:42<34:40,  0.05it/s]
+
+ options: [('A apple to the right of a armchair',), ('A apple to the left of a armchair',), ('A apple on a armchair',), ('A apple under a armchair',)]
+correct: [('A apple to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  77%|███████▋  | 318/412 [1:56:04<34:18,  0.05it/s]
+
+ options: [('A phone on a armchair',), ('A phone to the left of a armchair',), ('A phone under a armchair',), ('A phone to the right of a armchair',)]
+correct: [('A phone under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  77%|███████▋  | 319/412 [1:56:26<33:56,  0.05it/s]
+
+ options: [('A pillow to the left of a armchair',), ('A pillow under a armchair',), ('A pillow on a armchair',), ('A pillow to the right of a armchair',)]
+correct: [('A pillow to the left of a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  78%|███████▊  | 320/412 [1:56:48<33:34,  0.05it/s]
+
+ options: [('A helmet under a table',), ('A helmet on a table',), ('A helmet to the right of a table',), ('A helmet to the left of a table',)]
+correct: [('A helmet under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  78%|███████▊  | 321/412 [1:57:10<33:13,  0.05it/s]
+
+ options: [('A pillow to the left of a armchair',), ('A pillow on a armchair',), ('A pillow under a armchair',), ('A pillow to the right of a armchair',)]
+correct: [('A pillow to the right of a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  78%|███████▊  | 322/412 [1:57:32<32:51,  0.05it/s]
+
+ options: [('A bottle of mustard to the right of a chair',), ('A bottle of mustard to the left of a chair',), ('A bottle of mustard on a chair',), ('A bottle of mustard under a chair',)]
+correct: [('A bottle of mustard to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  78%|███████▊  | 323/412 [1:57:54<32:29,  0.05it/s]
+
+ options: [('A microphone under a chair',), ('A microphone on a chair',), ('A microphone to the right of a chair',), ('A microphone to the left of a chair',)]
+correct: [('A microphone to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  79%|███████▊  | 324/412 [1:58:16<32:07,  0.05it/s]
+
+ options: [('A oven mitt to the right of a chair',), ('A oven mitt under a chair',), ('A oven mitt on a chair',), ('A oven mitt to the left of a chair',)]
+correct: [('A oven mitt on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  79%|███████▉  | 325/412 [1:58:38<31:45,  0.05it/s]
+
+ options: [('A bottle under a table',), ('A bottle on a table',), ('A bottle to the left of a table',), ('A bottle to the right of a table',)]
+correct: [('A bottle to the right of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  79%|███████▉  | 326/412 [1:59:00<31:23,  0.05it/s]
+
+ options: [('A rose on a armchair',), ('A rose to the right of a armchair',), ('A rose to the left of a armchair',), ('A rose under a armchair',)]
+correct: [('A rose on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  79%|███████▉  | 327/412 [1:59:22<31:01,  0.05it/s]
+
+ options: [('A pillow under a table',), ('A pillow to the right of a table',), ('A pillow on a table',), ('A pillow to the left of a table',)]
+correct: [('A pillow to the left of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  80%|███████▉  | 328/412 [1:59:44<30:39,  0.05it/s]
+
+ options: [('A laptop under a chair',), ('A laptop to the right of a chair',), ('A laptop on a chair',), ('A laptop to the left of a chair',)]
+correct: [('A laptop to the right of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  80%|███████▉  | 329/412 [2:00:06<30:17,  0.05it/s]
+
+ options: [('A kettle to the left of a table',), ('A kettle to the right of a table',), ('A kettle on a table',), ('A kettle under a table',)]
+correct: [('A kettle to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  80%|████████  | 330/412 [2:00:27<29:56,  0.05it/s]
+
+ options: [('A toy cactus on a chair',), ('A toy cactus to the right of a chair',), ('A toy cactus to the left of a chair',), ('A toy cactus under a chair',)]
+correct: [('A toy cactus to the right of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  80%|████████  | 331/412 [2:00:49<29:34,  0.05it/s]
+
+ options: [('A book under a table',), ('A book on a table',), ('A book to the left of a table',), ('A book to the right of a table',)]
+correct: [('A book under a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  81%|████████  | 332/412 [2:01:11<29:12,  0.05it/s]
+
+ options: [('A dog to the right of a table',), ('A dog on a table',), ('A dog under a table',), ('A dog to the left of a table',)]
+correct: [('A dog on a table',)]
+output: ['True', 'True', 'False', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  81%|████████  | 333/412 [2:01:33<28:50,  0.05it/s]
+
+ options: [('A scarf to the left of a armchair',), ('A scarf under a armchair',), ('A scarf to the right of a armchair',), ('A scarf on a armchair',)]
+correct: [('A scarf on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  81%|████████  | 334/412 [2:01:55<28:28,  0.05it/s]
+
+ options: [('A mug on a table',), ('A mug to the right of a table',), ('A mug under a table',), ('A mug to the left of a table',)]
+correct: [('A mug under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  81%|████████▏ | 335/412 [2:02:17<28:06,  0.05it/s]
+
+ options: [('A headphones to the left of a chair',), ('A headphones on a chair',), ('A headphones under a chair',), ('A headphones to the right of a chair',)]
+correct: [('A headphones to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  82%|████████▏ | 336/412 [2:02:39<27:44,  0.05it/s]
+
+ options: [('A bowl to the left of a armchair',), ('A bowl to the right of a armchair',), ('A bowl on a armchair',), ('A bowl under a armchair',)]
+correct: [('A bowl on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  82%|████████▏ | 337/412 [2:03:01<27:22,  0.05it/s]
+
+ options: [('A photograph on a chair',), ('A photograph to the left of a chair',), ('A photograph under a chair',), ('A photograph to the right of a chair',)]
+correct: [('A photograph to the right of a chair',)]
+output: ['False', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  82%|████████▏ | 338/412 [2:03:23<27:00,  0.05it/s]
+
+ options: [('A mug under a armchair',), ('A mug to the right of a armchair',), ('A mug on a armchair',), ('A mug to the left of a armchair',)]
+correct: [('A mug under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  82%|████████▏ | 339/412 [2:03:45<26:38,  0.05it/s]
+
+ options: [('A lamp under a chair',), ('A lamp on a chair',), ('A lamp to the left of a chair',), ('A lamp to the right of a chair',)]
+correct: [('A lamp to the left of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  83%|████████▎ | 340/412 [2:04:07<26:17,  0.05it/s]
+
+ options: [('A plate to the left of a chair',), ('A plate under a chair',), ('A plate to the right of a chair',), ('A plate on a chair',)]
+correct: [('A plate on a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  83%|████████▎ | 341/412 [2:04:29<25:55,  0.05it/s]
+
+ options: [('A bread to the right of a armchair',), ('A bread on a armchair',), ('A bread under a armchair',), ('A bread to the left of a armchair',)]
+correct: [('A bread to the right of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  83%|████████▎ | 342/412 [2:04:51<25:33,  0.05it/s]
+
+ options: [('A helmet on a chair',), ('A helmet to the left of a chair',), ('A helmet under a chair',), ('A helmet to the right of a chair',)]
+correct: [('A helmet on a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  83%|████████▎ | 343/412 [2:05:13<25:11,  0.05it/s]
+
+ options: [('A plant to the right of a chair',), ('A plant under a chair',), ('A plant on a chair',), ('A plant to the left of a chair',)]
+correct: [('A plant on a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  83%|████████▎ | 344/412 [2:05:35<24:49,  0.05it/s]
+
+ options: [('A orange to the right of a armchair',), ('A orange under a armchair',), ('A orange on a armchair',), ('A orange to the left of a armchair',)]
+correct: [('A orange to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  84%|████████▎ | 345/412 [2:05:56<24:27,  0.05it/s]
+
+ options: [('A remote on a armchair',), ('A remote to the left of a armchair',), ('A remote under a armchair',), ('A remote to the right of a armchair',)]
+correct: [('A remote on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  84%|████████▍ | 346/412 [2:06:18<24:05,  0.05it/s]
+
+ options: [('A can on a armchair',), ('A can to the right of a armchair',), ('A can under a armchair',), ('A can to the left of a armchair',)]
+correct: [('A can to the left of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  84%|████████▍ | 347/412 [2:06:40<23:43,  0.05it/s]
+
+ options: [('A hat to the left of a chair',), ('A hat on a chair',), ('A hat to the right of a chair',), ('A hat under a chair',)]
+correct: [('A hat under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  84%|████████▍ | 348/412 [2:07:02<23:21,  0.05it/s]
+
+ options: [('A scissors under a chair',), ('A scissors to the left of a chair',), ('A scissors on a chair',), ('A scissors to the right of a chair',)]
+correct: [('A scissors on a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  85%|████████▍ | 349/412 [2:07:24<22:59,  0.05it/s]
+
+ options: [('A lemon to the left of a chair',), ('A lemon under a chair',), ('A lemon to the right of a chair',), ('A lemon on a chair',)]
+correct: [('A lemon under a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  85%|████████▍ | 350/412 [2:07:46<22:38,  0.05it/s]
+
+ options: [('A apple on a armchair',), ('A apple under a armchair',), ('A apple to the left of a armchair',), ('A apple to the right of a armchair',)]
+correct: [('A apple under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  85%|████████▌ | 351/412 [2:08:08<22:16,  0.05it/s]
+
+ options: [('A remote under a armchair',), ('A remote on a armchair',), ('A remote to the left of a armchair',), ('A remote to the right of a armchair',)]
+correct: [('A remote to the left of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  85%|████████▌ | 352/412 [2:08:30<21:54,  0.05it/s]
+
+ options: [('A knife to the left of a chair',), ('A knife to the right of a chair',), ('A knife on a chair',), ('A knife under a chair',)]
+correct: [('A knife on a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  86%|████████▌ | 353/412 [2:08:52<21:32,  0.05it/s]
+
+ options: [('A remote to the left of a armchair',), ('A remote on a armchair',), ('A remote to the right of a armchair',), ('A remote under a armchair',)]
+correct: [('A remote to the right of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  86%|████████▌ | 354/412 [2:09:14<21:10,  0.05it/s]
+
+ options: [('A vase to the right of a chair',), ('A vase under a chair',), ('A vase to the left of a chair',), ('A vase on a chair',)]
+correct: [('A vase to the left of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  86%|████████▌ | 355/412 [2:09:36<20:48,  0.05it/s]
+
+ options: [('A spatula on a table',), ('A spatula to the right of a table',), ('A spatula to the left of a table',), ('A spatula under a table',)]
+correct: [('A spatula to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  86%|████████▋ | 356/412 [2:09:58<20:26,  0.05it/s]
+
+ options: [('A bowl under a table',), ('A bowl to the right of a table',), ('A bowl on a table',), ('A bowl to the left of a table',)]
+correct: [('A bowl under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  87%|████████▋ | 357/412 [2:10:20<20:04,  0.05it/s]
+
+ options: [('A phone to the right of a armchair',), ('A phone to the left of a armchair',), ('A phone under a armchair',), ('A phone on a armchair',)]
+correct: [('A phone to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  87%|████████▋ | 358/412 [2:10:42<19:42,  0.05it/s]
+
+ options: [('A book under a armchair',), ('A book to the left of a armchair',), ('A book to the right of a armchair',), ('A book on a armchair',)]
+correct: [('A book to the left of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  87%|████████▋ | 359/412 [2:11:04<19:20,  0.05it/s]
+
+ options: [('A shoes under a chair',), ('A shoes to the right of a chair',), ('A shoes to the left of a chair',), ('A shoes on a chair',)]
+correct: [('A shoes on a chair',)]
+output: ['True', 'False', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  87%|████████▋ | 360/412 [2:11:26<18:59,  0.05it/s]
+
+ options: [('A ball of yarn on a chair',), ('A ball of yarn to the left of a chair',), ('A ball of yarn to the right of a chair',), ('A ball of yarn under a chair',)]
+correct: [('A ball of yarn under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  88%|████████▊ | 361/412 [2:11:47<18:37,  0.05it/s]
+
+ options: [('A laptop to the left of a armchair',), ('A laptop to the right of a armchair',), ('A laptop on a armchair',), ('A laptop under a armchair',)]
+correct: [('A laptop to the left of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  88%|████████▊ | 362/412 [2:12:09<18:15,  0.05it/s]
+
+ options: [('A bottle to the right of a armchair',), ('A bottle on a armchair',), ('A bottle under a armchair',), ('A bottle to the left of a armchair',)]
+correct: [('A bottle under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  88%|████████▊ | 363/412 [2:12:31<17:53,  0.05it/s]
+
+ options: [('A painting on a table',), ('A painting under a table',), ('A painting to the left of a table',), ('A painting to the right of a table',)]
+correct: [('A painting to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  88%|████████▊ | 364/412 [2:12:53<17:31,  0.05it/s]
+
+ options: [('A laptop under a armchair',), ('A laptop to the left of a armchair',), ('A laptop to the right of a armchair',), ('A laptop on a armchair',)]
+correct: [('A laptop under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  89%|████████▊ | 365/412 [2:13:15<17:09,  0.05it/s]
+
+ options: [('A sunglasses to the left of a table',), ('A sunglasses under a table',), ('A sunglasses to the right of a table',), ('A sunglasses on a table',)]
+correct: [('A sunglasses on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  89%|████████▉ | 366/412 [2:13:37<16:47,  0.05it/s]
+
+ options: [('A bowl on a table',), ('A bowl under a table',), ('A bowl to the right of a table',), ('A bowl to the left of a table',)]
+correct: [('A bowl to the right of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  89%|████████▉ | 367/412 [2:13:59<16:25,  0.05it/s]
+
+ options: [('A cap on a armchair',), ('A cap to the right of a armchair',), ('A cap to the left of a armchair',), ('A cap under a armchair',)]
+correct: [('A cap under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  89%|████████▉ | 368/412 [2:14:21<16:03,  0.05it/s]
+
+ options: [('A beer bottle to the right of a armchair',), ('A beer bottle on a armchair',), ('A beer bottle to the left of a armchair',), ('A beer bottle under a armchair',)]
+correct: [('A beer bottle under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  90%|████████▉ | 369/412 [2:14:43<15:41,  0.05it/s]
+
+ options: [('A bowl under a armchair',), ('A bowl on a armchair',), ('A bowl to the left of a armchair',), ('A bowl to the right of a armchair',)]
+correct: [('A bowl to the right of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  90%|████████▉ | 370/412 [2:15:05<15:20,  0.05it/s]
+
+ options: [('A soda can under a armchair',), ('A soda can on a armchair',), ('A soda can to the right of a armchair',), ('A soda can to the left of a armchair',)]
+correct: [('A soda can on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  90%|█████████ | 371/412 [2:15:27<14:58,  0.05it/s]
+
+ options: [('A orange to the right of a table',), ('A orange on a table',), ('A orange to the left of a table',), ('A orange under a table',)]
+correct: [('A orange to the left of a table',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  90%|█████████ | 372/412 [2:15:49<14:36,  0.05it/s]
+
+ options: [('A knife on a table',), ('A knife under a table',), ('A knife to the left of a table',), ('A knife to the right of a table',)]
+correct: [('A knife under a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  91%|█████████ | 373/412 [2:16:11<14:14,  0.05it/s]
+
+ options: [('A shoes under a chair',), ('A shoes on a chair',), ('A shoes to the left of a chair',), ('A shoes to the right of a chair',)]
+correct: [('A shoes under a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  91%|█████████ | 374/412 [2:16:33<13:52,  0.05it/s]
+
+ options: [('A remote on a chair',), ('A remote to the right of a chair',), ('A remote under a chair',), ('A remote to the left of a chair',)]
+correct: [('A remote on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  91%|█████████ | 375/412 [2:16:54<13:30,  0.05it/s]
+
+ options: [('A pot on a chair',), ('A pot to the right of a chair',), ('A pot to the left of a chair',), ('A pot under a chair',)]
+correct: [('A pot on a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  91%|█████████▏| 376/412 [2:17:16<13:08,  0.05it/s]
+
+ options: [('A headphones to the left of a armchair',), ('A headphones under a armchair',), ('A headphones to the right of a armchair',), ('A headphones on a armchair',)]
+correct: [('A headphones to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  92%|█████████▏| 377/412 [2:17:38<12:46,  0.05it/s]
+
+ options: [('A headphones on a chair',), ('A headphones to the left of a chair',), ('A headphones to the right of a chair',), ('A headphones under a chair',)]
+correct: [('A headphones on a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  92%|█████████▏| 378/412 [2:18:00<12:24,  0.05it/s]
+
+ options: [('A water bottle to the left of a armchair',), ('A water bottle to the right of a armchair',), ('A water bottle under a armchair',), ('A water bottle on a armchair',)]
+correct: [('A water bottle under a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  92%|█████████▏| 379/412 [2:18:22<12:02,  0.05it/s]
+
+ options: [('A dragonfruit on a table',), ('A dragonfruit under a table',), ('A dragonfruit to the right of a table',), ('A dragonfruit to the left of a table',)]
+correct: [('A dragonfruit under a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  92%|█████████▏| 380/412 [2:18:44<11:41,  0.05it/s]
+
+ options: [('A photograph under a chair',), ('A photograph to the right of a chair',), ('A photograph to the left of a chair',), ('A photograph on a chair',)]
+correct: [('A photograph on a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  92%|█████████▏| 381/412 [2:19:06<11:19,  0.05it/s]
+
+ options: [('A banjo on a armchair',), ('A banjo under a armchair',), ('A banjo to the right of a armchair',), ('A banjo to the left of a armchair',)]
+correct: [('A banjo under a armchair',)]
+output: ['False', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  93%|█████████▎| 382/412 [2:19:28<10:57,  0.05it/s]
+
+ options: [('A scarf to the left of a chair',), ('A scarf under a chair',), ('A scarf to the right of a chair',), ('A scarf on a chair',)]
+correct: [('A scarf to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  93%|█████████▎| 383/412 [2:19:50<10:35,  0.05it/s]
+
+ options: [('A tape under a armchair',), ('A tape to the right of a armchair',), ('A tape on a armchair',), ('A tape to the left of a armchair',)]
+correct: [('A tape on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  93%|█████████▎| 384/412 [2:20:12<10:13,  0.05it/s]
+
+ options: [('A sunglasses on a table',), ('A sunglasses under a table',), ('A sunglasses to the right of a table',), ('A sunglasses to the left of a table',)]
+correct: [('A sunglasses to the left of a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  93%|█████████▎| 385/412 [2:20:34<09:51,  0.05it/s]
+
+ options: [('A laptop to the left of a chair',), ('A laptop to the right of a chair',), ('A laptop on a chair',), ('A laptop under a chair',)]
+correct: [('A laptop on a chair',)]
+output: ['False', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  94%|█████████▎| 386/412 [2:20:56<09:29,  0.05it/s]
+
+ options: [('A knife to the left of a chair',), ('A knife under a chair',), ('A knife to the right of a chair',), ('A knife on a chair',)]
+correct: [('A knife under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  94%|█████████▍| 387/412 [2:21:18<09:07,  0.05it/s]
+
+ options: [('A spatula on a chair',), ('A spatula to the right of a chair',), ('A spatula to the left of a chair',), ('A spatula under a chair',)]
+correct: [('A spatula under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  94%|█████████▍| 388/412 [2:21:40<08:45,  0.05it/s]
+
+ options: [('A pillow under a armchair',), ('A pillow to the left of a armchair',), ('A pillow on a armchair',), ('A pillow to the right of a armchair',)]
+correct: [('A pillow on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  94%|█████████▍| 389/412 [2:22:02<08:23,  0.05it/s]
+
+ options: [('A beer bottle under a armchair',), ('A beer bottle on a armchair',), ('A beer bottle to the left of a armchair',), ('A beer bottle to the right of a armchair',)]
+correct: [('A beer bottle to the left of a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  95%|█████████▍| 390/412 [2:22:24<08:01,  0.05it/s]
+
+ options: [('A cap on a armchair',), ('A cap under a armchair',), ('A cap to the left of a armchair',), ('A cap to the right of a armchair',)]
+correct: [('A cap to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  95%|█████████▍| 391/412 [2:22:45<07:40,  0.05it/s]
+
+ options: [('A sunglasses on a armchair',), ('A sunglasses to the right of a armchair',), ('A sunglasses to the left of a armchair',), ('A sunglasses under a armchair',)]
+correct: [('A sunglasses on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  95%|█████████▌| 392/412 [2:23:07<07:18,  0.05it/s]
+
+ options: [('A bowl under a chair',), ('A bowl on a chair',), ('A bowl to the right of a chair',), ('A bowl to the left of a chair',)]
+correct: [('A bowl on a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  95%|█████████▌| 393/412 [2:23:29<06:56,  0.05it/s]
+
+ options: [('A can to the right of a chair',), ('A can to the left of a chair',), ('A can on a chair',), ('A can under a chair',)]
+correct: [('A can to the left of a chair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  96%|█████████▌| 394/412 [2:23:51<06:34,  0.05it/s]
+
+ options: [('A cup on a armchair',), ('A cup under a armchair',), ('A cup to the right of a armchair',), ('A cup to the left of a armchair',)]
+correct: [('A cup to the left of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  96%|█████████▌| 395/412 [2:24:13<06:12,  0.05it/s]
+
+ options: [('A lamp under a chair',), ('A lamp on a chair',), ('A lamp to the left of a chair',), ('A lamp to the right of a chair',)]
+correct: [('A lamp under a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  96%|█████████▌| 396/412 [2:24:35<05:50,  0.05it/s]
+
+ options: [('A sunglasses to the left of a armchair',), ('A sunglasses to the right of a armchair',), ('A sunglasses on a armchair',), ('A sunglasses under a armchair',)]
+correct: [('A sunglasses to the right of a armchair',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  96%|█████████▋| 397/412 [2:24:57<05:28,  0.05it/s]
+
+ options: [('A pan to the right of a chair',), ('A pan on a chair',), ('A pan to the left of a chair',), ('A pan under a chair',)]
+correct: [('A pan to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  97%|█████████▋| 398/412 [2:25:19<05:06,  0.05it/s]
+
+ options: [('A bottle of orange juice under a chair',), ('A bottle of orange juice on a chair',), ('A bottle of orange juice to the left of a chair',), ('A bottle of orange juice to the right of a chair',)]
+correct: [('A bottle of orange juice on a chair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  97%|█████████▋| 399/412 [2:25:41<04:44,  0.05it/s]
+
+ options: [('A toilet roll to the left of a table',), ('A toilet roll to the right of a table',), ('A toilet roll on a table',), ('A toilet roll under a table',)]
+correct: [('A toilet roll to the right of a table',)]
+output: ['True', 'True', 'False', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  97%|█████████▋| 400/412 [2:26:03<04:22,  0.05it/s]
+
+ options: [('A plate under a armchair',), ('A plate on a armchair',), ('A plate to the left of a armchair',), ('A plate to the right of a armchair',)]
+correct: [('A plate under a armchair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  97%|█████████▋| 401/412 [2:26:25<04:00,  0.05it/s]
+
+ options: [('A bottle to the left of a table',), ('A bottle on a table',), ('A bottle to the right of a table',), ('A bottle under a table',)]
+correct: [('A bottle on a table',)]
+output: ['False', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  98%|█████████▊| 402/412 [2:26:47<03:39,  0.05it/s]
+
+ options: [('A bowl under a chair',), ('A bowl to the right of a chair',), ('A bowl to the left of a chair',), ('A bowl on a chair',)]
+correct: [('A bowl to the right of a chair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  98%|█████████▊| 403/412 [2:27:09<03:17,  0.05it/s]
+
+ options: [('A book on a chair',), ('A book to the left of a chair',), ('A book to the right of a chair',), ('A book under a chair',)]
+correct: [('A book to the left of a chair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  98%|█████████▊| 404/412 [2:27:31<02:55,  0.05it/s]
+
+ options: [('A scarf to the left of a table',), ('A scarf to the right of a table',), ('A scarf under a table',), ('A scarf on a table',)]
+correct: [('A scarf on a table',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('False',), ('True',)]
+
+
+Testing DataLoader 0:  98%|█████████▊| 405/412 [2:27:53<02:33,  0.05it/s]
+
+ options: [('A plate on a armchair',), ('A plate under a armchair',), ('A plate to the right of a armchair',), ('A plate to the left of a armchair',)]
+correct: [('A plate to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  99%|█████████▊| 406/412 [2:28:15<02:11,  0.05it/s]
+
+ options: [('A remote to the right of a chair',), ('A remote on a chair',), ('A remote under a chair',), ('A remote to the left of a chair',)]
+correct: [('A remote to the right of a chair',)]
+output: ['True', 'False', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  99%|█████████▉| 407/412 [2:28:37<01:49,  0.05it/s]
+
+ options: [('A glove under a armchair',), ('A glove to the left of a armchair',), ('A glove on a armchair',), ('A glove to the right of a armchair',)]
+correct: [('A glove on a armchair',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0:  99%|█████████▉| 408/412 [2:28:58<01:27,  0.05it/s]
+
+ options: [('A dragonfruit on a table',), ('A dragonfruit to the right of a table',), ('A dragonfruit under a table',), ('A dragonfruit to the left of a table',)]
+correct: [('A dragonfruit on a table',)]
+output: ['True', 'True', 'True', 'True']
+ground-truth: [('True',), ('False',), ('False',), ('False',)]
+
+
+Testing DataLoader 0:  99%|█████████▉| 409/412 [2:29:20<01:05,  0.05it/s]
+
+ options: [('A dog to the left of a table',), ('A dog to the right of a table',), ('A dog under a table',), ('A dog on a table',)]
+correct: [('A dog under a table',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0: 100%|█████████▉| 410/412 [2:29:42<00:43,  0.05it/s]
+
+ options: [('A mug on a armchair',), ('A mug under a armchair',), ('A mug to the right of a armchair',), ('A mug to the left of a armchair',)]
+correct: [('A mug to the right of a armchair',)]
+output: ['False', 'True', 'True', 'True']
+ground-truth: [('False',), ('False',), ('True',), ('False',)]
+
+
+Testing DataLoader 0: 100%|█████████▉| 411/412 [2:30:04<00:21,  0.05it/s]
+
+ options: [('A book under a armchair',), ('A book to the right of a armchair',), ('A book to the left of a armchair',), ('A book on a armchair',)]
+correct: [('A book to the right of a armchair',)]
+output: ['True', 'True', 'True', 'False']
+ground-truth: [('False',), ('True',), ('False',), ('False',)]
+
+
+Testing DataLoader 0: 100%|██████████| 412/412 [2:30:26<00:00,  0.05it/s]Testing DataLoader 0: 100%|██████████| 412/412 [2:30:26<00:00,  0.05it/s]
+Testing finished!
