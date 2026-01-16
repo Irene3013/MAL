@@ -1,7 +1,70 @@
 /gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
   warnings.warn(
 `torch_dtype` is deprecated! Use `dtype` instead!
-Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:08<00:32,  8.12s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:11<00:15,  5.18s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:14<00:08,  4.39s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:17<00:03,  3.79s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:17<00:00,  3.53s/it]
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:03<00:12,  3.18s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:04<00:07,  2.36s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:06<00:04,  2.08s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:08<00:02,  2.00s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:08<00:00,  1.74s/it]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:00<00:00, 38.31it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:00<00:00, 46.89it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:07<00:29,  7.34s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:11<00:16,  5.57s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:14<00:08,  4.12s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:14<00:02,  2.68s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:14<00:00,  2.93s/it]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:03<00:12,  3.16s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:04<00:06,  2.09s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:05<00:03,  1.53s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:06<00:01,  1.28s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:06<00:00,  1.27s/it]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:08<00:33,  8.34s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:11<00:16,  5.47s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:12<00:07,  3.50s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:14<00:02,  2.77s/it]Loading checkpoint shards: 100%|██████████| 5/5 [00:14<00:00,  2.94s/it]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:02<00:09,  2.47s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:03<00:04,  1.39s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:03<00:02,  1.16s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:04<00:00,  1.05it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:04<00:00,  1.06it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:00<00:00, 29.44it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:00<00:00, 41.31it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/gaueko0/users/ietxarri010/env/nire_env/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:02<00:09,  2.44s/it]Loading checkpoint shards:  40%|████      | 2/5 [00:03<00:04,  1.36s/it]Loading checkpoint shards:  60%|██████    | 3/5 [00:03<00:02,  1.00s/it]Loading checkpoint shards:  80%|████████  | 4/5 [00:04<00:00,  1.20it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:04<00:00,  1.17it/s]
 The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
 GPU available: True (cuda), used: True
 TPU available: False, using: 0 TPU cores
