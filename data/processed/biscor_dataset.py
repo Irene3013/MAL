@@ -1,46 +1,56 @@
-# # data/processed/biscor_dataset.py
+# data/processed/biscor_dataset.py
 
-# # -----------------------------
-# # DATASET
-# # -----------------------------
-# class VSRDataset(Dataset):
-#     """
-#     Visual Spatial Relations (VSR) Dataset
-#     """
-#     def __init__(self, dataset_name="zeroshot", split="train", data_path="data", config=None):
+from pathlib import Path
+import json
+import os
+from torch.utils.data import Dataset, DataLoader
+import pytorch_lightning as pl
+from PIL import Image
+import torch
+from utils.data_helpers import invert_relation, vsr_dual_encoder_collate
+from utils.model_helpers import create_qwen_message, create_MC_qwen_message
+from qwen_vl_utils import process_vision_info
 
-#         # Validations
-#         self.base_path = Path(data_path) / "raw" / "vsr" #relative path
-#         assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
-#         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
-#         assert dataset_name in ['zeroshot', 'random'], f"Unsupported vsr name: '{dataset_name}'. Must be one of ['zeroshot', 'random']."
+
+# -----------------------------
+# DATASET
+# -----------------------------
+class BISCORDataset(Dataset):
+    """
+    BISCOR Dataset
+    """
+    def __init__(self, split="train", data_path="data", image_path="data", config=None):
+
+        # Validations
+        self.base_path = Path(data_path) / "raw" / "vsr" #relative path
+        assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
+        assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         
-#         # Data / Images path
-#         self.dataset_name = dataset_name # [zeroshot, random]
-#         self.split = split
+        # Data / Images path
+        self.split = split
 
-#         self.image_path = Path(self.base_path) / "images"
-#         self.data_path = Path(self.base_path) / self.dataset_name  / f"{split}.jsonl"
-#         self.dataset = self._load_jsonl()
+        self.image_path = Path(self.image_path)
+        self.data_path = Path(self.base_path) / f"{split}.jsonl"
+        self.dataset = self._load_jsonl()
 
-#         # Input processing
-#         self.transform = config["transform"]
-#         self.tokenizer = config["tokenizer"]
-#         self.processor = config["processor"]
-#         self.params = config.get("params", {})
+        # Input processing
+        self.transform = config["transform"]
+        self.tokenizer = config["tokenizer"]
+        self.processor = config["processor"]
+        self.params = config.get("params", {})
 
-#     def _load_jsonl(self):
-#         with open(self.data_path, "r", encoding="utf-8") as f:
-#             return [json.loads(line) for line in f]
+    def _load_jsonl(self):
+        with open(self.data_path, "r", encoding="utf-8") as f:
+            return [json.loads(line) for line in f]
     
-#     def _load_image(self, image):
-#         img_path = self.image_path / image
-#         if not os.path.exists(img_path):
-#             raise FileNotFoundError(f"Image not found: {img_path}")
-#         return Image.open(img_path)
+    def _load_image(self, image):
+        img_path = self.image_path / image
+        if not os.path.exists(img_path):
+            raise FileNotFoundError(f"Image not found: {img_path}")
+        return Image.open(img_path)
     
-#     def __len__(self):
-#         return len(self.dataset)
+    def __len__(self):
+        return len(self.dataset)
 
 #     def __getitem__(self, idx):
 #         item = self.dataset[idx]
@@ -87,7 +97,7 @@
 #             "text": inputs['input_ids'],
 #         }
 
-#     @staticmethod
-#     def compute_accuracy(logits, labels, score):
-#         probs = torch.sigmoid(logits)
-#         return (probs.argmax(dim=1) == labels).float().mean()
+    @staticmethod
+    def compute_accuracy(logits, labels, score):
+        probs = torch.sigmoid(logits)
+        return (probs.argmax(dim=1) == labels).float().mean()
