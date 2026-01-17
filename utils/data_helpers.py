@@ -125,3 +125,63 @@ def whastup_dual_encoder_collate(batch, config, model_name):
         "input": all_inputs,  
         "label": labels
     }
+
+
+def biscor_dual_encoder_collate(batch, config, model_name):
+    """
+    Collate function to evaluate BISCOR  in Dual Encoder models (CLIP, SigLIP, Pecore)
+    BISCOR item: {"caption_pos": str, "caption_neg": str, "image_pos": PIL.Image, "image_neg": PIL.Image}
+    """
+    labels = []
+    all_inputs = []
+    
+    # Input processors
+    transform = config["transform"]
+    processor = config["processor"]
+    tokenizer = config["tokenizer"] # For PE-core
+    params = config.get("params", {})
+
+    for item in batch:
+        img_pos = item["image_pos"]
+        img_neg = item["image_neg"]
+        cap_pos = item["caption_pos"]
+        cap_neg = item["caption_neg"]
+
+        # Labels to evaluate
+        label_t2i = [0, 1]
+        label_i2t = [0, 1]
+        labels.append([label_t2i, label_i2t])
+
+         # Crop images (CLIP image transform for comparable results)
+        if transform is not None:
+            img_pos = transform(img_pos)
+            img_neg = transform(img_neg)
+        img_pos = img_pos.convert("RGB") # secure 3 channels
+        img_neg = img_neg.convert("RGB") # secure 3 channels
+
+        # Process each input depending on the model
+        if model_name == "pecore":
+            image_tensor = processor(img_pos).unsqueeze(0)
+            text_tensor = tokenizer([cap_pos, cap_neg])
+            inputs = {"image": image_tensor, "captions": text_tensor}
+
+        elif model_name in ["siglip", "siglip2", "clip"]:
+            inputs = processor(
+                text=[cap_pos, cap_neg],
+                images=[img_pos, img_neg],
+                return_tensors="pt",
+                **params
+            )
+        else:
+            raise NotImplementedError()
+        
+        all_inputs.append(inputs)
+
+     # Labels to tensor
+    labels = torch.tensor(labels, dtype=torch.long)
+    return {
+        "input": all_inputs,  
+        "label": labels
+    }
+
+

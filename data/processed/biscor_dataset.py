@@ -1,15 +1,15 @@
 # data/processed/biscor_dataset.py
 
 from pathlib import Path
-import json
+import csv
 import os
+import torch
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
-import torch
-from utils.data_helpers import invert_relation, vsr_dual_encoder_collate
-from utils.model_helpers import create_qwen_message, create_MC_qwen_message
-from qwen_vl_utils import process_vision_info
+from utils.data_helpers import biscor_dual_encoder_collate
+# from utils.model_helpers import create_qwen_message, create_MC_qwen_message
+# from qwen_vl_utils import process_vision_info
 
 
 # -----------------------------
@@ -19,19 +19,19 @@ class BISCORDataset(Dataset):
     """
     BISCOR Dataset
     """
-    def __init__(self, split="train", data_path="data", image_path="data", config=None):
+    def __init__(self, split="train", data_path="data", model=None, config=None):
 
         # Validations
-        self.base_path = Path(data_path) / "raw" / "vsr" #relative path
-        assert self.base_path.exists(), f"Root directory '{self.base_path}' does not exist."   
+        #self.base_path = Path(data_path) #relative path
+        assert self.base_path.exists(), f"Root directory '{data_path}' does not exist."   
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         
         # Data / Images path
+        self.model = model
         self.split = split
-
-        self.image_path = Path(self.image_path)
-        self.data_path = Path(self.base_path) / f"{split}.jsonl"
-        self.dataset = self._load_jsonl()
+        self.image_path = Path(data_path)
+        self.data_path = Path(data_path) / "rel" / f"test_relation.csv"
+        self.dataset = self._load_csv()
 
         # Input processing
         self.transform = config["transform"]
@@ -39,9 +39,10 @@ class BISCORDataset(Dataset):
         self.processor = config["processor"]
         self.params = config.get("params", {})
 
-    def _load_jsonl(self):
-        with open(self.data_path, "r", encoding="utf-8") as f:
-            return [json.loads(line) for line in f]
+    def _load_csv(self):
+        with open(self.data_path, newline="", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            return list(reader)
     
     def _load_image(self, image):
         img_path = self.image_path / image
@@ -52,52 +53,119 @@ class BISCORDataset(Dataset):
     def __len__(self):
         return len(self.dataset)
 
-#     def __getitem__(self, idx):
-#         item = self.dataset[idx]
+    def __getitem__(self, idx):
+        item = self.dataset[idx]
 
-#         if(self.split != "train"):
-#             return {
-#                 "caption": item["caption"],
-#                 "negated": invert_relation(item["caption"], item["relation"], negate),
-#                 "image": self._load_image(item["image"]),
-#                 "label": item["label"]
-#             }
-
-#         img = self._load_image(item["image"])
-#         if item['label'] == 1:
-#             text = item["caption"] + ' (True)'
-#         else:
-#             text = item["caption"] + ' (False)'
-
-
-#         # Apply image preprocessing if specified
-#         if self.transform is not None:
-#             img = self.transform(img)
-#         img = img.convert("RGB")
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
+            return self._dual_encoder_item(item)
         
-#         # Process inputs separately (procesor + tokenizer)
-#         if self.tokenizer is not None:
-#             img = self.processor(img).unsqueeze(0)
-#             text = self.tokenizer(text)
-#             return {
-#                 "image": img,
-#                 "text": text
-#             }
+        # elif self.model == "qwen2":
+        #     return self._qwen_item(item)
+        
+        # elif self.model == "clip-flant5":
+        #     return self._vqascore_item(item)
+        else:
+            raise NotImplementedError()
+        
+    
+    # --- GET ITEM METHODS ---
+    def _dual_encoder_item(self, item):
+        """
+        Prepare item for Dual Encoder models.
+            Val/Test: 2 image - 2 captions
+            Train:    2 image - 2 caption (contrastive loss)
+        """    
+        _, pos_capt, neg_capt, pos_img, neg_img  = item
 
-#         # Process inputs all together (general processor)
-#         else:
-#             inputs = self.processor(
-#                 text=text,
-#                 images=img,
-#                 return_tensors="pt",
-#                 **self.params
-#             )
-#         return {
-#             "image": inputs['pixel_values'].squeeze(0),
-#             "text": inputs['input_ids'],
-#         }
+        # **A. Val/Test (return caption-pairs to Collate):**
+        if self.split != "train":
+            return {
+                "caption_pos": pos_capt,
+                "caption_neg": neg_capt,
+                "image_pos": self._load_image(pos_img),
+                "image_neg": self._load_image(neg_img),
+            }
 
     @staticmethod
     def compute_accuracy(logits, labels, score):
         probs = torch.sigmoid(logits)
         return (probs.argmax(dim=1) == labels).float().mean()
+    
+
+    # -----------------------------
+# DATAMODULE
+# -----------------------------
+class BISCORDataModule(pl.LightningDataModule):
+    """
+    Visual Spatial Relations (BISCOR) Data Module
+    """
+    def __init__(self, args, config):
+        super().__init__()
+
+        self.batch_size = args.batch_size
+        self.num_workers = args.num_workers
+        self.dataset_name = args.variant
+        self.root = args.root
+        self.model = args.model
+        self.config = config
+
+        # Setup dataloader
+        self.setup()
+        
+    def setup(self, stage=None):
+        # Define collate function (for evaluation)
+        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual Encoders
+            self.collate_fn_eval = lambda batch: biscor_dual_encoder_collate(
+                batch, self.config, self.model # Pasar args y model_name
+            )
+        else: # qwen / vqascore
+            self.collate_fn_eval = None
+
+        # Setup train/val/test datasets
+        # self.train_dataset = BISCORDataset(
+        #     split="train",
+        #     data_path=self.root,
+        #     dataset_name=self.dataset_name,
+        #     model=self.model,
+        #     config=self.config 
+        # )
+        # self.val_dataset = BISCORDataset(
+        #     split="val",
+        #     data_path=self.root,
+        #     dataset_name=self.dataset_name,
+        #     model=self.model,
+        #     config=self.config 
+        # )
+        self.test_dataset = BISCORDataset(
+            split="test",
+            data_path=self.root,
+            dataset_name=self.dataset_name,
+            model=self.model,
+            config=self.config 
+        )
+
+    # def train_dataloader(self):
+    #     return DataLoader(
+    #         self.train_dataset,
+    #         batch_size=self.batch_size,
+    #         shuffle=True,
+    #         num_workers=self.num_workers,
+    #     )
+    
+    # def val_dataloader(self):
+    #     return DataLoader(
+    #         self.val_dataset,
+    #         batch_size=self.batch_size,
+    #         shuffle=False,
+    #         num_workers=self.num_workers,
+    #         collate_fn=self.collate_fn_eval
+    #     )
+    
+    def test_dataloader(self):
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn_eval
+        )

@@ -96,6 +96,10 @@ class DualEncoder(pl.LightningModule):
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc
+    
+    def eval_step_biscor():
+        
+        return 0
 
     # -----------------------------
     # LIGHTNING STEP METHODS

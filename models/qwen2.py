@@ -95,7 +95,6 @@ class Qwen2_VL(pl.LightningModule):
         # Soft-eval
         # acc = 0
         # for pred, gt in zip(outputs, labels):
-        #     print(f"pred: {pred}\tgt: {gt[0]}")
         #     acc += (pred == gt[0]) / len(inputs)
 
         # Hard-eval
@@ -104,7 +103,7 @@ class Qwen2_VL(pl.LightningModule):
             if pred != gt[0]: acc=0 # one wrong 0 points
         
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-        return acc # Devolver la métrica de precisión
+        return acc 
 
 
     # -----------------------------
