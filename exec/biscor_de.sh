@@ -14,7 +14,12 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
-srun python main.py --model "clip" \
+srun python main.py --model "siglip" \
+   --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
+   --run_name biscor_clip_test --evaluate --dataset biscor \
+   --root /gaueko0/users/imiranda014/GSCRATCH/Data/inference-time/our_dataset --precision 32
+
+srun python main.py --model "siglip2" \
    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
    --run_name biscor_clip_test --evaluate --dataset biscor \
    --root /gaueko0/users/imiranda014/GSCRATCH/Data/inference-time/our_dataset --precision 32
