@@ -5,6 +5,7 @@ from models.dual_encoder import DualEncoder
 from models.qwen2 import Qwen2_VL
 from models.clip_flant5_xl import CLIP_FlanT5_XL
 from data.processed.vsr_dataset import VSRDataModule
+from data.processed.biscor_dataset import BISCORDataModule
 from data.processed.whatsup_dataset import WhatsUpDataModule
 import argparse
 import torch.serialization
@@ -56,7 +57,7 @@ def parse_args():
     
     # DataLoader args
     parser.add_argument(
-        "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial"], help="Select dataset to be trained on."
+        "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial", "biscor"], help="Select dataset to be trained on."
     )
     parser.add_argument(
         "--batch_size", type=int, default=56, help="Batch size (per gpu)."
@@ -142,11 +143,11 @@ def main_program():
         datamodule = VSRDataModule(args, config=model.config)
     elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
         datamodule = WhatsUpDataModule(args, config=model.config)
+    elif args.dataset == 'biscor':
+        datamodule = BISCORDataModule(args, config=model.config)
     else:
         print(f"Dataset {args.dataset} not implemented.")
-        sys.exit()
-    # Setup datamodule
-    #datamodule.setup()   
+        sys.exit()  
        
     print("Data loaded!")
 
