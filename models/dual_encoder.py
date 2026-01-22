@@ -3,6 +3,7 @@ import torch
 import pytorch_lightning as pl
 from data.processed.vsr_dataset import VSRDataset
 from data.processed.whatsup_dataset import WhatsUpDataset
+from data.processed.biscor_dataset import BISCORDataset
 import transformers
 from utils.model_helpers import load_vision_model_components
 
@@ -36,6 +37,10 @@ class DualEncoder(pl.LightningModule):
         if args.dataset == "whatsup":
             # precision / pair-wise / set-wise
             self.compute_accuracy = WhatsUpDataset.compute_accuracy
+
+        elif args.dataset == "biscor":
+            # BISCOR accuracy
+            self.compute_accuracy = BISCORDataset.compute_accuracy
         else:
             # precision
             self.compute_accuracy = VSRDataset.compute_accuracy
@@ -102,9 +107,10 @@ class DualEncoder(pl.LightningModule):
         inputs_list = batch["input"]
 
         print(inputs_list)
+        print(labels)
 
         # Forward pass each input
-        # logits_list = []
+        # acc_list = []
         # for inputs in inputs_list:
 
         #     if self.model_name == "pecore":
@@ -116,10 +122,8 @@ class DualEncoder(pl.LightningModule):
         #     else:
         #         inputs = inputs.to(self.device)
         #         outputs = self.model(**inputs)
-        #         I2T_logits = outputs.logits_per_image
-        #         T2I_logits = outputs.logits_per_text
-
-        #     logits_list.append(I2T_logits)
+        #         acc = self.compute_accuracy(outputs, labels, self.score)
+        #         acc_list.append(acc)
 
         # logits = torch.cat(logits_list, dim=0)
         # acc = self.compute_accuracy(logits, labels, self.score)

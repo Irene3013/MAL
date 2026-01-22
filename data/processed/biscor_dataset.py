@@ -87,9 +87,16 @@ class BISCORDataset(Dataset):
             }
 
     @staticmethod
-    def compute_accuracy(logits, labels, score):
-        probs = torch.sigmoid(logits)
-        return (probs.argmax(dim=1) == labels).float().mean()
+    def compute_accuracy(outputs, labels, score):
+        t2i = outputs.logits_per_image
+        i2t = outputs.logits_per_text
+
+        probs_t2i = torch.sigmoid(t2i)
+        probs_i2t = torch.sigmoid(i2t)
+        acc_t2i = (probs_t2i.argmax(dim=1) == labels).float().mean()
+        acc_i2t = (probs_i2t.argmax(dim=1) == labels).float().mean()
+
+        return (acc_t2i == 1) and (acc_i2t == 1) # must guess all correctly
     
 
     # -----------------------------
