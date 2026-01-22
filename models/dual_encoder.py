@@ -105,13 +105,17 @@ class DualEncoder(pl.LightningModule):
     def eval_step_biscor(self, batch, split):
 
         
-        print(batch)
-        labels = batch["label"].to(self.device)
-        inputs_list = batch["input"]
+        #labels = batch["label"].to(self.device)
+        inputs = batch["input"]
         
-        print(inputs_list)
+        print(inputs)
         print(labels)
-        
+
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        #labels = labels.to(self.device)
+
+        outputs = self.model(**inputs)
+
         # Forward pass each input
         # acc_list = []
         # for inputs in inputs_list:
@@ -129,10 +133,11 @@ class DualEncoder(pl.LightningModule):
         #         acc_list.append(acc)
 
         # logits = torch.cat(logits_list, dim=0)
-        # acc = self.compute_accuracy(logits, labels, self.score)
+        labels = torch.arange(outputs.logits_per_image.size(0), device=self.device)
+        acc = self.compute_accuracy(outputs, labels, self.score)
 
         # Logging
-        # self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return 0 #acc
 
     # -----------------------------

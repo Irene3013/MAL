@@ -89,15 +89,32 @@ class BISCORDataset(Dataset):
 
     @staticmethod
     def compute_accuracy(outputs, labels, score):
-        t2i = outputs.logits_per_image
-        i2t = outputs.logits_per_text
+        logits_i2t = outputs.logits_per_image
+        logits_t2i = outputs.logits_per_text
 
-        probs_t2i = torch.sigmoid(t2i)
-        probs_i2t = torch.sigmoid(i2t)
-        acc_t2i = (probs_t2i.argmax(dim=1) == labels).float().mean()
-        acc_i2t = (probs_i2t.argmax(dim=1) == labels).float().mean()
+        pred_t2i = logits_t2i.argmax(dim=1)
+        acc_t2i = (pred_t2i == labels).float().mean()
 
-        return (acc_t2i == 1) and (acc_i2t == 1) # must guess all correctly
+        print(pred_t2i, labels)
+
+        pred_i2t = logits_i2t.argmax(dim=1)
+        acc_i2t = (pred_i2t == labels).float().mean()
+
+        print(pred_i2t, labels)
+        # t2i = outputs.logits_per_image
+        # i2t = outputs.logits_per_text
+
+        # probs_t2i = torch.sigmoid(t2i)
+        # probs_i2t = torch.sigmoid(i2t)
+        # acc_t2i = (probs_t2i.argmax(dim=1) == labels).float().mean()
+        # acc_i2t = (probs_i2t.argmax(dim=1) == labels).float().mean()
+        hard_score = (
+            torch.equal(pred_t2i, labels) and
+            torch.equal(pred_i2t, labels)
+        )
+
+        print(hard_score, acc_i2t, acc_t2i)
+        return hard_score # must guess all correctly
     
 
     # -----------------------------
@@ -116,7 +133,7 @@ class BISCORDataModule(pl.LightningDataModule):
         self.root = args.root
         self.model = args.model
         self.config = config
-        
+
         # Setup dataloader
         self.setup()
         
