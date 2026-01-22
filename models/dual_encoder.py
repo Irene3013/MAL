@@ -104,12 +104,14 @@ class DualEncoder(pl.LightningModule):
     
     def eval_step_biscor(self, batch, split):
 
-        print(inputs_list)
-        print(labels)
-
+        
+        print(batch)
         labels = batch["label"].to(self.device)
         inputs_list = batch["input"]
-
+        
+        print(inputs_list)
+        print(labels)
+        
         # Forward pass each input
         # acc_list = []
         # for inputs in inputs_list:
