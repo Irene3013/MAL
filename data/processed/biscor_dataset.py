@@ -31,6 +31,7 @@ class BISCORDataset(Dataset):
         self.split = split
         self.image_path = Path(data_path)
         self.data_path = Path(data_path) / "rel" / f"test_relation.csv"
+        print(self.data_path)
         self.dataset = self._load_csv()
 
         # Input processing
@@ -55,6 +56,7 @@ class BISCORDataset(Dataset):
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
+        print(idx)
         print(item)
         # if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
         #     return self._dual_encoder_item(item)
