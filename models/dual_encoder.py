@@ -107,9 +107,6 @@ class DualEncoder(pl.LightningModule):
         
         #labels = batch["label"].to(self.device)
         inputs = batch["input"]
-        
-        print(inputs)
-        print(labels)
 
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         #labels = labels.to(self.device)
