@@ -114,7 +114,7 @@ class BISCORDataset(Dataset):
         )
 
         print(hard_score, acc_i2t, acc_t2i)
-        return hard_score # must guess all correctly
+        return 1 if hard_score else 0 # must guess all correctly
     
 
     # -----------------------------
