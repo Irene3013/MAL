@@ -46,7 +46,6 @@ class BISCORDataset(Dataset):
     
     def _load_image(self, image):
         img_path = self.image_path / Path(image)
-        print(image)
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path)
@@ -55,19 +54,18 @@ class BISCORDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-
         item = self.dataset[idx]
         print(item)
-        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
-            return self._dual_encoder_item(item)
+        # if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
+        #     return self._dual_encoder_item(item)
         
-        # elif self.model == "qwen2":
-        #     return self._qwen_item(item)
+        # # elif self.model == "qwen2":
+        # #     return self._qwen_item(item)
         
-        # elif self.model == "clip-flant5":
-        #     return self._vqascore_item(item)
-        else:
-            raise NotImplementedError()
+        # # elif self.model == "clip-flant5":
+        # #     return self._vqascore_item(item)
+        # else:
+        #     raise NotImplementedError()
         
     
     # --- GET ITEM METHODS ---
