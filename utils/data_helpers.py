@@ -133,7 +133,6 @@ def biscor_dual_encoder_collate(batch, config, model_name):
     BISCOR item: {"caption_pos": str, "caption_neg": str, "image_pos": PIL.Image, "image_neg": PIL.Image}
     """
     labels = []
-    all_inputs = []
     
     # Input processors
     transform = config["transform"]
@@ -141,47 +140,62 @@ def biscor_dual_encoder_collate(batch, config, model_name):
     tokenizer = config["tokenizer"] # For PE-core
     params = config.get("params", {})
 
-    for item in batch:
-        img_pos = item["image_pos"]
-        img_neg = item["image_neg"]
-        cap_pos = item["caption_pos"]
-        cap_neg = item["caption_neg"]
+    #for item in batch:
+    item = batch[0] # batch-size=1
+    img_pos = item["image_pos"]
+    img_neg = item["image_neg"]
+    cap_pos = item["caption_pos"]
+    cap_neg = item["caption_neg"]
 
-        # Labels to evaluate
-        label_t2i = [0, 1]
-        label_i2t = [0, 1]
-        labels.append([label_t2i, label_i2t])
+    # Labels to evaluate
+    label_t2i = [0, 1]
+    label_i2t = [0, 1]
+    labels.append([label_t2i, label_i2t])
 
-         # Crop images (CLIP image transform for comparable results)
-        if transform is not None:
-            img_pos = transform(img_pos)
-            img_neg = transform(img_neg)
-        img_pos = img_pos.convert("RGB") # secure 3 channels
-        img_neg = img_neg.convert("RGB") # secure 3 channels
+        # Crop images (CLIP image transform for comparable results)
+    if transform is not None:
+        img_pos = transform(img_pos)
+        img_neg = transform(img_neg)
+    img_pos = img_pos.convert("RGB") # secure 3 channels
+    img_neg = img_neg.convert("RGB") # secure 3 channels
 
-        # Process each input depending on the model
-        if model_name == "pecore":
-            image_tensor = processor(img_pos).unsqueeze(0)
-            text_tensor = tokenizer([cap_pos, cap_neg])
-            inputs = {"image": image_tensor, "captions": text_tensor}
+    # Process each input depending on the model
+    if model_name == "pecore":
+        image_tensor = processor(img_pos).unsqueeze(0)
+        text_tensor = tokenizer([cap_pos, cap_neg])
+        inputs = {"image": image_tensor, "captions": text_tensor}
 
-        elif model_name in ["siglip", "siglip2", "clip"]:
-            inputs = processor(
-                text=[cap_pos, cap_neg],
-                images=[img_pos, img_neg],
-                return_tensors="pt",
-                **params
-            )
-        else:
-            raise NotImplementedError()
-        
-        all_inputs.append(inputs)
-
+    elif model_name in ["siglip", "siglip2", "clip"]:
+        inputs = processor(
+            text=[cap_pos, cap_neg],
+            images=[img_pos, img_neg],
+            return_tensors="pt",
+            **params
+        )
+    else:
+        raise NotImplementedError()
+    
      # Labels to tensor
     labels = torch.tensor(labels, dtype=torch.long)
     return {
-        "input": all_inputs,  
+        "input": inputs,   
         "label": labels
     }
 
 
+
+# import random
+
+# # Para cada par en tu dataset:
+# indices = [0, 1]
+# random.shuffle(indices) # A veces será [0, 1], a veces [1, 0]
+
+# # Reordenamos textos e imágenes según los índices aleatorios
+# shuffled_images = [ [img_pos, img_neg][i] for i in indices ]
+# shuffled_texts = [ [cap_pos, cap_neg][i] for i in indices ]
+
+# # El label ahora no es fijo, es el lugar donde quedó el original
+# # Si el positivo (que estaba en 0) ahora está en la posición 'j', ese es tu label
+# label_pos = indices.index(0) 
+# label_neg = indices.index(1)
+# current_ground_truth = [label_pos, label_neg]

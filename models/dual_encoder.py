@@ -97,9 +97,36 @@ class DualEncoder(pl.LightningModule):
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc
     
-    def eval_step_biscor():
-        
-        return 0
+    def eval_step_biscor(self, batch, split):
+        labels = batch["label"].to(self.device)
+        inputs_list = batch["input"]
+
+        print(inputs_list)
+
+        # Forward pass each input
+        # logits_list = []
+        # for inputs in inputs_list:
+
+        #     if self.model_name == "pecore":
+        #         image = inputs['image'].to(self.device)
+        #         captions = inputs['captions'].to(self.device)
+        #         image_features, text_features, logit_scale = self.model(image, captions)
+        #         I2T_logits = logit_scale * image_features @ text_features.T
+
+        #     else:
+        #         inputs = inputs.to(self.device)
+        #         outputs = self.model(**inputs)
+        #         I2T_logits = outputs.logits_per_image
+        #         T2I_logits = outputs.logits_per_text
+
+        #     logits_list.append(I2T_logits)
+
+        # logits = torch.cat(logits_list, dim=0)
+        # acc = self.compute_accuracy(logits, labels, self.score)
+
+        # Logging
+        # self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        return 0 #acc
 
     # -----------------------------
     # LIGHTNING STEP METHODS
