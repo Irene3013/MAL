@@ -40,7 +40,7 @@ class BISCORDataset(Dataset):
         self.params = config.get("params", {})
 
     def _load_csv(self):
-        with open(self.data_path, newline="", encoding="utf-8") as f:
+        with open(self.data_path, newline="\n", encoding="utf-8") as f:
             reader = csv.reader(f)
             return list(reader)
     
