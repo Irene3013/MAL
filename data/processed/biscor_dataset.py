@@ -45,7 +45,7 @@ class BISCORDataset(Dataset):
             return list(reader)
     
     def _load_image(self, image):
-        img_path = self.image_path / image
+        img_path = self.image_path / Path(image)
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found: {img_path}")
         return Image.open(img_path)
@@ -146,7 +146,6 @@ class BISCORDataModule(pl.LightningDataModule):
         self.test_dataset = BISCORDataset(
             split="test",
             data_path=self.root,
-            dataset_name=self.dataset_name,
             model=self.model,
             config=self.config 
         )
