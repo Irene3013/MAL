@@ -22,8 +22,8 @@ class BISCORDataset(Dataset):
     def __init__(self, split="train", data_path="data", model=None, config=None):
 
         # Validations
-        #self.base_path = Path(data_path) #relative path
-        assert self.data_path.exists(), f"Root directory '{data_path}' does not exist."   
+        self.data_path = Path(data_path) #relative path
+        assert self.data_path.exists(), f"Root directory does not exist."   
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         
         # Data / Images path
