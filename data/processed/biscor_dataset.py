@@ -116,9 +116,7 @@ class BISCORDataModule(pl.LightningDataModule):
         self.root = args.root
         self.model = args.model
         self.config = config
-
-        print(self.root)
-
+        
         # Setup dataloader
         self.setup()
         

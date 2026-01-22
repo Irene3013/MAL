@@ -147,7 +147,7 @@ def biscor_dual_encoder_collate(batch, config, model_name):
     cap_pos = item["caption_pos"]
     cap_neg = item["caption_neg"]
 
-    print(item)
+    #print(item)
 
     # Labels to evaluate
     label_t2i = [0, 1]

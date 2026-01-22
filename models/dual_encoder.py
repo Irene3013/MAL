@@ -52,7 +52,7 @@ class DualEncoder(pl.LightningModule):
         if split == "train":
             return self.train_step(batch, split)
         else:
-            return self.eval_step(batch, split)
+            return self.eval_step_biscor(batch, split)#self.eval_step(batch, split)
 
     def train_step(self, batch, split):
         images = batch["image"].to(self.device)
@@ -103,11 +103,12 @@ class DualEncoder(pl.LightningModule):
         return acc
     
     def eval_step_biscor(self, batch, split):
-        labels = batch["label"].to(self.device)
-        inputs_list = batch["input"]
 
         print(inputs_list)
         print(labels)
+
+        labels = batch["label"].to(self.device)
+        inputs_list = batch["input"]
 
         # Forward pass each input
         # acc_list = []
