@@ -42,6 +42,7 @@ class BISCORDataset(Dataset):
     def _load_csv(self):
         with open(self.data_path, newline="\n", encoding="utf-8") as f:
             reader = csv.reader(f)
+            next(reader)
             return list(reader)
     
     def _load_image(self, image):
