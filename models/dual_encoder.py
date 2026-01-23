@@ -113,25 +113,23 @@ class DualEncoder(pl.LightningModule):
             captions = inputs['captions'].to(self.device)
             image_features, text_features, logit_scale = self.model(image, captions)
             logits_i2t = logit_scale * image_features @ text_features.T
-            logits_t2i = logits_i2t.T #creo
+            logits_t2i = logits_i2t.T 
         else:
-            # Inputs to device
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
-
             outputs = self.model(**inputs)
             logits_i2t = outputs.logits_per_image
             logits_t2i = outputs.logits_per_text
 
-            labels = torch.arange(outputs.logits_per_image.size(0), device=self.device)
-            pred_t2i = logits_t2i.argmax(dim=1)
-            pred_i2t = logits_i2t.argmax(dim=1)
- 
-            hard_score = (
-                torch.equal(pred_t2i, labels) and
-                torch.equal(pred_i2t, labels)
-            )
-            # Must guess all
-            acc = 1 if hard_score else 0
+        labels = torch.arange(logits_i2t.size(0), device=self.device)
+        pred_t2i = logits_t2i.argmax(dim=1)
+        pred_i2t = logits_i2t.argmax(dim=1)
+
+        hard_score = (
+            torch.equal(pred_t2i, labels) and
+            torch.equal(pred_i2t, labels)
+        )
+        # Must guess all
+        acc = 1 if hard_score else 0
 
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
