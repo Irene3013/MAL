@@ -163,8 +163,8 @@ def biscor_dual_encoder_collate(batch, config, model_name):
 
     # Process each input depending on the model
     if model_name == "pecore":
-        image_pos_tensor = processor([img_pos]).unsqueeze(0)
-        image_neg_tensor = processor([img_neg]).unsqueeze(0)
+        image_pos_tensor = processor(img_pos).unsqueeze(0)
+        image_neg_tensor = processor(img_neg).unsqueeze(0)
         text_tensor = tokenizer([cap_pos, cap_neg])
         inputs = {"image": [image_pos_tensor, image_neg_tensor], "captions": text_tensor}
 
