@@ -93,14 +93,14 @@ class Qwen2_VL(pl.LightningModule):
             outputs.append(output_text)
         
         # Soft-eval
-        # acc = 0
-        # for pred, gt in zip(outputs, labels):
-        #     acc += (pred == gt[0]) / len(inputs)
+        acc = 0
+        for pred, gt in zip(outputs, labels):
+            acc += (pred == gt[0]) / len(inputs)
 
         # Hard-eval
-        acc = 1
-        for pred, gt in zip(outputs, labels):
-            if pred != gt[0]: acc=0 # one wrong 0 points
+        # acc = 1
+        # for pred, gt in zip(outputs, labels):
+        #     if pred != gt[0]: acc=0 # one wrong 0 points
         
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc 

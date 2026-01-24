@@ -10,11 +10,12 @@
 #SBATCH --mail-user=irene.etxarri@ehu.eus
 
 #source /gscratch/users/asalaberria009/env/p39-cu115/bin/activate
-source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
+#source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
+source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
-srun python main.py --model "pecore" \
+srun python main.py --model "qwen2" \
    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
-   --run_name biscor_clip_test --evaluate --dataset biscor \
+   --run_name biscor_qwen_test --evaluate --dataset biscor \
    --root /gaueko0/users/imiranda014/GSCRATCH/Data/inference-time/our_dataset --precision 32

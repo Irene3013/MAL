@@ -120,18 +120,6 @@ class DualEncoder(pl.LightningModule):
             all_image_features = torch.cat([image_features_pos, image_features_neg], dim=0) # [2, d]
             logits_i2t = logit_scale * all_image_features @ text_features.T
             logits_t2i = logits_i2t.T
-
-            # logits_i2t_pos = logit_scale * image_features_pos @ text_features.T
-            # logits_i2t_neg = logit_scale * image_features_neg @ text_features.T
-
-            # logits_t2i_pos = logits_i2t_pos.T
-            # logits_t2i_neg = logits_i2t_neg.T
-
-            # logits_i2t = 
-            # logits_t2i = torch.cat([logits_t2i_pos, logits_t2i_neg], dim=1)
-            # image_features, text_features, logit_scale = self.model(image, captions)
-            # logits_i2t = logit_scale * image_features @ text_features.T
-            # logits_t2i = logits_i2t.T 
         else:
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             outputs = self.model(**inputs)

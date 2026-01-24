@@ -96,7 +96,7 @@ def create_MC_qwen_message(imagepath, options):
     full_text_content = (
         "Which caption best describes the image?\n\n"
         f"{options_text_block}\n\n"
-        f"Answer with one letter only ({instruction_suffix})."
+        f"Answer with one letter: {instruction_suffix}."
     )
     return [
         {
@@ -119,7 +119,7 @@ def create_qwen_message(imagepath, options):
             f"\"{caption}\"\n\n"
             "Question:\n"
             "Does the caption accurately describe the image?\n\n"
-            "Answer with one word only: True or False"
+            "Answer with one word: True or False"
         )
         messages.append([
             {
@@ -131,3 +131,30 @@ def create_qwen_message(imagepath, options):
             }
         ])
     return messages
+
+
+def create_qwen_messages_biscor(image_pos, image_neg, caption_pos, caption_neg):
+    """
+    Create generation message for Qwen2-VL model.
+    """
+    images = [image_pos, image_neg]
+    captions = [caption_pos, caption_neg]
+    
+    messages = []
+    
+    # (Ip, Cp), (Ip, Cn), (In, Cp), (In, Cn)
+    for img_path in images:
+        for cap_text in captions:
+            messages.append({
+                "role": "user",
+                "content": [
+                    {"type": "image", "image": f"file:///{img_path}"},
+                    {"type": "text", "text": (
+                        f"Caption: {cap_text}\n"
+                        "Question: Does this caption accurately describe the image?\n"
+                        "Answer with one word: True or False."
+                    )},
+                ],
+            })
+            
+    return messages 

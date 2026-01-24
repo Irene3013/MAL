@@ -147,8 +147,6 @@ def biscor_dual_encoder_collate(batch, config, model_name):
     cap_pos = item["caption_pos"]
     cap_neg = item["caption_neg"]
 
-    #print(item)
-
     # Labels to evaluate
     label_t2i = [0, 1]
     label_i2t = [0, 1]
@@ -185,20 +183,3 @@ def biscor_dual_encoder_collate(batch, config, model_name):
         "label": labels
     }
 
-
-
-# import random
-
-# # Para cada par en tu dataset:
-# indices = [0, 1]
-# random.shuffle(indices) # A veces será [0, 1], a veces [1, 0]
-
-# # Reordenamos textos e imágenes según los índices aleatorios
-# shuffled_images = [ [img_pos, img_neg][i] for i in indices ]
-# shuffled_texts = [ [cap_pos, cap_neg][i] for i in indices ]
-
-# # El label ahora no es fijo, es el lugar donde quedó el original
-# # Si el positivo (que estaba en 0) ahora está en la posición 'j', ese es tu label
-# label_pos = indices.index(0) 
-# label_neg = indices.index(1)
-# current_ground_truth = [label_pos, label_neg]
