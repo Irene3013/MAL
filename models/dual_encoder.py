@@ -109,9 +109,10 @@ class DualEncoder(pl.LightningModule):
         print(inputs)
 
         if self.model_name == "pecore":
-            image = inputs['image'].to(self.device)
+            images = inputs['image']
+            for image in images: image.to(self.device)
             captions = inputs['captions'].to(self.device)
-            image_features, text_features, logit_scale = self.model(image, captions)
+            image_features, text_features, logit_scale = self.model(images, captions)
             logits_i2t = logit_scale * image_features @ text_features.T
             logits_t2i = logits_i2t.T 
         else:
