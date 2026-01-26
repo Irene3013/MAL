@@ -106,8 +106,6 @@ class BISCORDataset(Dataset):
             )
             image_inputs, video_inputs = process_vision_info(message)
 
-            # assert image_inputs is not None, "image_inputs is none"
-            # assert video_inputs is not None, "video_inputs is none"
             input = self.processor(
                 text=[text],
                 images=image_inputs,

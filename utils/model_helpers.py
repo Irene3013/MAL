@@ -145,19 +145,22 @@ def create_qwen_messages_biscor(image_pos, image_neg, caption_pos, caption_neg):
     
     # (Ip, Cp), (Ip, Cn), (In, Cp), (In, Cn)
     for img_path in images:
-        # if not os.path.exists(img_path):
-        #     raise FileNotFoundError(f"Image not found: {img_path}")
         for cap_text in captions:
-            messages.append({
+            text = (
+                "Caption:\n"
+                f"\"{cap_text}\"\n\n"
+                "Question:\n"
+                "Does this caption accurately describe the image?\n\n"
+                "Answer with one word: True or False"
+            )
+            messages.append([
+            {
                 "role": "user",
                 "content": [
                     {"type": "image", "image": f"file:///{img_path}"},
-                    {"type": "text", "text": (
-                        f"Caption: {cap_text}\n"
-                        "Question: Does this caption accurately describe the image?\n"
-                        "Answer with one word: True or False."
-                    )},
+                    {"type": "text", "text": text},
                 ],
-            })
+            }
+        ])
     print(messages)
     return messages 
