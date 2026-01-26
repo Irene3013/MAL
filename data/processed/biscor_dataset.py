@@ -60,13 +60,13 @@ class BISCORDataset(Dataset):
         if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
             return self._dual_encoder_item(item)
         
-        # # elif self.model == "qwen2":
-        # #     return self._qwen_item(item)
+        elif self.model == "qwen2":
+            return self._qwen_item(item)
         
         # # elif self.model == "clip-flant5":
         # #     return self._vqascore_item(item)
-        # else:
-        #     raise NotImplementedError()
+        else:
+            raise NotImplementedError()
         
     
     # --- GET ITEM METHODS ---
@@ -106,8 +106,8 @@ class BISCORDataset(Dataset):
             )
             image_inputs, video_inputs = process_vision_info(message)
 
-            assert image_inputs is not None, "image_inputs is none"
-            assert video_inputs is not None, "video_inputs is none"
+            # assert image_inputs is not None, "image_inputs is none"
+            # assert video_inputs is not None, "video_inputs is none"
             input = self.processor(
                 text=[text],
                 images=image_inputs,
@@ -115,7 +115,7 @@ class BISCORDataset(Dataset):
                 padding=True,
                 return_tensors="pt",
             )
-            assert input is not None, "input is none"
+            # assert input is not None, "input is none"
             inputs.append(input)
 
 
