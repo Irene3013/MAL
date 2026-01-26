@@ -163,7 +163,7 @@ class VSRDataset(Dataset):
         caption = item["caption"]
         negated = invert_relation(caption, item["relation"])
         return {
-            "input": [img_path, caption, negated],
+            "input": [{"img_path": img_path, "caption": caption, "negated": negated}],
             "label": 0 if item["label"] == 1 else 1 
         }
 
