@@ -1,6 +1,7 @@
 # utils/model_helpers.py
 import torch
 import string
+import os
 from utils.constants import PREPROCESS_TRANSFORM
 
 def load_vision_model_components(model_name: str):
@@ -144,6 +145,8 @@ def create_qwen_messages_biscor(image_pos, image_neg, caption_pos, caption_neg):
     
     # (Ip, Cp), (Ip, Cn), (In, Cp), (In, Cn)
     for img_path in images:
+        if not os.path.exists(img_path):
+            raise FileNotFoundError(f"Image not found: {img_path}")
         for cap_text in captions:
             messages.append({
                 "role": "user",
