@@ -156,5 +156,5 @@ def create_qwen_messages_biscor(image_pos, image_neg, caption_pos, caption_neg):
                     )},
                 ],
             })
-            
+    print(messages)
     return messages 
