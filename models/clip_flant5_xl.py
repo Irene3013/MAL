@@ -5,6 +5,9 @@ import pytorch_lightning as pl
 from data.processed.vsr_dataset import VSRDataset
 from data.processed.whatsup_dataset import WhatsUpDataset
 from utils.model_helpers import load_vision_model_components
+from data.processed.vsr_dataset import VSRDataModule
+from data.processed.biscor_dataset import BISCORDataModule
+from data.processed.whatsup_dataset import WhatsUpDataModule
 
 # from qwen_vl_utils import process_vision_info
 # import core.vision_encoder.pe as pe
@@ -26,6 +29,18 @@ class CLIP_FlanT5_XL(pl.LightningModule):
         self.scheduler_off = args.scheduler_off
         self.batch_size = args.batch_size
         self.cross_entropy = torch.nn.CrossEntropyLoss()
+
+        # --- Get Dataset ---
+
+        if args.dataset == "vsr":
+            self.dataset = VSRDataModule(args, config=self.config)
+        elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
+            self.dataset = WhatsUpDataModule(args, config=self.config)
+        elif args.dataset == 'biscor':
+            self.dataset = BISCORDataModule(args, config=self.config)
+        else:
+            print(f"Dataset {args.dataset} not implemented.")
+            raise NotImplementedError
 
         print(f"args.gpus: {args.gpus}")
         #self.device = "cpu" if args.gpus == 0 else "cuda"
@@ -56,11 +71,15 @@ class CLIP_FlanT5_XL(pl.LightningModule):
         return 0
 
     def eval_step(self, batch, split):
-        inputs = batch["input"]
-        labels = batch["label"]
 
-        print(inputs)
-        print(labels)
+        print(batch)
+
+        # item = self.dataset._vqascore_item
+        # inputs = batch["input"]
+        # labels = batch["label"]
+
+        # print(inputs)
+        # print(labels)
 
         # Mover inputs al device
         # inputs = {k: v.to(self.device) for k, v in inputs.items()}

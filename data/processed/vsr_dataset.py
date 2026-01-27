@@ -55,18 +55,19 @@ class VSRDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        item = self.dataset[idx]
+        #item = self.dataset[idx]
 
-        if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
-            return self._dual_encoder_item(item)
+        # if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
+        #     return self._dual_encoder_item(item)
         
-        elif self.model == "qwen2":
-            return self._qwen_item(item)
+        # elif self.model == "qwen2":
+        #     return self._qwen_item(item)
         
-        elif self.model == "clip-flant5":
-            return self._vqascore_item(item)
-        else:
-            raise NotImplementedError()
+        # elif self.model == "clip-flant5":
+        #     return self._vqascore_item(item)
+        # else:
+        #     raise NotImplementedError()
+        return [idx]
 
 
     # --- GET ITEM METHODS ---
