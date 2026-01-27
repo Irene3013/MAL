@@ -14,7 +14,7 @@ source /gaueko0/users/ietxarri010/env/t2v_p10_shared/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
-srun python main.py --model "clip-flant5" \
+srun python main_vqa_eval.py --model "clip-flant5" \
    --lr 2e-5 --batch_size 1 --max_steps 20000 --accumulate_grad_batches 2 \
    --run_name vsr_vqascore_zeroshot --evaluate --dataset vsr \
    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant zeroshot
