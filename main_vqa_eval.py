@@ -3,7 +3,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 #from tqdm import tqdm
 from models.clip_flant5_xl import CLIP_FlanT5_XL
-from data.processed.vsr_dataset import VSRDataset, invert_relation
+from data.processed.vsr_dataset import VSRDataset
 from data.processed.biscor_dataset import BISCORDataset
 from data.processed.whatsup_dataset import WhatsUpDataset, COCOSpatialDataset, GQASpatialDataset
 import argparse
@@ -118,7 +118,6 @@ def main_program():
         model = CLIP_FlanT5_XL(args)
     else:
         model = CLIP_FlanT5_XL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
-
     print("Model loaded!")
 
      # Load data
@@ -160,8 +159,20 @@ def main_program():
 
     for item in dataset:
        
-        print(item)
-        print("\n")
+        inputs = item["input"]
+        labels = item["label"]
+
+        images = [inputs["img_path"]]
+        texts = [inputs["caption"], inputs["negated"]]
+        scores = model(images=images, texts=texts)
+
+        print(scores.shape)
+        C0_I0 = scores[0][0]
+        C1_I0 = scores[0][1]
+
+        print(C0_I0)
+        print(C1_I0)
+
     #  # Use ModelCheckPoint to store best validation model
     # checkpoint_callback = ModelCheckpoint(
     #     dirpath=args.output_path, 

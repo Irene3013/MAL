@@ -30,8 +30,6 @@ class CLIP_FlanT5_XL(pl.LightningModule):
         self.batch_size = args.batch_size
         self.cross_entropy = torch.nn.CrossEntropyLoss()
 
-        
-
         print(f"args.gpus: {args.gpus}")
         #self.device = "cpu" if args.gpus == 0 else "cuda"
 
@@ -46,17 +44,6 @@ class CLIP_FlanT5_XL(pl.LightningModule):
         else:
             # precision
             self.compute_accuracy = VSRDataset.compute_accuracy
-
-        # --- Get Dataset ---
-        if args.dataset == "vsr":
-            self.dataset = VSRDataModule(args, config=self.config)
-        elif args.dataset in ['whatsup', 'cocospatial', 'gqaspatial']:
-            self.dataset = WhatsUpDataModule(args, config=self.config)
-        elif args.dataset == 'biscor':
-            self.dataset = BISCORDataModule(args, config=self.config)
-        else:
-            print(f"Dataset {args.dataset} not implemented.")
-            raise NotImplementedError
 
     # -----------------------------
     # STEP (train/val/test)
