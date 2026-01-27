@@ -1,9 +1,9 @@
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
-from tqdm import tqdm
+#from tqdm import tqdm
 from models.clip_flant5_xl import CLIP_FlanT5_XL
-from data.processed.vsr_dataset import VSRDataset
+from data.processed.vsr_dataset import VSRDataset, invert_relation
 from data.processed.biscor_dataset import BISCORDataset
 from data.processed.whatsup_dataset import WhatsUpDataset, COCOSpatialDataset, GQASpatialDataset
 import argparse
@@ -141,7 +141,6 @@ def main_program():
     print("Data loaded!")
 
     
-    iter=data.iter(batch_size=1)
     I2T = []
     T2I = []
     group_score = []
@@ -161,10 +160,13 @@ def main_program():
     
     logger = TensorBoardLogger("logs", name=tb_run_name, default_hp_metric=False)
 
-    for item in tqdm(iter):
-        input = item["input"]
-        label = item["label"]
-        print(input, label)
+    for item in data:
+        img_path = dataset.image_path / item["image"]
+        caption = item["caption"]
+        negated = invert_relation(caption, item["relation"])
+        label =  0 if item["label"] == 1 else 1
+        print(img_path, caption, negated, label)
+        print("\n")
     #  # Use ModelCheckPoint to store best validation model
     # checkpoint_callback = ModelCheckpoint(
     #     dirpath=args.output_path, 
