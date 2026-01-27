@@ -137,10 +137,8 @@ def main_program():
     else:
         print(f"Dataset {args.dataset} not implemented.")
         sys.exit()  
-    data = dataset.dataset
     print("Data loaded!")
 
-    
     I2T = []
     T2I = []
     group_score = []
@@ -160,12 +158,9 @@ def main_program():
     
     logger = TensorBoardLogger("logs", name=tb_run_name, default_hp_metric=False)
 
-    for item in data:
-        img_path = dataset.image_path / item["image"]
-        caption = item["caption"]
-        negated = invert_relation(caption, item["relation"])
-        label =  0 if item["label"] == 1 else 1
-        print(img_path, caption, negated, label)
+    for item in dataset:
+       
+        print(item)
         print("\n")
     #  # Use ModelCheckPoint to store best validation model
     # checkpoint_callback = ModelCheckpoint(
