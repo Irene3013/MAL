@@ -162,6 +162,7 @@ class VSRDataset(Dataset):
         img_path = self.image_path / item["image"]
         caption = item["caption"]
         negated = invert_relation(caption, item["relation"])
+        img = self._load_image(img_path)
         return {
             "input": [{"img_path": img_path, "caption": caption, "negated": negated}],
             "label": 0 if item["label"] == 1 else 1 

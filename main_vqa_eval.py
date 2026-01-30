@@ -9,6 +9,7 @@ from data.processed.whatsup_dataset import WhatsUpDataset, COCOSpatialDataset, G
 import argparse
 import torch.serialization
 import sys
+import t2v_metrics
 
 
 
@@ -118,6 +119,7 @@ def main_program():
         model = CLIP_FlanT5_XL(args)
     else:
         model = CLIP_FlanT5_XL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
+    clip_flant5_score = t2v_metrics.VQAScore(model='clip-flant5-xl')
     print("Model loaded!")
 
      # Load data
@@ -168,7 +170,7 @@ def main_program():
         print()
         images = [str(inputs[0]['img_path'])]
         texts = [inputs[0]["caption"], inputs[0]["negated"]]
-        scores = model(images=images, texts=texts)
+        scores = clip_flant5_score(images=images, texts=texts)
 
         print(scores.shape)
         print(scores)
