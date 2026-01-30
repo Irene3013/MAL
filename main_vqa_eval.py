@@ -162,15 +162,16 @@ def main_program():
         inputs = item["input"]
         labels = item["label"]
 
+        # print()
+        # print(inputs)
+        # print(labels)
         print()
-        print(inputs)
-        print(labels)
-        print()
-        # images = [inputs["img_path"]]
-        # texts = [inputs["caption"], inputs["negated"]]
-        # scores = model(images=images, texts=texts)
+        images = [str(inputs[0]['img_path'])]
+        texts = [inputs[0]["caption"], inputs[0]["negated"]]
+        scores = model(images=images, texts=texts)
 
-        # print(scores.shape)
+        print(scores.shape)
+        print(scores)
         # C0_I0 = scores[0][0]
         # C1_I0 = scores[0][1]
 
