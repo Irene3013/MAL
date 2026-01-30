@@ -114,12 +114,12 @@ def main_program():
 
     # Load model
     print("Loading model...")
-   
-    #clip_flant5_score = t2v_metrics.VQAScore(model='clip-flant5-xl')
-    clip_flant5_score = t2v_metrics.VQAScore(
-        model='clip-flant5-xl',
-        device='cpu'
-    )
+    torch.cuda.empty_cache()
+    clip_flant5_score = t2v_metrics.VQAScore(model='clip-flant5-xl')
+    # clip_flant5_score = t2v_metrics.VQAScore(
+    #     model='clip-flant5-xl',
+    #     device='cpu'
+    # )
 
     config_output = {
             "processor": None,
