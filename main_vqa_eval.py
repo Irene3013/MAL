@@ -1,8 +1,8 @@
-import pytorch_lightning as pl
+# import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
-from pytorch_lightning.callbacks import ModelCheckpoint
+# from pytorch_lightning.callbacks import ModelCheckpoint
 #from tqdm import tqdm
-from models.clip_flant5_xl import CLIP_FlanT5_XL
+# from models.clip_flant5_xl import CLIP_FlanT5_XL
 from data.processed.vsr_dataset import VSRDataset
 from data.processed.biscor_dataset import BISCORDataset
 from data.processed.whatsup_dataset import WhatsUpDataset, COCOSpatialDataset, GQASpatialDataset
@@ -109,17 +109,18 @@ def main_program():
     args = parse_args()
     
     # Reproducibility
-    if args.seed != -1:
-        pl.utilities.seed.seed_everything(args.seed)
+    # if args.seed != -1:
+    #     pl.utilities.seed.seed_everything(args.seed)
 
     # Load model
     print("Loading model...")
    
-    # if args.ckpt is None:
-    #     model = CLIP_FlanT5_XL(args)
-    # else:
-    #     model = CLIP_FlanT5_XL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
-    clip_flant5_score = t2v_metrics.VQAScore(model='clip-flant5-xl')
+    #clip_flant5_score = t2v_metrics.VQAScore(model='clip-flant5-xl')
+    clip_flant5_score = t2v_metrics.VQAScore(
+        model='clip-flant5-xl',
+        device='cpu'
+    )
+
     config_output = {
             "processor": None,
             "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
@@ -170,65 +171,12 @@ def main_program():
         inputs = item["input"]
         labels = item["label"]
 
-        # print()
-        # print(inputs)
-        # print(labels)
-        print()
         images = [str(inputs[0]['img_path'])]
         texts = [inputs[0]["caption"], inputs[0]["negated"]]
         scores = clip_flant5_score(images=images, texts=texts)
 
         print(scores.shape)
         print(scores)
-        # C0_I0 = scores[0][0]
-        # C1_I0 = scores[0][1]
-
-        # print(C0_I0)
-        # print(C1_I0)
-
-    #  # Use ModelCheckPoint to store best validation model
-    # checkpoint_callback = ModelCheckpoint(
-    #     dirpath=args.output_path, 
-    #     monitor='val_accuracy', 
-    #     mode='max', 
-    #     filename=tb_run_name + "-{epoch:02d}-{val_accuracy:.2f}", 
-    #     save_weights_only=True, 
-    #     save_top_k=1)
-    
-    # # Prepare Trainer
-    # trainer = pl.Trainer(
-    #             devices=args.gpus, 
-    #             fast_dev_run=False, 
-    #             logger=logger, 
-    #             max_steps=args.max_steps, 
-    #             accumulate_grad_batches=args.accumulate_grad_batches, 
-    #             strategy= 'auto', 
-    #             precision=args.precision, 
-    #             callbacks=[checkpoint_callback]
-    #         )
-    
-    # # Train model
-    # if args.train:
-    #     model.train()
-    #     print("Training starts!")
-    #     model.train()
-    #     trainer.fit(model, datamodule)
-    #     print("Training finished!")
-
-    # # Evaluate model
-    # if args.evaluate and args.train:
-    #     print(f'Loading {checkpoint_callback.best_model_path} with val accuracy of {checkpoint_callback.best_model_score} to test')
-    #     print('Testing starts!')
-    #     model.eval()
-    #     trainer.test(ckpt_path = 'best', dataloaders=datamodule.test_dataloader(), verbose=False)
-    #     print('Testing finished!')
-
-    # elif args.evaluate and not args.train:
-    #     print('Testing starts!')
-    #     model.eval()
-    #     trainer.test(model=model, dataloaders=datamodule.test_dataloader(), verbose=False)
-    #     print('Testing finished!')
-    
     return 0
 
 if __name__ == "__main__":
