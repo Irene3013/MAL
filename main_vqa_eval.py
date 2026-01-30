@@ -162,16 +162,20 @@ def main_program():
         inputs = item["input"]
         labels = item["label"]
 
-        images = [inputs["img_path"]]
-        texts = [inputs["caption"], inputs["negated"]]
-        scores = model(images=images, texts=texts)
+        print()
+        print(inputs)
+        print(labels)
+        print()
+        # images = [inputs["img_path"]]
+        # texts = [inputs["caption"], inputs["negated"]]
+        # scores = model(images=images, texts=texts)
 
-        print(scores.shape)
-        C0_I0 = scores[0][0]
-        C1_I0 = scores[0][1]
+        # print(scores.shape)
+        # C0_I0 = scores[0][0]
+        # C1_I0 = scores[0][1]
 
-        print(C0_I0)
-        print(C1_I0)
+        # print(C0_I0)
+        # print(C1_I0)
 
     #  # Use ModelCheckPoint to store best validation model
     # checkpoint_callback = ModelCheckpoint(
