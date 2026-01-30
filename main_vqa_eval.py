@@ -115,26 +115,32 @@ def main_program():
     # Load model
     print("Loading model...")
    
-    if args.ckpt is None:
-        model = CLIP_FlanT5_XL(args)
-    else:
-        model = CLIP_FlanT5_XL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
+    # if args.ckpt is None:
+    #     model = CLIP_FlanT5_XL(args)
+    # else:
+    #     model = CLIP_FlanT5_XL.load_from_checkpoint(checkpoint_path=args.ckpt, args=args, strict=True) 
     clip_flant5_score = t2v_metrics.VQAScore(model='clip-flant5-xl')
+    config_output = {
+            "processor": None,
+            "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
+            "tokenizer": None,
+            "params": None
+        }
     print("Model loaded!")
 
      # Load data
     print("Loading data...")
 
     if args.dataset == "vsr":
-        dataset = VSRDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=model.config)
+        dataset = VSRDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=config_output)
     elif args.dataset == 'whatsup':
-        dataset = WhatsUpDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=model.config)
+        dataset = WhatsUpDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=config_output)
     elif args.dataset == 'cocospatial':
-        dataset = COCOSpatialDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=model.config)
+        dataset = COCOSpatialDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=config_output)
     elif args.dataset == 'gqaspatial':
-        dataset = GQASpatialDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=model.config)
+        dataset = GQASpatialDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=config_output)
     elif args.dataset == 'biscor':
-        dataset = BISCORDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=model.config)
+        dataset = BISCORDataset(dataset_name=args.variant, split="test", data_path=args.root, model=args.model, config=config_output)
     else:
         print(f"Dataset {args.dataset} not implemented.")
         sys.exit()  
