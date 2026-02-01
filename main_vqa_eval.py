@@ -1,5 +1,5 @@
 # import pytorch_lightning as pl
-from pytorch_lightning.loggers import TensorBoardLogger
+# from pytorch_lightning.loggers import TensorBoardLogger
 # from pytorch_lightning.callbacks import ModelCheckpoint
 #from tqdm import tqdm
 # from models.clip_flant5_xl import CLIP_FlanT5_XL
@@ -164,7 +164,7 @@ def main_program():
     tb_run_name = args.run_name
     print(f'Run name: {tb_run_name}')
     
-    logger = TensorBoardLogger("logs", name=tb_run_name, default_hp_metric=False)
+    #logger = TensorBoardLogger("logs", name=tb_run_name, default_hp_metric=False)
 
     for item in dataset:
        
