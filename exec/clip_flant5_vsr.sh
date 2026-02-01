@@ -9,8 +9,8 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-user=irene.etxarri@ehu.eus
 
-#source /gscratch/users/asalaberria009/env/p39-cu115/bin/activate
-source /gaueko0/users/ietxarri010/env/t2v_p10_shared/bin/activate
+#source /gaueko0/users/ietxarri010/env/t2v_p10_shared/bin/activate
+#source /gaueko0/users/ietxarri010/env/t2v_p10/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
