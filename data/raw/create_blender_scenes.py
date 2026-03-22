@@ -1,9 +1,9 @@
 import bpy
-import csv
+#import csv
 import os
 import json
-import random
-import math
+#import random
+#import math
 import mathutils
 import argparse
 import sys
