@@ -211,7 +211,8 @@ def main():
     parser.add_argument("--height",         type=int, default=224)
     parser.add_argument("--n_per_rel",      type=int, default=None)
 
-    args = parse_args(parser)
+    #args = parse_args(parser)
+    args = parser.parse_args()
     
     N_PER_REL       = args.n_per_rel
     BASE_SCENE      = os.path.join(args.root, "clevr/base_scene.blend")
