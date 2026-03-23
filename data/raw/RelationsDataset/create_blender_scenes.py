@@ -15,26 +15,6 @@ MATERIAL_MAP = {
 }
 
     
-# ── ARGS PARSER ─────────────────────────────────────────────────
-
-def extract_args(input_argv=None):
-	"""
-	Pull out command-line arguments after "--". Blender ignores command-line flags
-	after --, so this lets us forward command line arguments from the blender
-	invocation to our own script.
-	"""
-	if input_argv is None:
-		input_argv = sys.argv
-	output_argv = []
-	if '--' in input_argv:
-		idx = input_argv.index('--')
-		output_argv = input_argv[(idx + 1):]
-	return output_argv
-
-
-def parse_args(parser, argv=None):
-	return parser.parse_args(extract_args(argv))
-
     
 # ── UTILS ─────────────────────────────────────────────────
 
@@ -211,7 +191,6 @@ def main():
     parser.add_argument("--height",         type=int, default=224)
     parser.add_argument("--n_per_rel",      type=int, default=None)
 
-    #args = parse_args(parser)
     args = parser.parse_args()
     
     N_PER_REL       = args.n_per_rel
@@ -220,18 +199,15 @@ def main():
     MATERIAL_DIR    = os.path.join(args.root, "clevr/materials")
     PROPERTIES_JSON = os.path.join(args.root, "clevr/properties.json")
     
-    SPLITS = ['train', 'val', 'test']
+    SPLITS = ['train', 'test']
+    SPLITS = ['test']
 
     for split in SPLITS:
         
-        if split == 'test':
-            img_dir  = os.path.join(args.root, args.version, "test_images")
-            json_dir = os.path.join(args.root, args.version, "test_scenes")
+        img_dir  = os.path.join(args.root, args.version, f"{split}_images")
+        json_dir = os.path.join(args.root, args.version, f"{split}_scenes")
+    
         
-        else:
-            img_dir  = os.path.join(args.root, args.version, "train_images")
-            json_dir = os.path.join(args.root, args.version, "train_scenes")
-
         os.makedirs(img_dir,  exist_ok=True)
         os.makedirs(json_dir, exist_ok=True)
 

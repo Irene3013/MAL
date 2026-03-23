@@ -152,7 +152,7 @@ def biscor_dual_encoder_collate(batch, config, model_name):
     label_i2t = [0, 1]
     labels.append([label_t2i, label_i2t])
 
-        # Crop images (CLIP image transform for comparable results)
+    # Crop images (CLIP image transform for comparable results)
     if transform is not None:
         img_pos = transform(img_pos)
         img_neg = transform(img_neg)
