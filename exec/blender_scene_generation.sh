@@ -9,12 +9,25 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-user=irene.etxarri@ehu.eus
 
-source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
+source /gaueko0/users/ietxarri010/env/bpy_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
-# srun python main.py --model "siglip" \
-#    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
-#    --run_name vsr_zs_clip_finetuning --evaluate --train --dataset vsr \
-#    --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant zeroshot
+srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v1 
 
+
+srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v2 
+
+
+srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v3 
+
+
+srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v4 
+
+
+srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v5 

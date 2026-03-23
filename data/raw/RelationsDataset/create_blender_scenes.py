@@ -135,15 +135,9 @@ def save_scene_json(path, data):
 
 def set_camera_from_directions(camera, directions):
     cam_behind = mathutils.Vector(directions['behind'])
-    cam_left = mathutils.Vector(directions['left'])
-    cam_up = mathutils.Vector(directions['above'])
-    
-    cam_right = -cam_left
-    cam_down = -cam_up
     cam_front = -cam_behind
-    
+
     quat = cam_front.to_track_quat('Z', 'Y')
-    
     camera.rotation_mode = 'QUATERNION'
     camera.rotation_quaternion = quat
 
@@ -212,9 +206,7 @@ def main():
     # Parse argumants
     parser = argparse.ArgumentParser()
     parser.add_argument("--root",           default="/content/drive/MyDrive/EHU/KISA/TFM/RelationsDataset")
-    parser.add_argument("--out_path",       default="/content/output")
     parser.add_argument("--version",        default="v1")
-    parser.add_argument("--split",          default="train")
     parser.add_argument("--width",          type=int, default=224)
     parser.add_argument("--height",         type=int, default=224)
     parser.add_argument("--n_per_rel",      type=int, default=None)
@@ -227,60 +219,69 @@ def main():
     MATERIAL_DIR    = os.path.join(args.root, "clevr/materials")
     PROPERTIES_JSON = os.path.join(args.root, "clevr/properties.json")
     
-    img_dir  = os.path.join(args.out_path, "images")
-    json_dir = os.path.join(args.out_path, "scenes")
-    os.makedirs(img_dir,  exist_ok=True)
-    os.makedirs(json_dir, exist_ok=True)
-    
-    json_path = os.path.join(args.root, f"{args.version}/{args.version}_{args.split}.json")
-    
-    
-    # Cargar JSON 
-    with open(json_path) as f:
-        rel_data = json.load(f)
+    SPLITS = ['train', 'val', 'test']
 
-    bpy.ops.wm.open_mainfile(filepath=BASE_SCENE)
-    load_materials(MATERIAL_DIR)  
-    enable_gpu()
-    
-    print("updated")
-    
-    index = 0
-    for rel_key in rel_data.keys():
+    for split in SPLITS:
         
-        if N_PER_REL is not None:
-            for key in rel_data.keys():
-                rel_data[key] = rel_data[key][:N_PER_REL]
+        if split == 'test':
+            img_dir  = os.path.join(args.root, args.version, "test_images")
+            json_dir = os.path.join(args.root, args.version, "test_scenes")
         
-        for scene in rel_data[rel_key]:
-            
-            # Set scene camera
-            camera = bpy.data.objects['Camera']
-            set_camera_from_directions(camera, scene["directions"])
-            obj1, obj2 = scene["obj1"], scene["obj2"]
-            
-            # POSITIVE
-            clear_objects()
+        else:
+            img_dir  = os.path.join(args.root, args.version, "train_images")
+            json_dir = os.path.join(args.root, args.version, "train_scenes")
 
-            scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR)
-            img_path  = os.path.join(img_dir,  f"pos_{index:06d}.png")
-            json_path = os.path.join(json_dir, f"pos_{index:06d}.json")
+        os.makedirs(img_dir,  exist_ok=True)
+        os.makedirs(json_dir, exist_ok=True)
 
-            render_scene(img_path)
-            save_scene_json(json_path, scene_meta)
+        json_path = os.path.join(args.root, f"{args.version}/{args.version}_{split}.json")
+        
+        # Cargar JSON 
+        with open(json_path) as f:
+            rel_data = json.load(f)
+
+        bpy.ops.wm.open_mainfile(filepath=BASE_SCENE)
+        load_materials(MATERIAL_DIR)  
+        enable_gpu()
+        
+        index = 0
+        for rel_key in rel_data.keys():
             
-            # NEGATIVE
-            clear_objects()
+            if N_PER_REL is not None:
+                for key in rel_data.keys():
+                    rel_data[key] = rel_data[key][:N_PER_REL]
             
-            scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR, swap_positions=True)
-            img_path  = os.path.join(img_dir,  f"neg_{index:06d}.png")
-            json_path = os.path.join(json_dir, f"neg_{index:06d}.json")
+            for scene in rel_data[rel_key]:
+                
+                # Set scene camera
+                camera = bpy.data.objects['Camera']
+                set_camera_from_directions(camera, scene["directions"])
+                obj1, obj2 = scene["obj1"], scene["obj2"]
+                
+                # POSITIVE
+                clear_objects()
+
+                scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR)
+                img_path  = os.path.join(img_dir,  f"pos_{index:06d}.png")
+                json_path = os.path.join(json_dir, f"pos_{index:06d}.json")
+
+                render_scene(img_path)
+                save_scene_json(json_path, scene_meta)
+                
+                # NEGATIVE
+                clear_objects()
+                
+                scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR, swap_positions=True)
+                img_path  = os.path.join(img_dir,  f"neg_{index:06d}.png")
+                json_path = os.path.join(json_dir, f"neg_{index:06d}.json")
+                
+                render_scene(img_path)
+                save_scene_json(json_path, scene_meta)
+                
+                print(f"Rendered {index:06d} | {rel_key}")
+                index +=1
             
-            render_scene(img_path)
-            save_scene_json(json_path, scene_meta)
-            
-            print(f"Rendered {index:06d} | {rel_key}")
-            index +=1
+            print(f" {split} done")
 
 
 if __name__ == "__main__":
