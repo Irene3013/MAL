@@ -3,7 +3,6 @@ import os
 import json
 import mathutils
 import argparse
-import sys
 
 
 MATERIAL_MAP = {
@@ -12,9 +11,7 @@ MATERIAL_MAP = {
 }
 
     
-    
 # ── UTILS ─────────────────────────────────────────────────
-
 def load_properties(path):
     with open(path) as f:
         props = json.load(f)
@@ -218,7 +215,6 @@ def main():
         load_materials(MATERIAL_DIR)  
         enable_gpu()
         
-        index = 0
         for rel_key in rel_data.keys():
             
             if N_PER_REL is not None:
@@ -231,13 +227,14 @@ def main():
                 camera = bpy.data.objects['Camera']
                 set_camera_from_directions(camera, scene["directions"])
                 obj1, obj2 = scene["obj1"], scene["obj2"]
+                imageID = scene["imageID"]
                 
                 # POSITIVE
                 clear_objects()
 
                 scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR)
-                img_path  = os.path.join(img_dir,  f"pos_{index:06d}.png")
-                json_path = os.path.join(json_dir, f"pos_{index:06d}.json")
+                img_path  = os.path.join(img_dir,  f"pos_{imageID}.png")
+                json_path = os.path.join(json_dir, f"pos_{imageID}.json")
 
                 render_scene(img_path)
                 save_scene_json(json_path, scene_meta)
@@ -246,15 +243,12 @@ def main():
                 clear_objects()
                 
                 scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR, swap_positions=True)
-                img_path  = os.path.join(img_dir,  f"neg_{index:06d}.png")
-                json_path = os.path.join(json_dir, f"neg_{index:06d}.json")
+                img_path  = os.path.join(img_dir,  f"neg_{imageID}.png")
+                json_path = os.path.join(json_dir, f"neg_{imageID}.json")
                 
                 render_scene(img_path)
                 save_scene_json(json_path, scene_meta)
-                
-                print(f"Rendered {index:06d} | {rel_key}")
-                index +=1
-            
+                            
             print(f" {split} done")
 
 
