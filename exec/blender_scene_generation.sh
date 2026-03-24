@@ -17,17 +17,13 @@ srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blen
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v1 
 
 
-srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v2 
-
-
-srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v3 
+# srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v2 
 
 
 # srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v4 
+#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v3 
 
 
-srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v5 
+# srun python /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset/create_blender_scenes.py \
+#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --version v5 

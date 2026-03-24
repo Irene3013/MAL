@@ -194,7 +194,6 @@ def main():
     PROPERTIES_JSON = os.path.join(args.root, "clevr/properties.json")
     
     SPLITS = ['train', 'test']
-    SPLITS = ['test']
 
     for split in SPLITS:
         
