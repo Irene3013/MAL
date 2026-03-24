@@ -1,0 +1,39 @@
+{
+  "relation": "behind",
+  "obj1": {
+    "shape": "SmoothCube_v2",
+    "color": [
+      1.0,
+      0.9333333333333333,
+      0.2,
+      1.0
+    ],
+    "material": "Rubber",
+    "size": 0.7,
+    "3d_coords": [
+      2.2357473373413086,
+      0.4839427173137665,
+      0.7
+    ]
+  },
+  "obj2": {
+    "shape": "SmoothCube_v2",
+    "color": [
+      1.0,
+      0.9333333333333333,
+      0.2,
+      1.0
+    ],
+    "material": "Rubber",
+    "size": 0.7,
+    "3d_coords": [
+      -1.308379054069519,
+      0.6644778251647949,
+      0.7
+    ]
+  },
+  "clevr_source": {
+    "obj1_index": -1,
+    "obj2_index": -1
+  }
+}
