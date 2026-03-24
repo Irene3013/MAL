@@ -1,0 +1,39 @@
+{
+  "relation": "left",
+  "obj1": {
+    "shape": "SmoothCube_v2",
+    "color": [
+      1.0,
+      0.9333333333333333,
+      0.2,
+      1.0
+    ],
+    "material": "Rubber",
+    "size": 0.7,
+    "3d_coords": [
+      2.1550698280334473,
+      0.6761351227760315,
+      0.7
+    ]
+  },
+  "obj2": {
+    "shape": "Sphere",
+    "color": [
+      1.0,
+      0.9333333333333333,
+      0.2,
+      1.0
+    ],
+    "material": "Rubber",
+    "size": 0.7,
+    "3d_coords": [
+      -2.732358455657959,
+      0.23445123434066772,
+      0.7
+    ]
+  },
+  "clevr_source": {
+    "obj1_index": -1,
+    "obj2_index": -1
+  }
+}
