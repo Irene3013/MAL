@@ -135,11 +135,11 @@ def build_scene(obj1, obj2, relation, properties_path, shape_path, swap_position
     size2 = size_map[obj2['size']]
 
     # Posición desde el par CLEVR
-    x1, y1, _ = obj1["3d_coords"]
-    x2, y2, _ = obj2["3d_coords"]
+    x1, y1, z1 = obj1["3d_coords"]
+    x2, y2, z2 = obj2["3d_coords"]
     
     if swap_positions:
-        x1, y1, x2, y2 = x2, y2, x1, y1
+        x1, y1, z1, x2, y2, z2 = x2, y2, z2, x1, y1, z1
     
     # Material desde el par CLEVR
     material1 = MATERIAL_MAP[obj1.get("material", "rubber")]
@@ -158,14 +158,14 @@ def build_scene(obj1, obj2, relation, properties_path, shape_path, swap_position
             "color":     color1,
             "material":  material1,
             "size":      size1,
-            "3d_coords": [x1, y1, size1],
+            "3d_coords": [x1, y1, z1],
         },
         "obj2": {
             "shape":     shape2,
             "color":     color2,
             "material":  material2,
             "size":      size2,
-            "3d_coords": [x2, y2, size2],
+            "3d_coords": [x2, y2, z2],
         },
         "clevr_source": {
             "obj1_index":     obj1.get("object_index", -1),
