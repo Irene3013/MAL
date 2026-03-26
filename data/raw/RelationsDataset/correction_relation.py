@@ -111,8 +111,8 @@ def main(relations_path, scenes_folder):
 # -------------------------
 
 if __name__ == "__main__":
-    version = "v1"
-    split ="train"
+    version = "v2"
+    split ="test"
     main(
         relations_path=f"./{version}/{version}_{split}.json",
         scenes_folder=f"./{version}/{split}_scenes"

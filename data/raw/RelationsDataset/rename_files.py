@@ -25,8 +25,8 @@ def swap_files(ids, folder, ext):
 
 
 def main():
-    version = "v1"
-    split ="train"
+    version = "v2"
+    split ="test"
     # Cargar ids fallidos
     with open("failed_ids.json", "r") as f:
         ids = json.load(f)
