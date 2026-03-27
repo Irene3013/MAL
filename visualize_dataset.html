@@ -3,127 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relations Dataset Viewer</title>
+    <title>Compact Relations Viewer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px;}
+        /* --- GENERAL --- */
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: #f8f9fa; color: #333; margin: 0; padding: 10px; overflow: hidden; }
+        .container { max-width: 1600px; margin: auto; background: white; padding: 15px; border-radius: 12px; height: 95vh; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h1 { text-align: center; font-size: 1.1rem; margin: 0 0 10px 0; color: #444; }
         
-        /* Top Controls */
-        .controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #eee;}
-        select, button { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
-        button { background-color: #3498db; color: white; cursor: pointer; border: none; transition: background 0.3s; font-weight: bold;}
-        button:hover { background-color: #2980b9; }
+        /* --- CONTROLS --- */
+        .controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        select, button { padding: 4px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; }
+        button { background-color: #4a90e2; color: white; cursor: pointer; border: none; font-weight: 600; }
+        button:hover { background-color: #357abd; }
+
+        /* --- LAYOUT --- */
+        .layout { display: flex; gap: 15px; flex-grow: 1; overflow: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { flex: 0 0 400px; border: 1px solid #eee; border-radius: 8px; display: flex; flex-direction: column; background: #fff; }
+        .filter-area { padding: 10px; background: #fafafa; border-bottom: 1px solid #eee; }
+        .list-container { flex-grow: 1; overflow-y: auto; }
         
-        #status { text-align: center; font-weight: bold; margin-bottom: 20px; color: #e67e22; }
+        .list-item { padding: 6px 12px; border-bottom: 1px solid #f5f5f5; cursor: pointer; transition: 0.1s; display: flex; flex-direction: column; }
+        .list-item:hover { background: #f0f7ff; }
+        .list-item.active { background: #eef4ff; border-left: 4px solid #4a90e2; }
 
-        /* Main Layout: Sidebar + Content */
-        .layout { display: flex; gap: 20px; align-items: flex-start; }
+        /* INDEX STYLE */
+        .item-index { font-size: 10px; color: #bbb; font-weight: 600; min-width: 28px; display: inline-block; }
 
-        /* Sidebar (List & Filters) */
-        .sidebar { flex: 0 0 300px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; height: 75vh; }
-        .filter-group { margin-bottom: 15px; }
-        .filter-group label { font-weight: bold; display: block; margin-bottom: 5px; color: #2c3e50;}
-        .filter-group select { width: 100%; }
+        /* ULTRA MINI CHIPS */
+        .badge-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-bottom: 2px; }
+        .badge { padding: 1px 7px; border-radius: 4px; font-size: 9.5px; font-weight: 700; text-transform: uppercase; border: 1px solid rgba(0,0,0,0.08); color: #333; }
         
-        .list-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #ddd; padding-top: 10px; }
-        .list-item { padding: 10px; margin-bottom: 8px; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 14px;}
-        .list-item:hover { background: #e8f4f8; border-color: #3498db; }
-        .list-item.active { background: #3498db; color: white; border-color: #2980b9; }
-        .list-item-title { font-weight: bold; margin-bottom: 4px; }
-        .list-item-subtitle { font-size: 12px; opacity: 0.8; }
-
-        /* Main Content Area */
-        .main-content { flex-grow: 1; display: none; flex-direction: column; gap: 20px;}
+        .badge-rel { background: transparent; color: #777; border: 1px dashed #ccc; font-style: italic; text-transform: lowercase; font-weight: 400; padding: 0 4px; }
         
-        /* Metadata */
-        .metadata { background: #e8f4f8; padding: 15px; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; font-size: 14px;}
-        .metadata span { font-weight: bold; color: #2980b9; }
+        .list-item-subtitle { font-size: 9px; color: #ccc; font-family: monospace; margin-left: 32px; }
 
-        /* Images and Captions Grid */
-        .viewer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fafafa; display: flex; flex-direction: column;}
-        .card-header { padding: 10px; text-align: center; font-weight: bold; color: white; }
-        .pos-header { background-color: #27ae60; }
-        .neg-header { background-color: #c0392b; }
-        .image-container { width: 100%; height: 400px; background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* --- MAIN CONTENT --- */
+        .main-content { flex-grow: 1; display: none; flex-direction: column; gap: 8px; overflow: hidden; }
+        .metadata-bar { display: flex; justify-content: space-around; background: #f1f3f5; padding: 5px; border-radius: 6px; font-size: 10px; color: #666; }
+        .metadata-bar b { color: #333; margin-left: 2px; }
+
+        .viewer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-grow: 1; overflow: hidden; }
+        .card { border: 1px solid #eee; border-radius: 10px; display: flex; flex-direction: column; background: #fff; overflow: hidden; }
+        .card-header { padding: 3px; text-align: center; font-size: 9px; font-weight: bold; color: white; text-transform: uppercase; }
+        .pos-header { background-color: #74b816; } 
+        .neg-header { background-color: #f03e3e; } 
+
+        .caption { padding: 10px; text-align: center; font-size: 13px; font-weight: 600; color: #2c3e50; background: #fdfdfd; border-bottom: 1px solid #f1f1f1; min-height: 35px; display: flex; align-items: center; justify-content: center; }
+        .image-container { flex-grow: 1; background: #fff; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
         .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .caption { padding: 15px; text-align: center; font-size: 16px; flex-grow: 1; border-top: 1px solid #ddd;}
-        
-        /* Placeholder when nothing is selected */
-        .placeholder-msg { text-align: center; padding: 50px; color: #7f8c8d; font-size: 18px; width: 100%;}
+
+        #placeholder { flex-grow: 1; display: flex; align-items: center; justify-content: center; color: #ccc; border: 2px dashed #eee; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🔍 Relations Dataset Viewer</h1>
+    <h1>Relations Dataset Explorer</h1>
     
     <div class="controls">
-        <label for="versionSelect">Version:</label>
         <select id="versionSelect">
-            <option value="v1">v1</option>
-            <option value="v2">v2</option>
-            <option value="v3">v3</option>
-            <option value="v4">v4</option>
-            <option value="v5">v5</option>
-            <option value="v5p">v5p</option>
+            <option value="v1">v1</option><option value="v2">v2</option><option value="v3">v3</option>
+            <option value="v4">v4</option><option value="v5">v5</option><option value="v5p">v5p</option>
         </select>
-
-        <label for="splitSelect">Split:</label>
         <select id="splitSelect">
-            <option value="train">Train</option>
-            <option value="val">Val</option>
-            <option value="test">Test</option>
+            <option value="train">Train</option><option value="val">Val</option><option value="test">Test</option>
         </select>
-
-        <button onclick="loadDataset()">Load Dataset</button>
+        <button onclick="loadDataset()">Load</button>
+        <div id="status" style="font-size: 11px; color: #999; margin-left: 10px; align-self: center;">Ready.</div>
     </div>
-
-    <div id="status">Waiting to load dataset...</div>
 
     <div class="layout" id="mainLayout" style="display: none;">
         <div class="sidebar">
-            <div class="filter-group">
-                <label for="relationFilter">Filter by Relation:</label>
-                <select id="relationFilter" onchange="applyFilters()">
-                    <option value="ALL">-- All Relations --</option>
-                </select>
+            <div class="filter-area">
+                <select id="relationFilter" onchange="applyFilters()" style="width: 100%; font-size: 11px;"></select>
             </div>
-            <div class="list-container" id="exampleList">
-                </div>
+            <div class="list-container" id="exampleList"></div>
         </div>
 
-        <div id="placeholder" class="placeholder-msg">
-            👈 Select an example from the list to view details.
-        </div>
+        <div id="placeholder">Select an entry from the list</div>
 
         <div class="main-content" id="mainContent">
-            <div class="metadata" id="metadataDiv">
-                <div>Relation: <span id="meta-relation"></span></div>
-                <div>Shape 1: <span id="meta-shape1"></span></div>
-                <div>Color 1: <span id="meta-color1"></span></div>
-                <div>Shape 2: <span id="meta-shape2"></span></div>
-                <div>Color 2: <span id="meta-color2"></span></div>
-                <div>File ID: <span id="meta-file"></span></div>
+            <div class="metadata-bar">
+                <span>Rel: <b id="meta-relation"></b></span>
+                <span>Obj 1: <b id="meta-obj1"></b></span>
+                <span>Obj 2: <b id="meta-obj2"></b></span>
+                <span>File: <b id="meta-file"></b></span>
             </div>
 
-            <div class="viewer-grid" id="viewerGrid">
+            <div class="viewer-grid">
                 <div class="card">
                     <div class="card-header pos-header">Positive</div>
-                    <div class="image-container">
-                        <img id="imgPos" src="" alt="Positive Image" onerror="this.onerror=null; this.src=''; this.alt='Image not found';">
-                    </div>
                     <div class="caption" id="capPos"></div>
+                    <div class="image-container"><img id="imgPos" src=""></div>
                 </div>
-
                 <div class="card">
                     <div class="card-header neg-header">Negative</div>
-                    <div class="image-container">
-                        <img id="imgNeg" src="" alt="Negative Image" onerror="this.onerror=null; this.src=''; this.alt='Image not found';">
-                    </div>
                     <div class="caption" id="capNeg"></div>
+                    <div class="image-container"><img id="imgNeg" src=""></div>
                 </div>
             </div>
         </div>
@@ -132,185 +112,120 @@
 
 <script>
     const ROOT = "./data/raw/RelationsDataset";
-    let fullDataset = [];     // Stores all loaded CSV rows
-    let filteredDataset = []; // Stores rows after applying filters
-    let currentImgBasePath = "";
+    let fullDataset = [], filteredDataset = [], currentImgBasePath = "";
 
-    function resolvePaths(version, split) {
-        let csvPath = "";
-        let imgFolder = (split === "test") ? "test_images" : "train_images";
-        let imgVersionDir = version;
+    const colorMap = {
+        'red': '#ffadad', 'blue': '#a0c4ff', 'green': '#baffc9', 
+        'yellow': '#fdffb6', 'purple': '#cdb4db', 'orange': '#ffd6a5',
+        'pink': '#ffc6ff', 'cyan': '#9bf6ff', 'white': '#f8f9fa', 
+        'black': '#adb5bd', 'grey': '#dee2e6', 'gray': '#dee2e6',
+        'brown': '#d7ccc8' // Brown bug fix: added soft brown color
+    };
 
-        // 1. Exceptions for image folders
-        if (version === "v4") {
-            imgVersionDir = "v3";
-        } else if (version === "v5p") {
-            imgVersionDir = "v5";
-        }
+    function getSoftColor(colorName) {
+        return colorMap[(colorName || 'grey').toLowerCase()] || '#ced4da';
+    }
 
-        let imgBasePath = `${ROOT}/${imgVersionDir}/${imgFolder}`;
-
-        // 2. Exceptions for CSV paths
-        if (version === "v5p") {
-            if (split === "test") {
-                csvPath = `${ROOT}/v5/v5_test_paraphrase.csv`;
-            } else {
-                csvPath = `${ROOT}/v5/v5_${split}.csv`;
-            }
-        } else {
-            csvPath = `${ROOT}/${version}/${version}_${split}.csv`;
-        }
-
-        return { csvPath, imgBasePath };
+    function resolvePaths(v, s) {
+        let imgFolder = (s === "test") ? "test_images" : "train_images";
+        let imgVD = (v === "v4") ? "v3" : (v === "v5p" ? "v5" : v);
+        let csv = (v === "v5p" && s === "test") ? `${ROOT}/v5/v5_test_paraphrase.csv` : (v === "v5p" ? `${ROOT}/v5/v5_${s}.csv` : `${ROOT}/${v}/${v}_${s}.csv`);
+        return { csv, img: `${ROOT}/${imgVD}/${imgFolder}` };
     }
 
     function loadDataset() {
-        const version = document.getElementById("versionSelect").value;
-        const split = document.getElementById("splitSelect").value;
-        const statusEl = document.getElementById("status");
+        const paths = resolvePaths(document.getElementById("versionSelect").value, document.getElementById("splitSelect").value);
+        currentImgBasePath = paths.img;
+        document.getElementById("status").innerText = "Loading...";
         
-        const paths = resolvePaths(version, split);
-        currentImgBasePath = paths.imgBasePath;
-
-        statusEl.innerText = `Loading CSV from: ${paths.csvPath}...`;
-        
-        // Hide layout during load
-        document.getElementById("mainLayout").style.display = "none";
-        hideExample();
-
-        Papa.parse(paths.csvPath, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: function(results) {
-                if (results.errors.length && results.data.length === 0) {
-                    statusEl.innerText = "Error loading CSV. Check console or ensure your local server is running.";
-                    console.error(results.errors);
-                    return;
-                }
-                
-                fullDataset = results.data;
-                if(fullDataset.length === 0) {
-                    statusEl.innerText = "The CSV is empty.";
-                    return;
-                }
-
-                statusEl.innerText = `Successfully loaded ${fullDataset.length} examples from '${version}' (${split}).`;
-                
-                populateRelationFilter();
-                applyFilters(); // This will render the list
-
+        Papa.parse(paths.csv, {
+            download: true, header: true, skipEmptyLines: true,
+            complete: function(r) {
+                fullDataset = r.data.sort((a, b) => a.image.localeCompare(b.image, undefined, {numeric: true}));
+                populateFilter();
+                applyFilters();
                 document.getElementById("mainLayout").style.display = "flex";
-            },
-            error: function(err) {
-                statusEl.innerText = "Could not find or read the CSV file. Is the path correct?";
-                console.error(err);
+                document.getElementById("status").innerText = `Loaded ${fullDataset.length} items.`;
             }
         });
     }
 
-    function populateRelationFilter() {
-        const filterSelect = document.getElementById("relationFilter");
-        // Clear previous options except "ALL"
-        filterSelect.innerHTML = '<option value="ALL">-- All Relations --</option>';
-        
-        // Extract unique relations
-        const uniqueRelations = [...new Set(fullDataset.map(item => item.relation).filter(Boolean))];
-        uniqueRelations.sort();
-
-        uniqueRelations.forEach(rel => {
-            const option = document.createElement("option");
-            option.value = rel;
-            option.innerText = rel;
-            filterSelect.appendChild(option);
+    function populateFilter() {
+        const f = document.getElementById("relationFilter");
+        f.innerHTML = '<option value="ALL">All Relations</option>';
+        [...new Set(fullDataset.map(i => i.relation))].sort().forEach(r => {
+            let o = document.createElement("option"); o.value = r; o.innerText = r; f.appendChild(o);
         });
     }
 
     function applyFilters() {
-        const selectedRelation = document.getElementById("relationFilter").value;
-        
-        if (selectedRelation === "ALL") {
-            filteredDataset = fullDataset;
-        } else {
-            filteredDataset = fullDataset.filter(item => item.relation === selectedRelation);
-        }
-
+        const rel = document.getElementById("relationFilter").value;
+        filteredDataset = rel === "ALL" ? fullDataset : fullDataset.filter(i => i.relation === rel);
         renderList();
-        hideExample(); // Clear the main view when filter changes
+        document.getElementById("placeholder").style.display = "flex";
+        document.getElementById("mainContent").style.display = "none";
     }
 
     function renderList() {
-        const listContainer = document.getElementById("exampleList");
-        listContainer.innerHTML = ""; // Clear existing
-
-        if (filteredDataset.length === 0) {
-            listContainer.innerHTML = "<div style='padding:10px; text-align:center;'>No examples match this filter.</div>";
-            return;
-        }
-
-        filteredDataset.forEach((row, index) => {
+        const container = document.getElementById("exampleList");
+        container.innerHTML = "";
+        filteredDataset.forEach((row, idx) => {
             const div = document.createElement("div");
             div.className = "list-item";
-            div.onclick = () => selectExample(index, div);
+            div.onclick = () => selectExample(idx, div);
             
-            // Constructing the dynamic title: id-color1-shape1-relation-color2-shape2
-            // We use || '?' to handle cases where a column might be empty
-            const id = index; 
-            const c1 = row.color1 || 'n/a';
-            const s1 = row.shape1 || 'n/a';
-            const rel = row.relation || 'n/a';
-            const c2 = row.color2 || 'n/a';
-            const s2 = row.shape2 || 'n/a';
+            const bgColor1 = getSoftColor(row.color1);
+            const bgColor2 = getSoftColor(row.color2);
 
-            const title = document.createElement("div");
-            title.className = "list-item-title";
-            title.innerText = `${id} - ${c1} - ${s1} - ${rel} - ${c2} - ${s2}`;
-            
-            const subtitle = document.createElement("div");
-            subtitle.className = "list-item-subtitle";
-            subtitle.innerText = `File: ${row.image}`;
-
-            div.appendChild(title);
-            div.appendChild(subtitle);
-            listContainer.appendChild(div);
+            div.innerHTML = `
+                <div class="badge-container">
+                    <span class="item-index">${idx}</span>
+                    <span class="badge" style="background-color:${bgColor1}">${row.shape1}</span>
+                    <span class="badge badge-rel">${row.relation}</span>
+                    <span class="badge" style="background-color:${bgColor2}">${row.shape2}</span>
+                </div>
+                <div class="list-item-subtitle">${row.image}</div>
+            `;
+            container.appendChild(div);
         });
     }
 
-    function selectExample(index, element) {
-        // Highlight selected item in the list
-        const allItems = document.querySelectorAll(".list-item");
-        allItems.forEach(item => item.classList.remove("active"));
-        element.classList.add("active");
+    function selectExample(idx, el) {
+        document.querySelectorAll(".list-item").forEach(i => i.classList.remove("active"));
+        el.classList.add("active");
+        const row = filteredDataset[idx];
 
-        const row = filteredDataset[index];
+        document.getElementById("meta-relation").innerText = row.relation;
+        document.getElementById("meta-obj1").innerText = `${row.color1} ${row.shape1}`;
+        document.getElementById("meta-obj2").innerText = `${row.color2} ${row.shape2}`;
+        document.getElementById("meta-file").innerText = row.image;
 
-        // Update Metadata
-        document.getElementById("meta-relation").innerText = row.relation || "N/A";
-        document.getElementById("meta-shape1").innerText = row.shape1 || "N/A";
-        document.getElementById("meta-color1").innerText = row.color1 || "N/A";
-        document.getElementById("meta-shape2").innerText = row.shape2 || "N/A";
-        document.getElementById("meta-color2").innerText = row.color2 || "N/A";
-        document.getElementById("meta-file").innerText = row.image || "N/A";
+        document.getElementById("imgPos").src = `${currentImgBasePath}/pos_${row.image}`;
+        document.getElementById("imgNeg").src = `${currentImgBasePath}/neg_${row.image}`;
+        document.getElementById("capPos").innerText = row.caption_pos;
+        document.getElementById("capNeg").innerText = row.caption_neg;
 
-        // Update Images (prepending pos_ and neg_)
-        const imageName = row.image; // e.g., "000000.png"
-        document.getElementById("imgPos").src = `${currentImgBasePath}/pos_${imageName}`;
-        document.getElementById("imgNeg").src = `${currentImgBasePath}/neg_${imageName}`;
-
-        // Update Captions
-        document.getElementById("capPos").innerText = row.caption_pos || "No positive caption";
-        document.getElementById("capNeg").innerText = row.caption_neg || "No negative caption";
-
-        // Toggle UI elements
         document.getElementById("placeholder").style.display = "none";
         document.getElementById("mainContent").style.display = "flex";
     }
 
-    function hideExample() {
-        document.getElementById("placeholder").style.display = "block";
-        document.getElementById("mainContent").style.display = "none";
-    }
-</script>
+    // Keyboard navigation (Optional but very useful)
+    document.addEventListener('keydown', (e) => {
+        if (!filteredDataset.length) return;
+        const active = document.querySelector('.list-item.active');
+        if (!active) return;
 
+        let items = Array.from(document.querySelectorAll('.list-item'));
+        let idx = items.indexOf(active);
+
+        if (e.key === 'ArrowDown' && idx < items.length - 1) {
+            items[idx + 1].click();
+            items[idx + 1].scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp' && idx > 0) {
+            items[idx - 1].click();
+            items[idx - 1].scrollIntoView({ block: 'nearest' });
+        }
+    });
+</script>
 </body>
 </html>
