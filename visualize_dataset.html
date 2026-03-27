@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relations Dataset Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px;}
+        
+        /* Top Controls */
+        .controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #eee;}
+        select, button { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        button { background-color: #3498db; color: white; cursor: pointer; border: none; transition: background 0.3s; font-weight: bold;}
+        button:hover { background-color: #2980b9; }
+        
+        #status { text-align: center; font-weight: bold; margin-bottom: 20px; color: #e67e22; }
+
+        /* Main Layout: Sidebar + Content */
+        .layout { display: flex; gap: 20px; align-items: flex-start; }
+
+        /* Sidebar (List & Filters) */
+        .sidebar { flex: 0 0 300px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; height: 75vh; }
+        .filter-group { margin-bottom: 15px; }
+        .filter-group label { font-weight: bold; display: block; margin-bottom: 5px; color: #2c3e50;}
+        .filter-group select { width: 100%; }
+        
+        .list-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #ddd; padding-top: 10px; }
+        .list-item { padding: 10px; margin-bottom: 8px; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 14px;}
+        .list-item:hover { background: #e8f4f8; border-color: #3498db; }
+        .list-item.active { background: #3498db; color: white; border-color: #2980b9; }
+        .list-item-title { font-weight: bold; margin-bottom: 4px; }
+        .list-item-subtitle { font-size: 12px; opacity: 0.8; }
+
+        /* Main Content Area */
+        .main-content { flex-grow: 1; display: none; flex-direction: column; gap: 20px;}
+        
+        /* Metadata */
+        .metadata { background: #e8f4f8; padding: 15px; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; font-size: 14px;}
+        .metadata span { font-weight: bold; color: #2980b9; }
+
+        /* Images and Captions Grid */
+        .viewer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fafafa; display: flex; flex-direction: column;}
+        .card-header { padding: 10px; text-align: center; font-weight: bold; color: white; }
+        .pos-header { background-color: #27ae60; }
+        .neg-header { background-color: #c0392b; }
+        .image-container { width: 100%; height: 400px; background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .caption { padding: 15px; text-align: center; font-size: 16px; flex-grow: 1; border-top: 1px solid #ddd;}
+        
+        /* Placeholder when nothing is selected */
+        .placeholder-msg { text-align: center; padding: 50px; color: #7f8c8d; font-size: 18px; width: 100%;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔍 Relations Dataset Viewer</h1>
+    
+    <div class="controls">
+        <label for="versionSelect">Version:</label>
+        <select id="versionSelect">
+            <option value="v1">v1</option>
+            <option value="v2">v2</option>
+            <option value="v3">v3</option>
+            <option value="v4">v4</option>
+            <option value="v5">v5</option>
+            <option value="v5p">v5p</option>
+        </select>
+
+        <label for="splitSelect">Split:</label>
+        <select id="splitSelect">
+            <option value="train">Train</option>
+            <option value="val">Val</option>
+            <option value="test">Test</option>
+        </select>
+
+        <button onclick="loadDataset()">Load Dataset</button>
+    </div>
+
+    <div id="status">Waiting to load dataset...</div>
+
+    <div class="layout" id="mainLayout" style="display: none;">
+        <div class="sidebar">
+            <div class="filter-group">
+                <label for="relationFilter">Filter by Relation:</label>
+                <select id="relationFilter" onchange="applyFilters()">
+                    <option value="ALL">-- All Relations --</option>
+                </select>
+            </div>
+            <div class="list-container" id="exampleList">
+                </div>
+        </div>
+
+        <div id="placeholder" class="placeholder-msg">
+            👈 Select an example from the list to view details.
+        </div>
+
+        <div class="main-content" id="mainContent">
+            <div class="metadata" id="metadataDiv">
+                <div>Relation: <span id="meta-relation"></span></div>
+                <div>Shape 1: <span id="meta-shape1"></span></div>
+                <div>Color 1: <span id="meta-color1"></span></div>
+                <div>Shape 2: <span id="meta-shape2"></span></div>
+                <div>Color 2: <span id="meta-color2"></span></div>
+                <div>File ID: <span id="meta-file"></span></div>
+            </div>
+
+            <div class="viewer-grid" id="viewerGrid">
+                <div class="card">
+                    <div class="card-header pos-header">Positive</div>
+                    <div class="image-container">
+                        <img id="imgPos" src="" alt="Positive Image" onerror="this.onerror=null; this.src=''; this.alt='Image not found';">
+                    </div>
+                    <div class="caption" id="capPos"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header neg-header">Negative</div>
+                    <div class="image-container">
+                        <img id="imgNeg" src="" alt="Negative Image" onerror="this.onerror=null; this.src=''; this.alt='Image not found';">
+                    </div>
+                    <div class="caption" id="capNeg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ROOT = "./data/raw/RelationsDataset";
+    let fullDataset = [];     // Stores all loaded CSV rows
+    let filteredDataset = []; // Stores rows after applying filters
+    let currentImgBasePath = "";
+
+    function resolvePaths(version, split) {
+        let csvPath = "";
+        let imgFolder = (split === "test") ? "test_images" : "train_images";
+        let imgVersionDir = version;
+
+        // 1. Exceptions for image folders
+        if (version === "v4") {
+            imgVersionDir = "v3";
+        } else if (version === "v5p") {
+            imgVersionDir = "v5";
+        }
+
+        let imgBasePath = `${ROOT}/${imgVersionDir}/${imgFolder}`;
+
+        // 2. Exceptions for CSV paths
+        if (version === "v5p") {
+            if (split === "test") {
+                csvPath = `${ROOT}/v5/v5_test_paraphrase.csv`;
+            } else {
+                csvPath = `${ROOT}/v5/v5_${split}.csv`;
+            }
+        } else {
+            csvPath = `${ROOT}/${version}/${version}_${split}.csv`;
+        }
+
+        return { csvPath, imgBasePath };
+    }
+
+    function loadDataset() {
+        const version = document.getElementById("versionSelect").value;
+        const split = document.getElementById("splitSelect").value;
+        const statusEl = document.getElementById("status");
+        
+        const paths = resolvePaths(version, split);
+        currentImgBasePath = paths.imgBasePath;
+
+        statusEl.innerText = `Loading CSV from: ${paths.csvPath}...`;
+        
+        // Hide layout during load
+        document.getElementById("mainLayout").style.display = "none";
+        hideExample();
+
+        Papa.parse(paths.csvPath, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                if (results.errors.length && results.data.length === 0) {
+                    statusEl.innerText = "Error loading CSV. Check console or ensure your local server is running.";
+                    console.error(results.errors);
+                    return;
+                }
+                
+                fullDataset = results.data;
+                if(fullDataset.length === 0) {
+                    statusEl.innerText = "The CSV is empty.";
+                    return;
+                }
+
+                statusEl.innerText = `Successfully loaded ${fullDataset.length} examples from '${version}' (${split}).`;
+                
+                populateRelationFilter();
+                applyFilters(); // This will render the list
+
+                document.getElementById("mainLayout").style.display = "flex";
+            },
+            error: function(err) {
+                statusEl.innerText = "Could not find or read the CSV file. Is the path correct?";
+                console.error(err);
+            }
+        });
+    }
+
+    function populateRelationFilter() {
+        const filterSelect = document.getElementById("relationFilter");
+        // Clear previous options except "ALL"
+        filterSelect.innerHTML = '<option value="ALL">-- All Relations --</option>';
+        
+        // Extract unique relations
+        const uniqueRelations = [...new Set(fullDataset.map(item => item.relation).filter(Boolean))];
+        uniqueRelations.sort();
+
+        uniqueRelations.forEach(rel => {
+            const option = document.createElement("option");
+            option.value = rel;
+            option.innerText = rel;
+            filterSelect.appendChild(option);
+        });
+    }
+
+    function applyFilters() {
+        const selectedRelation = document.getElementById("relationFilter").value;
+        
+        if (selectedRelation === "ALL") {
+            filteredDataset = fullDataset;
+        } else {
+            filteredDataset = fullDataset.filter(item => item.relation === selectedRelation);
+        }
+
+        renderList();
+        hideExample(); // Clear the main view when filter changes
+    }
+
+    function renderList() {
+        const listContainer = document.getElementById("exampleList");
+        listContainer.innerHTML = ""; // Clear existing
+
+        if (filteredDataset.length === 0) {
+            listContainer.innerHTML = "<div style='padding:10px; text-align:center;'>No examples match this filter.</div>";
+            return;
+        }
+
+        filteredDataset.forEach((row, index) => {
+            const div = document.createElement("div");
+            div.className = "list-item";
+            div.onclick = () => selectExample(index, div);
+            
+            // Constructing the dynamic title: id-color1-shape1-relation-color2-shape2
+            // We use || '?' to handle cases where a column might be empty
+            const id = index; 
+            const c1 = row.color1 || 'n/a';
+            const s1 = row.shape1 || 'n/a';
+            const rel = row.relation || 'n/a';
+            const c2 = row.color2 || 'n/a';
+            const s2 = row.shape2 || 'n/a';
+
+            const title = document.createElement("div");
+            title.className = "list-item-title";
+            title.innerText = `${id} - ${c1} - ${s1} - ${rel} - ${c2} - ${s2}`;
+            
+            const subtitle = document.createElement("div");
+            subtitle.className = "list-item-subtitle";
+            subtitle.innerText = `File: ${row.image}`;
+
+            div.appendChild(title);
+            div.appendChild(subtitle);
+            listContainer.appendChild(div);
+        });
+    }
+
+    function selectExample(index, element) {
+        // Highlight selected item in the list
+        const allItems = document.querySelectorAll(".list-item");
+        allItems.forEach(item => item.classList.remove("active"));
+        element.classList.add("active");
+
+        const row = filteredDataset[index];
+
+        // Update Metadata
+        document.getElementById("meta-relation").innerText = row.relation || "N/A";
+        document.getElementById("meta-shape1").innerText = row.shape1 || "N/A";
+        document.getElementById("meta-color1").innerText = row.color1 || "N/A";
+        document.getElementById("meta-shape2").innerText = row.shape2 || "N/A";
+        document.getElementById("meta-color2").innerText = row.color2 || "N/A";
+        document.getElementById("meta-file").innerText = row.image || "N/A";
+
+        // Update Images (prepending pos_ and neg_)
+        const imageName = row.image; // e.g., "000000.png"
+        document.getElementById("imgPos").src = `${currentImgBasePath}/pos_${imageName}`;
+        document.getElementById("imgNeg").src = `${currentImgBasePath}/neg_${imageName}`;
+
+        // Update Captions
+        document.getElementById("capPos").innerText = row.caption_pos || "No positive caption";
+        document.getElementById("capNeg").innerText = row.caption_neg || "No negative caption";
+
+        // Toggle UI elements
+        document.getElementById("placeholder").style.display = "none";
+        document.getElementById("mainContent").style.display = "flex";
+    }
+
+    function hideExample() {
+        document.getElementById("placeholder").style.display = "block";
+        document.getElementById("mainContent").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

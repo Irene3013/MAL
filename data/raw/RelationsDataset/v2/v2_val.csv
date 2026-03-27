@@ -1,229 +1,229 @@
 caption_pos,caption_neg,relation,shape1,color1,shape2,color2,image
-The brown cone is behind of the green cone,The green cone is behind of the brown cone,behind,cone,brown,cone,green,001085.png
-The purple cone is behind of the red cone,The red cone is behind of the purple cone,behind,cone,purple,cone,red,001101.png
-The brown cone is behind of the gray cone,The gray cone is behind of the brown cone,behind,cone,brown,cone,gray,001084.png
-The gray cone is behind of the yellow cone,The yellow cone is behind of the gray cone,behind,cone,gray,cone,yellow,001097.png
-The blue cone is behind of the brown cone,The brown cone is behind of the blue cone,behind,cone,blue,cone,brown,001076.png
-The brown cone is behind of the yellow cone,The yellow cone is behind of the brown cone,behind,cone,brown,cone,yellow,001088.png
-The red cube is behind of the green cone,The green cone is behind of the red cube,behind,cube,red,cone,green,000944.png
-The yellow cube is behind of the cyan cone,The cyan cone is behind of the yellow cube,behind,cube,yellow,cone,cyan,000950.png
-The blue cube is behind of the blue cone,The blue cone is behind of the blue cube,behind,cube,blue,cone,blue,000892.png
-The purple cube is behind of the green cone,The green cone is behind of the purple cube,behind,cube,purple,cone,green,000936.png
-The blue cube is behind of the purple cone,The purple cone is behind of the blue cube,behind,cube,blue,cone,purple,000897.png
-The green cube is behind of the green cone,The green cone is behind of the green cube,behind,cube,green,cone,green,000928.png
-The cyan cube is behind of the blue cone,The blue cone is behind of the cyan cube,behind,cube,cyan,cone,blue,000908.png
-The brown cube is behind of the green cone,The green cone is behind of the brown cube,behind,cube,brown,cone,green,000904.png
-The gray cube is behind of the brown cone,The brown cone is behind of the gray cube,behind,cube,gray,cone,brown,000917.png
-The yellow cube is behind of the purple cone,The purple cone is behind of the yellow cube,behind,cube,yellow,cone,purple,000953.png
-The yellow cube is behind of the blue cone,The blue cone is behind of the yellow cube,behind,cube,yellow,cone,blue,000948.png
-The brown cube is behind of the brown cone,The brown cone is behind of the brown cube,behind,cube,brown,cone,brown,000901.png
-The purple cube is behind of the blue cone,The blue cone is behind of the purple cube,behind,cube,purple,cone,blue,000932.png
-The brown cube is behind of the green cube,The green cube is behind of the brown cube,behind,cube,brown,cube,green,001029.png
-The purple cube is behind of the red cube,The red cube is behind of the purple cube,behind,cube,purple,cube,red,001045.png
-The brown cube is behind of the gray cube,The gray cube is behind of the brown cube,behind,cube,brown,cube,gray,001028.png
-The gray cube is behind of the yellow cube,The yellow cube is behind of the gray cube,behind,cube,gray,cube,yellow,001041.png
-The blue cube is behind of the brown cube,The brown cube is behind of the blue cube,behind,cube,blue,cube,brown,001020.png
-The brown cube is behind of the yellow cube,The yellow cube is behind of the brown cube,behind,cube,brown,cube,yellow,001032.png
-The red cube is behind of the green cylinder,The green cylinder is behind of the red cube,behind,cube,red,cylinder,green,000880.png
-The yellow cube is behind of the cyan cylinder,The cyan cylinder is behind of the yellow cube,behind,cube,yellow,cylinder,cyan,000886.png
-The blue cube is behind of the blue cylinder,The blue cylinder is behind of the blue cube,behind,cube,blue,cylinder,blue,000828.png
-The purple cube is behind of the green cylinder,The green cylinder is behind of the purple cube,behind,cube,purple,cylinder,green,000872.png
-The blue cube is behind of the purple cylinder,The purple cylinder is behind of the blue cube,behind,cube,blue,cylinder,purple,000833.png
-The green cube is behind of the green cylinder,The green cylinder is behind of the green cube,behind,cube,green,cylinder,green,000864.png
-The cyan cube is behind of the blue cylinder,The blue cylinder is behind of the cyan cube,behind,cube,cyan,cylinder,blue,000844.png
-The brown cube is behind of the green cylinder,The green cylinder is behind of the brown cube,behind,cube,brown,cylinder,green,000840.png
-The gray cube is behind of the brown cylinder,The brown cylinder is behind of the gray cube,behind,cube,gray,cylinder,brown,000853.png
-The yellow cube is behind of the purple cylinder,The purple cylinder is behind of the yellow cube,behind,cube,yellow,cylinder,purple,000889.png
-The yellow cube is behind of the blue cylinder,The blue cylinder is behind of the yellow cube,behind,cube,yellow,cylinder,blue,000884.png
-The brown cube is behind of the brown cylinder,The brown cylinder is behind of the brown cube,behind,cube,brown,cylinder,brown,000837.png
-The purple cube is behind of the blue cylinder,The blue cylinder is behind of the purple cube,behind,cube,purple,cylinder,blue,000868.png
-The red cylinder is behind of the green cone,The green cone is behind of the red cylinder,behind,cylinder,red,cone,green,001008.png
-The yellow cylinder is behind of the cyan cone,The cyan cone is behind of the yellow cylinder,behind,cylinder,yellow,cone,cyan,001014.png
-The blue cylinder is behind of the blue cone,The blue cone is behind of the blue cylinder,behind,cylinder,blue,cone,blue,000956.png
-The purple cylinder is behind of the green cone,The green cone is behind of the purple cylinder,behind,cylinder,purple,cone,green,001000.png
-The blue cylinder is behind of the purple cone,The purple cone is behind of the blue cylinder,behind,cylinder,blue,cone,purple,000961.png
-The green cylinder is behind of the green cone,The green cone is behind of the green cylinder,behind,cylinder,green,cone,green,000992.png
-The cyan cylinder is behind of the blue cone,The blue cone is behind of the cyan cylinder,behind,cylinder,cyan,cone,blue,000972.png
-The brown cylinder is behind of the green cone,The green cone is behind of the brown cylinder,behind,cylinder,brown,cone,green,000968.png
-The gray cylinder is behind of the brown cone,The brown cone is behind of the gray cylinder,behind,cylinder,gray,cone,brown,000981.png
-The yellow cylinder is behind of the purple cone,The purple cone is behind of the yellow cylinder,behind,cylinder,yellow,cone,purple,001017.png
-The yellow cylinder is behind of the blue cone,The blue cone is behind of the yellow cylinder,behind,cylinder,yellow,cone,blue,001012.png
-The brown cylinder is behind of the brown cone,The brown cone is behind of the brown cylinder,behind,cylinder,brown,cone,brown,000965.png
-The purple cylinder is behind of the blue cone,The blue cone is behind of the purple cylinder,behind,cylinder,purple,cone,blue,000996.png
-The brown cylinder is behind of the green cylinder,The green cylinder is behind of the brown cylinder,behind,cylinder,brown,cylinder,green,001057.png
-The purple cylinder is behind of the red cylinder,The red cylinder is behind of the purple cylinder,behind,cylinder,purple,cylinder,red,001073.png
-The brown cylinder is behind of the gray cylinder,The gray cylinder is behind of the brown cylinder,behind,cylinder,brown,cylinder,gray,001056.png
-The gray cylinder is behind of the yellow cylinder,The yellow cylinder is behind of the gray cylinder,behind,cylinder,gray,cylinder,yellow,001069.png
-The blue cylinder is behind of the brown cylinder,The brown cylinder is behind of the blue cylinder,behind,cylinder,blue,cylinder,brown,001048.png
-The brown cylinder is behind of the yellow cylinder,The yellow cylinder is behind of the brown cylinder,behind,cylinder,brown,cylinder,yellow,001060.png
-The brown cone is in front of the green cone,The green cone is in front of the brown cone,front,cone,brown,cone,green,000809.png
-The purple cone is in front of the red cone,The red cone is in front of the purple cone,front,cone,purple,cone,red,000825.png
-The brown cone is in front of the gray cone,The gray cone is in front of the brown cone,front,cone,brown,cone,gray,000808.png
-The gray cone is in front of the yellow cone,The yellow cone is in front of the gray cone,front,cone,gray,cone,yellow,000821.png
-The blue cone is in front of the brown cone,The brown cone is in front of the blue cone,front,cone,blue,cone,brown,000800.png
-The brown cone is in front of the yellow cone,The yellow cone is in front of the brown cone,front,cone,brown,cone,yellow,000812.png
-The red cube is in front of the green cone,The green cone is in front of the red cube,front,cube,red,cone,green,000668.png
-The yellow cube is in front of the cyan cone,The cyan cone is in front of the yellow cube,front,cube,yellow,cone,cyan,000674.png
-The blue cube is in front of the blue cone,The blue cone is in front of the blue cube,front,cube,blue,cone,blue,000616.png
-The purple cube is in front of the green cone,The green cone is in front of the purple cube,front,cube,purple,cone,green,000660.png
-The blue cube is in front of the purple cone,The purple cone is in front of the blue cube,front,cube,blue,cone,purple,000621.png
-The green cube is in front of the green cone,The green cone is in front of the green cube,front,cube,green,cone,green,000652.png
-The cyan cube is in front of the blue cone,The blue cone is in front of the cyan cube,front,cube,cyan,cone,blue,000632.png
-The brown cube is in front of the green cone,The green cone is in front of the brown cube,front,cube,brown,cone,green,000628.png
-The gray cube is in front of the brown cone,The brown cone is in front of the gray cube,front,cube,gray,cone,brown,000641.png
-The yellow cube is in front of the purple cone,The purple cone is in front of the yellow cube,front,cube,yellow,cone,purple,000677.png
-The yellow cube is in front of the blue cone,The blue cone is in front of the yellow cube,front,cube,yellow,cone,blue,000672.png
-The brown cube is in front of the brown cone,The brown cone is in front of the brown cube,front,cube,brown,cone,brown,000625.png
-The purple cube is in front of the blue cone,The blue cone is in front of the purple cube,front,cube,purple,cone,blue,000656.png
-The brown cube is in front of the green cube,The green cube is in front of the brown cube,front,cube,brown,cube,green,000753.png
-The purple cube is in front of the red cube,The red cube is in front of the purple cube,front,cube,purple,cube,red,000769.png
-The brown cube is in front of the gray cube,The gray cube is in front of the brown cube,front,cube,brown,cube,gray,000752.png
-The gray cube is in front of the yellow cube,The yellow cube is in front of the gray cube,front,cube,gray,cube,yellow,000765.png
-The blue cube is in front of the brown cube,The brown cube is in front of the blue cube,front,cube,blue,cube,brown,000744.png
-The brown cube is in front of the yellow cube,The yellow cube is in front of the brown cube,front,cube,brown,cube,yellow,000756.png
-The red cube is in front of the green sphere,The green sphere is in front of the red cube,front,cube,red,sphere,green,000604.png
-The yellow cube is in front of the cyan sphere,The cyan sphere is in front of the yellow cube,front,cube,yellow,sphere,cyan,000610.png
-The blue cube is in front of the blue sphere,The blue sphere is in front of the blue cube,front,cube,blue,sphere,blue,000552.png
-The purple cube is in front of the green sphere,The green sphere is in front of the purple cube,front,cube,purple,sphere,green,000596.png
-The blue cube is in front of the purple sphere,The purple sphere is in front of the blue cube,front,cube,blue,sphere,purple,000557.png
-The green cube is in front of the green sphere,The green sphere is in front of the green cube,front,cube,green,sphere,green,000588.png
-The cyan cube is in front of the blue sphere,The blue sphere is in front of the cyan cube,front,cube,cyan,sphere,blue,000568.png
-The brown cube is in front of the green sphere,The green sphere is in front of the brown cube,front,cube,brown,sphere,green,000564.png
-The gray cube is in front of the brown sphere,The brown sphere is in front of the gray cube,front,cube,gray,sphere,brown,000577.png
-The yellow cube is in front of the purple sphere,The purple sphere is in front of the yellow cube,front,cube,yellow,sphere,purple,000613.png
-The yellow cube is in front of the blue sphere,The blue sphere is in front of the yellow cube,front,cube,yellow,sphere,blue,000608.png
-The brown cube is in front of the brown sphere,The brown sphere is in front of the brown cube,front,cube,brown,sphere,brown,000561.png
-The purple cube is in front of the blue sphere,The blue sphere is in front of the purple cube,front,cube,purple,sphere,blue,000592.png
-The red sphere is in front of the green cone,The green cone is in front of the red sphere,front,sphere,red,cone,green,000732.png
-The yellow sphere is in front of the cyan cone,The cyan cone is in front of the yellow sphere,front,sphere,yellow,cone,cyan,000738.png
-The blue sphere is in front of the blue cone,The blue cone is in front of the blue sphere,front,sphere,blue,cone,blue,000680.png
-The purple sphere is in front of the green cone,The green cone is in front of the purple sphere,front,sphere,purple,cone,green,000724.png
-The blue sphere is in front of the purple cone,The purple cone is in front of the blue sphere,front,sphere,blue,cone,purple,000685.png
-The green sphere is in front of the green cone,The green cone is in front of the green sphere,front,sphere,green,cone,green,000716.png
-The cyan sphere is in front of the blue cone,The blue cone is in front of the cyan sphere,front,sphere,cyan,cone,blue,000696.png
-The brown sphere is in front of the green cone,The green cone is in front of the brown sphere,front,sphere,brown,cone,green,000692.png
-The gray sphere is in front of the brown cone,The brown cone is in front of the gray sphere,front,sphere,gray,cone,brown,000705.png
-The yellow sphere is in front of the purple cone,The purple cone is in front of the yellow sphere,front,sphere,yellow,cone,purple,000741.png
-The yellow sphere is in front of the blue cone,The blue cone is in front of the yellow sphere,front,sphere,yellow,cone,blue,000736.png
-The brown sphere is in front of the brown cone,The brown cone is in front of the brown sphere,front,sphere,brown,cone,brown,000689.png
-The purple sphere is in front of the blue cone,The blue cone is in front of the purple sphere,front,sphere,purple,cone,blue,000720.png
-The brown sphere is in front of the green sphere,The green sphere is in front of the brown sphere,front,sphere,brown,sphere,green,000781.png
-The purple sphere is in front of the red sphere,The red sphere is in front of the purple sphere,front,sphere,purple,sphere,red,000797.png
-The brown sphere is in front of the gray sphere,The gray sphere is in front of the brown sphere,front,sphere,brown,sphere,gray,000780.png
-The gray sphere is in front of the yellow sphere,The yellow sphere is in front of the gray sphere,front,sphere,gray,sphere,yellow,000793.png
-The blue sphere is in front of the brown sphere,The brown sphere is in front of the blue sphere,front,sphere,blue,sphere,brown,000772.png
-The brown sphere is in front of the yellow sphere,The yellow sphere is in front of the brown sphere,front,sphere,brown,sphere,yellow,000784.png
-The brown cube is to the left of the green cube,The green cube is to the left of the brown cube,left,cube,brown,cube,green,000201.png
-The purple cube is to the left of the red cube,The red cube is to the left of the purple cube,left,cube,purple,cube,red,000217.png
-The brown cube is to the left of the gray cube,The gray cube is to the left of the brown cube,left,cube,brown,cube,gray,000200.png
-The gray cube is to the left of the yellow cube,The yellow cube is to the left of the gray cube,left,cube,gray,cube,yellow,000213.png
-The blue cube is to the left of the brown cube,The brown cube is to the left of the blue cube,left,cube,blue,cube,brown,000192.png
-The brown cube is to the left of the yellow cube,The yellow cube is to the left of the brown cube,left,cube,brown,cube,yellow,000204.png
-The red cube is to the left of the green cylinder,The green cylinder is to the left of the red cube,left,cube,red,cylinder,green,000052.png
-The yellow cube is to the left of the cyan cylinder,The cyan cylinder is to the left of the yellow cube,left,cube,yellow,cylinder,cyan,000058.png
 The blue cube is to the left of the blue cylinder,The blue cylinder is to the left of the blue cube,left,cube,blue,cylinder,blue,000000.png
-The purple cube is to the left of the green cylinder,The green cylinder is to the left of the purple cube,left,cube,purple,cylinder,green,000044.png
 The blue cube is to the left of the purple cylinder,The purple cylinder is to the left of the blue cube,left,cube,blue,cylinder,purple,000005.png
-The green cube is to the left of the green cylinder,The green cylinder is to the left of the green cube,left,cube,green,cylinder,green,000036.png
-The cyan cube is to the left of the blue cylinder,The blue cylinder is to the left of the cyan cube,left,cube,cyan,cylinder,blue,000016.png
-The brown cube is to the left of the green cylinder,The green cylinder is to the left of the brown cube,left,cube,brown,cylinder,green,000012.png
-The gray cube is to the left of the brown cylinder,The brown cylinder is to the left of the gray cube,left,cube,gray,cylinder,brown,000025.png
-The yellow cube is to the left of the purple cylinder,The purple cylinder is to the left of the yellow cube,left,cube,yellow,cylinder,purple,000061.png
-The yellow cube is to the left of the blue cylinder,The blue cylinder is to the left of the yellow cube,left,cube,yellow,cylinder,blue,000056.png
 The brown cube is to the left of the brown cylinder,The brown cylinder is to the left of the brown cube,left,cube,brown,cylinder,brown,000009.png
+The brown cube is to the left of the green cylinder,The green cylinder is to the left of the brown cube,left,cube,brown,cylinder,green,000012.png
+The cyan cube is to the left of the blue cylinder,The blue cylinder is to the left of the cyan cube,left,cube,cyan,cylinder,blue,000016.png
+The gray cube is to the left of the brown cylinder,The brown cylinder is to the left of the gray cube,left,cube,gray,cylinder,brown,000025.png
+The green cube is to the left of the green cylinder,The green cylinder is to the left of the green cube,left,cube,green,cylinder,green,000036.png
 The purple cube is to the left of the blue cylinder,The blue cylinder is to the left of the purple cube,left,cube,purple,cylinder,blue,000040.png
-The red cube is to the left of the green sphere,The green sphere is to the left of the red cube,left,cube,red,sphere,green,000116.png
-The yellow cube is to the left of the cyan sphere,The cyan sphere is to the left of the yellow cube,left,cube,yellow,sphere,cyan,000122.png
+The purple cube is to the left of the green cylinder,The green cylinder is to the left of the purple cube,left,cube,purple,cylinder,green,000044.png
+The red cube is to the left of the green cylinder,The green cylinder is to the left of the red cube,left,cube,red,cylinder,green,000052.png
+The yellow cube is to the left of the blue cylinder,The blue cylinder is to the left of the yellow cube,left,cube,yellow,cylinder,blue,000056.png
+The yellow cube is to the left of the cyan cylinder,The cyan cylinder is to the left of the yellow cube,left,cube,yellow,cylinder,cyan,000058.png
+The yellow cube is to the left of the purple cylinder,The purple cylinder is to the left of the yellow cube,left,cube,yellow,cylinder,purple,000061.png
 The blue cube is to the left of the blue sphere,The blue sphere is to the left of the blue cube,left,cube,blue,sphere,blue,000064.png
-The purple cube is to the left of the green sphere,The green sphere is to the left of the purple cube,left,cube,purple,sphere,green,000108.png
 The blue cube is to the left of the purple sphere,The purple sphere is to the left of the blue cube,left,cube,blue,sphere,purple,000069.png
-The green cube is to the left of the green sphere,The green sphere is to the left of the green cube,left,cube,green,sphere,green,000100.png
-The cyan cube is to the left of the blue sphere,The blue sphere is to the left of the cyan cube,left,cube,cyan,sphere,blue,000080.png
-The brown cube is to the left of the green sphere,The green sphere is to the left of the brown cube,left,cube,brown,sphere,green,000076.png
-The gray cube is to the left of the brown sphere,The brown sphere is to the left of the gray cube,left,cube,gray,sphere,brown,000089.png
-The yellow cube is to the left of the purple sphere,The purple sphere is to the left of the yellow cube,left,cube,yellow,sphere,purple,000125.png
-The yellow cube is to the left of the blue sphere,The blue sphere is to the left of the yellow cube,left,cube,yellow,sphere,blue,000120.png
 The brown cube is to the left of the brown sphere,The brown sphere is to the left of the brown cube,left,cube,brown,sphere,brown,000073.png
+The brown cube is to the left of the green sphere,The green sphere is to the left of the brown cube,left,cube,brown,sphere,green,000076.png
+The cyan cube is to the left of the blue sphere,The blue sphere is to the left of the cyan cube,left,cube,cyan,sphere,blue,000080.png
+The gray cube is to the left of the brown sphere,The brown sphere is to the left of the gray cube,left,cube,gray,sphere,brown,000089.png
+The green cube is to the left of the green sphere,The green sphere is to the left of the green cube,left,cube,green,sphere,green,000100.png
 The purple cube is to the left of the blue sphere,The blue sphere is to the left of the purple cube,left,cube,purple,sphere,blue,000104.png
-The brown cylinder is to the left of the green cylinder,The green cylinder is to the left of the brown cylinder,left,cylinder,brown,cylinder,green,000229.png
-The purple cylinder is to the left of the red cylinder,The red cylinder is to the left of the purple cylinder,left,cylinder,purple,cylinder,red,000245.png
-The brown cylinder is to the left of the gray cylinder,The gray cylinder is to the left of the brown cylinder,left,cylinder,brown,cylinder,gray,000228.png
-The gray cylinder is to the left of the yellow cylinder,The yellow cylinder is to the left of the gray cylinder,left,cylinder,gray,cylinder,yellow,000241.png
-The blue cylinder is to the left of the brown cylinder,The brown cylinder is to the left of the blue cylinder,left,cylinder,blue,cylinder,brown,000220.png
-The brown cylinder is to the left of the yellow cylinder,The yellow cylinder is to the left of the brown cylinder,left,cylinder,brown,cylinder,yellow,000232.png
-The red cylinder is to the left of the green sphere,The green sphere is to the left of the red cylinder,left,cylinder,red,sphere,green,000180.png
-The yellow cylinder is to the left of the cyan sphere,The cyan sphere is to the left of the yellow cylinder,left,cylinder,yellow,sphere,cyan,000186.png
+The purple cube is to the left of the green sphere,The green sphere is to the left of the purple cube,left,cube,purple,sphere,green,000108.png
+The red cube is to the left of the green sphere,The green sphere is to the left of the red cube,left,cube,red,sphere,green,000116.png
+The yellow cube is to the left of the blue sphere,The blue sphere is to the left of the yellow cube,left,cube,yellow,sphere,blue,000120.png
+The yellow cube is to the left of the cyan sphere,The cyan sphere is to the left of the yellow cube,left,cube,yellow,sphere,cyan,000122.png
+The yellow cube is to the left of the purple sphere,The purple sphere is to the left of the yellow cube,left,cube,yellow,sphere,purple,000125.png
 The blue cylinder is to the left of the blue sphere,The blue sphere is to the left of the blue cylinder,left,cylinder,blue,sphere,blue,000128.png
-The purple cylinder is to the left of the green sphere,The green sphere is to the left of the purple cylinder,left,cylinder,purple,sphere,green,000172.png
 The blue cylinder is to the left of the purple sphere,The purple sphere is to the left of the blue cylinder,left,cylinder,blue,sphere,purple,000133.png
-The green cylinder is to the left of the green sphere,The green sphere is to the left of the green cylinder,left,cylinder,green,sphere,green,000164.png
-The cyan cylinder is to the left of the blue sphere,The blue sphere is to the left of the cyan cylinder,left,cylinder,cyan,sphere,blue,000144.png
-The brown cylinder is to the left of the green sphere,The green sphere is to the left of the brown cylinder,left,cylinder,brown,sphere,green,000140.png
-The gray cylinder is to the left of the brown sphere,The brown sphere is to the left of the gray cylinder,left,cylinder,gray,sphere,brown,000153.png
-The yellow cylinder is to the left of the purple sphere,The purple sphere is to the left of the yellow cylinder,left,cylinder,yellow,sphere,purple,000189.png
-The yellow cylinder is to the left of the blue sphere,The blue sphere is to the left of the yellow cylinder,left,cylinder,yellow,sphere,blue,000184.png
 The brown cylinder is to the left of the brown sphere,The brown sphere is to the left of the brown cylinder,left,cylinder,brown,sphere,brown,000137.png
+The brown cylinder is to the left of the green sphere,The green sphere is to the left of the brown cylinder,left,cylinder,brown,sphere,green,000140.png
+The cyan cylinder is to the left of the blue sphere,The blue sphere is to the left of the cyan cylinder,left,cylinder,cyan,sphere,blue,000144.png
+The gray cylinder is to the left of the brown sphere,The brown sphere is to the left of the gray cylinder,left,cylinder,gray,sphere,brown,000153.png
+The green cylinder is to the left of the green sphere,The green sphere is to the left of the green cylinder,left,cylinder,green,sphere,green,000164.png
 The purple cylinder is to the left of the blue sphere,The blue sphere is to the left of the purple cylinder,left,cylinder,purple,sphere,blue,000168.png
-The brown sphere is to the left of the green sphere,The green sphere is to the left of the brown sphere,left,sphere,brown,sphere,green,000257.png
-The purple sphere is to the left of the red sphere,The red sphere is to the left of the purple sphere,left,sphere,purple,sphere,red,000273.png
-The brown sphere is to the left of the gray sphere,The gray sphere is to the left of the brown sphere,left,sphere,brown,sphere,gray,000256.png
-The gray sphere is to the left of the yellow sphere,The yellow sphere is to the left of the gray sphere,left,sphere,gray,sphere,yellow,000269.png
+The purple cylinder is to the left of the green sphere,The green sphere is to the left of the purple cylinder,left,cylinder,purple,sphere,green,000172.png
+The red cylinder is to the left of the green sphere,The green sphere is to the left of the red cylinder,left,cylinder,red,sphere,green,000180.png
+The yellow cylinder is to the left of the blue sphere,The blue sphere is to the left of the yellow cylinder,left,cylinder,yellow,sphere,blue,000184.png
+The yellow cylinder is to the left of the cyan sphere,The cyan sphere is to the left of the yellow cylinder,left,cylinder,yellow,sphere,cyan,000186.png
+The yellow cylinder is to the left of the purple sphere,The purple sphere is to the left of the yellow cylinder,left,cylinder,yellow,sphere,purple,000189.png
+The blue cube is to the left of the brown cube,The brown cube is to the left of the blue cube,left,cube,blue,cube,brown,000192.png
+The brown cube is to the left of the gray cube,The gray cube is to the left of the brown cube,left,cube,brown,cube,gray,000200.png
+The brown cube is to the left of the green cube,The green cube is to the left of the brown cube,left,cube,brown,cube,green,000201.png
+The brown cube is to the left of the yellow cube,The yellow cube is to the left of the brown cube,left,cube,brown,cube,yellow,000204.png
+The gray cube is to the left of the yellow cube,The yellow cube is to the left of the gray cube,left,cube,gray,cube,yellow,000213.png
+The purple cube is to the left of the red cube,The red cube is to the left of the purple cube,left,cube,purple,cube,red,000217.png
+The blue cylinder is to the left of the brown cylinder,The brown cylinder is to the left of the blue cylinder,left,cylinder,blue,cylinder,brown,000220.png
+The brown cylinder is to the left of the gray cylinder,The gray cylinder is to the left of the brown cylinder,left,cylinder,brown,cylinder,gray,000228.png
+The brown cylinder is to the left of the green cylinder,The green cylinder is to the left of the brown cylinder,left,cylinder,brown,cylinder,green,000229.png
+The brown cylinder is to the left of the yellow cylinder,The yellow cylinder is to the left of the brown cylinder,left,cylinder,brown,cylinder,yellow,000232.png
+The gray cylinder is to the left of the yellow cylinder,The yellow cylinder is to the left of the gray cylinder,left,cylinder,gray,cylinder,yellow,000241.png
+The purple cylinder is to the left of the red cylinder,The red cylinder is to the left of the purple cylinder,left,cylinder,purple,cylinder,red,000245.png
 The blue sphere is to the left of the brown sphere,The brown sphere is to the left of the blue sphere,left,sphere,blue,sphere,brown,000248.png
+The brown sphere is to the left of the gray sphere,The gray sphere is to the left of the brown sphere,left,sphere,brown,sphere,gray,000256.png
+The brown sphere is to the left of the green sphere,The green sphere is to the left of the brown sphere,left,sphere,brown,sphere,green,000257.png
 The brown sphere is to the left of the yellow sphere,The yellow sphere is to the left of the brown sphere,left,sphere,brown,sphere,yellow,000260.png
-The brown cone is to the right of the green cone,The green cone is to the right of the brown cone,right,cone,brown,cone,green,000533.png
-The purple cone is to the right of the red cone,The red cone is to the right of the purple cone,right,cone,purple,cone,red,000549.png
-The brown cone is to the right of the gray cone,The gray cone is to the right of the brown cone,right,cone,brown,cone,gray,000532.png
-The gray cone is to the right of the yellow cone,The yellow cone is to the right of the gray cone,right,cone,gray,cone,yellow,000545.png
-The blue cone is to the right of the brown cone,The brown cone is to the right of the blue cone,right,cone,blue,cone,brown,000524.png
-The brown cone is to the right of the yellow cone,The yellow cone is to the right of the brown cone,right,cone,brown,cone,yellow,000536.png
-The red cylinder is to the right of the green cone,The green cone is to the right of the red cylinder,right,cylinder,red,cone,green,000392.png
-The yellow cylinder is to the right of the cyan cone,The cyan cone is to the right of the yellow cylinder,right,cylinder,yellow,cone,cyan,000398.png
-The blue cylinder is to the right of the blue cone,The blue cone is to the right of the blue cylinder,right,cylinder,blue,cone,blue,000340.png
-The purple cylinder is to the right of the green cone,The green cone is to the right of the purple cylinder,right,cylinder,purple,cone,green,000384.png
-The blue cylinder is to the right of the purple cone,The purple cone is to the right of the blue cylinder,right,cylinder,blue,cone,purple,000345.png
-The green cylinder is to the right of the green cone,The green cone is to the right of the green cylinder,right,cylinder,green,cone,green,000376.png
-The cyan cylinder is to the right of the blue cone,The blue cone is to the right of the cyan cylinder,right,cylinder,cyan,cone,blue,000356.png
-The brown cylinder is to the right of the green cone,The green cone is to the right of the brown cylinder,right,cylinder,brown,cone,green,000352.png
-The gray cylinder is to the right of the brown cone,The brown cone is to the right of the gray cylinder,right,cylinder,gray,cone,brown,000365.png
-The yellow cylinder is to the right of the purple cone,The purple cone is to the right of the yellow cylinder,right,cylinder,yellow,cone,purple,000401.png
-The yellow cylinder is to the right of the blue cone,The blue cone is to the right of the yellow cylinder,right,cylinder,yellow,cone,blue,000396.png
-The brown cylinder is to the right of the brown cone,The brown cone is to the right of the brown cylinder,right,cylinder,brown,cone,brown,000349.png
-The purple cylinder is to the right of the blue cone,The blue cone is to the right of the purple cylinder,right,cylinder,purple,cone,blue,000380.png
-The brown cylinder is to the right of the green cylinder,The green cylinder is to the right of the brown cylinder,right,cylinder,brown,cylinder,green,000477.png
-The purple cylinder is to the right of the red cylinder,The red cylinder is to the right of the purple cylinder,right,cylinder,purple,cylinder,red,000493.png
-The brown cylinder is to the right of the gray cylinder,The gray cylinder is to the right of the brown cylinder,right,cylinder,brown,cylinder,gray,000476.png
-The gray cylinder is to the right of the yellow cylinder,The yellow cylinder is to the right of the gray cylinder,right,cylinder,gray,cylinder,yellow,000489.png
-The blue cylinder is to the right of the brown cylinder,The brown cylinder is to the right of the blue cylinder,right,cylinder,blue,cylinder,brown,000468.png
-The brown cylinder is to the right of the yellow cylinder,The yellow cylinder is to the right of the brown cylinder,right,cylinder,brown,cylinder,yellow,000480.png
-The red cylinder is to the right of the green sphere,The green sphere is to the right of the red cylinder,right,cylinder,red,sphere,green,000328.png
-The yellow cylinder is to the right of the cyan sphere,The cyan sphere is to the right of the yellow cylinder,right,cylinder,yellow,sphere,cyan,000334.png
+The gray sphere is to the left of the yellow sphere,The yellow sphere is to the left of the gray sphere,left,sphere,gray,sphere,yellow,000269.png
+The purple sphere is to the left of the red sphere,The red sphere is to the left of the purple sphere,left,sphere,purple,sphere,red,000273.png
 The blue cylinder is to the right of the blue sphere,The blue sphere is to the right of the blue cylinder,right,cylinder,blue,sphere,blue,000276.png
-The purple cylinder is to the right of the green sphere,The green sphere is to the right of the purple cylinder,right,cylinder,purple,sphere,green,000320.png
 The blue cylinder is to the right of the purple sphere,The purple sphere is to the right of the blue cylinder,right,cylinder,blue,sphere,purple,000281.png
-The green cylinder is to the right of the green sphere,The green sphere is to the right of the green cylinder,right,cylinder,green,sphere,green,000312.png
-The cyan cylinder is to the right of the blue sphere,The blue sphere is to the right of the cyan cylinder,right,cylinder,cyan,sphere,blue,000292.png
-The brown cylinder is to the right of the green sphere,The green sphere is to the right of the brown cylinder,right,cylinder,brown,sphere,green,000288.png
-The gray cylinder is to the right of the brown sphere,The brown sphere is to the right of the gray cylinder,right,cylinder,gray,sphere,brown,000301.png
-The yellow cylinder is to the right of the purple sphere,The purple sphere is to the right of the yellow cylinder,right,cylinder,yellow,sphere,purple,000337.png
-The yellow cylinder is to the right of the blue sphere,The blue sphere is to the right of the yellow cylinder,right,cylinder,yellow,sphere,blue,000332.png
 The brown cylinder is to the right of the brown sphere,The brown sphere is to the right of the brown cylinder,right,cylinder,brown,sphere,brown,000285.png
+The brown cylinder is to the right of the green sphere,The green sphere is to the right of the brown cylinder,right,cylinder,brown,sphere,green,000288.png
+The cyan cylinder is to the right of the blue sphere,The blue sphere is to the right of the cyan cylinder,right,cylinder,cyan,sphere,blue,000292.png
+The gray cylinder is to the right of the brown sphere,The brown sphere is to the right of the gray cylinder,right,cylinder,gray,sphere,brown,000301.png
+The green cylinder is to the right of the green sphere,The green sphere is to the right of the green cylinder,right,cylinder,green,sphere,green,000312.png
 The purple cylinder is to the right of the blue sphere,The blue sphere is to the right of the purple cylinder,right,cylinder,purple,sphere,blue,000316.png
-The red sphere is to the right of the green cone,The green cone is to the right of the red sphere,right,sphere,red,cone,green,000456.png
-The yellow sphere is to the right of the cyan cone,The cyan cone is to the right of the yellow sphere,right,sphere,yellow,cone,cyan,000462.png
+The purple cylinder is to the right of the green sphere,The green sphere is to the right of the purple cylinder,right,cylinder,purple,sphere,green,000320.png
+The red cylinder is to the right of the green sphere,The green sphere is to the right of the red cylinder,right,cylinder,red,sphere,green,000328.png
+The yellow cylinder is to the right of the blue sphere,The blue sphere is to the right of the yellow cylinder,right,cylinder,yellow,sphere,blue,000332.png
+The yellow cylinder is to the right of the cyan sphere,The cyan sphere is to the right of the yellow cylinder,right,cylinder,yellow,sphere,cyan,000334.png
+The yellow cylinder is to the right of the purple sphere,The purple sphere is to the right of the yellow cylinder,right,cylinder,yellow,sphere,purple,000337.png
+The blue cylinder is to the right of the blue cone,The blue cone is to the right of the blue cylinder,right,cylinder,blue,cone,blue,000340.png
+The blue cylinder is to the right of the purple cone,The purple cone is to the right of the blue cylinder,right,cylinder,blue,cone,purple,000345.png
+The brown cylinder is to the right of the brown cone,The brown cone is to the right of the brown cylinder,right,cylinder,brown,cone,brown,000349.png
+The brown cylinder is to the right of the green cone,The green cone is to the right of the brown cylinder,right,cylinder,brown,cone,green,000352.png
+The cyan cylinder is to the right of the blue cone,The blue cone is to the right of the cyan cylinder,right,cylinder,cyan,cone,blue,000356.png
+The gray cylinder is to the right of the brown cone,The brown cone is to the right of the gray cylinder,right,cylinder,gray,cone,brown,000365.png
+The green cylinder is to the right of the green cone,The green cone is to the right of the green cylinder,right,cylinder,green,cone,green,000376.png
+The purple cylinder is to the right of the blue cone,The blue cone is to the right of the purple cylinder,right,cylinder,purple,cone,blue,000380.png
+The purple cylinder is to the right of the green cone,The green cone is to the right of the purple cylinder,right,cylinder,purple,cone,green,000384.png
+The red cylinder is to the right of the green cone,The green cone is to the right of the red cylinder,right,cylinder,red,cone,green,000392.png
+The yellow cylinder is to the right of the blue cone,The blue cone is to the right of the yellow cylinder,right,cylinder,yellow,cone,blue,000396.png
+The yellow cylinder is to the right of the cyan cone,The cyan cone is to the right of the yellow cylinder,right,cylinder,yellow,cone,cyan,000398.png
+The yellow cylinder is to the right of the purple cone,The purple cone is to the right of the yellow cylinder,right,cylinder,yellow,cone,purple,000401.png
 The blue sphere is to the right of the blue cone,The blue cone is to the right of the blue sphere,right,sphere,blue,cone,blue,000404.png
-The purple sphere is to the right of the green cone,The green cone is to the right of the purple sphere,right,sphere,purple,cone,green,000448.png
 The blue sphere is to the right of the purple cone,The purple cone is to the right of the blue sphere,right,sphere,blue,cone,purple,000409.png
-The green sphere is to the right of the green cone,The green cone is to the right of the green sphere,right,sphere,green,cone,green,000440.png
-The cyan sphere is to the right of the blue cone,The blue cone is to the right of the cyan sphere,right,sphere,cyan,cone,blue,000420.png
-The brown sphere is to the right of the green cone,The green cone is to the right of the brown sphere,right,sphere,brown,cone,green,000416.png
-The gray sphere is to the right of the brown cone,The brown cone is to the right of the gray sphere,right,sphere,gray,cone,brown,000429.png
-The yellow sphere is to the right of the purple cone,The purple cone is to the right of the yellow sphere,right,sphere,yellow,cone,purple,000465.png
-The yellow sphere is to the right of the blue cone,The blue cone is to the right of the yellow sphere,right,sphere,yellow,cone,blue,000460.png
 The brown sphere is to the right of the brown cone,The brown cone is to the right of the brown sphere,right,sphere,brown,cone,brown,000413.png
+The brown sphere is to the right of the green cone,The green cone is to the right of the brown sphere,right,sphere,brown,cone,green,000416.png
+The cyan sphere is to the right of the blue cone,The blue cone is to the right of the cyan sphere,right,sphere,cyan,cone,blue,000420.png
+The gray sphere is to the right of the brown cone,The brown cone is to the right of the gray sphere,right,sphere,gray,cone,brown,000429.png
+The green sphere is to the right of the green cone,The green cone is to the right of the green sphere,right,sphere,green,cone,green,000440.png
 The purple sphere is to the right of the blue cone,The blue cone is to the right of the purple sphere,right,sphere,purple,cone,blue,000444.png
-The brown sphere is to the right of the green sphere,The green sphere is to the right of the brown sphere,right,sphere,brown,sphere,green,000505.png
-The purple sphere is to the right of the red sphere,The red sphere is to the right of the purple sphere,right,sphere,purple,sphere,red,000521.png
-The brown sphere is to the right of the gray sphere,The gray sphere is to the right of the brown sphere,right,sphere,brown,sphere,gray,000504.png
-The gray sphere is to the right of the yellow sphere,The yellow sphere is to the right of the gray sphere,right,sphere,gray,sphere,yellow,000517.png
+The purple sphere is to the right of the green cone,The green cone is to the right of the purple sphere,right,sphere,purple,cone,green,000448.png
+The red sphere is to the right of the green cone,The green cone is to the right of the red sphere,right,sphere,red,cone,green,000456.png
+The yellow sphere is to the right of the blue cone,The blue cone is to the right of the yellow sphere,right,sphere,yellow,cone,blue,000460.png
+The yellow sphere is to the right of the cyan cone,The cyan cone is to the right of the yellow sphere,right,sphere,yellow,cone,cyan,000462.png
+The yellow sphere is to the right of the purple cone,The purple cone is to the right of the yellow sphere,right,sphere,yellow,cone,purple,000465.png
+The blue cylinder is to the right of the brown cylinder,The brown cylinder is to the right of the blue cylinder,right,cylinder,blue,cylinder,brown,000468.png
+The brown cylinder is to the right of the gray cylinder,The gray cylinder is to the right of the brown cylinder,right,cylinder,brown,cylinder,gray,000476.png
+The brown cylinder is to the right of the green cylinder,The green cylinder is to the right of the brown cylinder,right,cylinder,brown,cylinder,green,000477.png
+The brown cylinder is to the right of the yellow cylinder,The yellow cylinder is to the right of the brown cylinder,right,cylinder,brown,cylinder,yellow,000480.png
+The gray cylinder is to the right of the yellow cylinder,The yellow cylinder is to the right of the gray cylinder,right,cylinder,gray,cylinder,yellow,000489.png
+The purple cylinder is to the right of the red cylinder,The red cylinder is to the right of the purple cylinder,right,cylinder,purple,cylinder,red,000493.png
 The blue sphere is to the right of the brown sphere,The brown sphere is to the right of the blue sphere,right,sphere,blue,sphere,brown,000496.png
+The brown sphere is to the right of the gray sphere,The gray sphere is to the right of the brown sphere,right,sphere,brown,sphere,gray,000504.png
+The brown sphere is to the right of the green sphere,The green sphere is to the right of the brown sphere,right,sphere,brown,sphere,green,000505.png
 The brown sphere is to the right of the yellow sphere,The yellow sphere is to the right of the brown sphere,right,sphere,brown,sphere,yellow,000508.png
+The gray sphere is to the right of the yellow sphere,The yellow sphere is to the right of the gray sphere,right,sphere,gray,sphere,yellow,000517.png
+The purple sphere is to the right of the red sphere,The red sphere is to the right of the purple sphere,right,sphere,purple,sphere,red,000521.png
+The blue cone is to the right of the brown cone,The brown cone is to the right of the blue cone,right,cone,blue,cone,brown,000524.png
+The brown cone is to the right of the gray cone,The gray cone is to the right of the brown cone,right,cone,brown,cone,gray,000532.png
+The brown cone is to the right of the green cone,The green cone is to the right of the brown cone,right,cone,brown,cone,green,000533.png
+The brown cone is to the right of the yellow cone,The yellow cone is to the right of the brown cone,right,cone,brown,cone,yellow,000536.png
+The gray cone is to the right of the yellow cone,The yellow cone is to the right of the gray cone,right,cone,gray,cone,yellow,000545.png
+The purple cone is to the right of the red cone,The red cone is to the right of the purple cone,right,cone,purple,cone,red,000549.png
+The blue cube is in front of the blue sphere,The blue sphere is in front of the blue cube,front,cube,blue,sphere,blue,000552.png
+The blue cube is in front of the purple sphere,The purple sphere is in front of the blue cube,front,cube,blue,sphere,purple,000557.png
+The brown cube is in front of the brown sphere,The brown sphere is in front of the brown cube,front,cube,brown,sphere,brown,000561.png
+The brown cube is in front of the green sphere,The green sphere is in front of the brown cube,front,cube,brown,sphere,green,000564.png
+The cyan cube is in front of the blue sphere,The blue sphere is in front of the cyan cube,front,cube,cyan,sphere,blue,000568.png
+The gray cube is in front of the brown sphere,The brown sphere is in front of the gray cube,front,cube,gray,sphere,brown,000577.png
+The green cube is in front of the green sphere,The green sphere is in front of the green cube,front,cube,green,sphere,green,000588.png
+The purple cube is in front of the blue sphere,The blue sphere is in front of the purple cube,front,cube,purple,sphere,blue,000592.png
+The purple cube is in front of the green sphere,The green sphere is in front of the purple cube,front,cube,purple,sphere,green,000596.png
+The red cube is in front of the green sphere,The green sphere is in front of the red cube,front,cube,red,sphere,green,000604.png
+The yellow cube is in front of the blue sphere,The blue sphere is in front of the yellow cube,front,cube,yellow,sphere,blue,000608.png
+The yellow cube is in front of the cyan sphere,The cyan sphere is in front of the yellow cube,front,cube,yellow,sphere,cyan,000610.png
+The yellow cube is in front of the purple sphere,The purple sphere is in front of the yellow cube,front,cube,yellow,sphere,purple,000613.png
+The blue cube is in front of the blue cone,The blue cone is in front of the blue cube,front,cube,blue,cone,blue,000616.png
+The blue cube is in front of the purple cone,The purple cone is in front of the blue cube,front,cube,blue,cone,purple,000621.png
+The brown cube is in front of the brown cone,The brown cone is in front of the brown cube,front,cube,brown,cone,brown,000625.png
+The brown cube is in front of the green cone,The green cone is in front of the brown cube,front,cube,brown,cone,green,000628.png
+The cyan cube is in front of the blue cone,The blue cone is in front of the cyan cube,front,cube,cyan,cone,blue,000632.png
+The gray cube is in front of the brown cone,The brown cone is in front of the gray cube,front,cube,gray,cone,brown,000641.png
+The green cube is in front of the green cone,The green cone is in front of the green cube,front,cube,green,cone,green,000652.png
+The purple cube is in front of the blue cone,The blue cone is in front of the purple cube,front,cube,purple,cone,blue,000656.png
+The purple cube is in front of the green cone,The green cone is in front of the purple cube,front,cube,purple,cone,green,000660.png
+The red cube is in front of the green cone,The green cone is in front of the red cube,front,cube,red,cone,green,000668.png
+The yellow cube is in front of the blue cone,The blue cone is in front of the yellow cube,front,cube,yellow,cone,blue,000672.png
+The yellow cube is in front of the cyan cone,The cyan cone is in front of the yellow cube,front,cube,yellow,cone,cyan,000674.png
+The yellow cube is in front of the purple cone,The purple cone is in front of the yellow cube,front,cube,yellow,cone,purple,000677.png
+The blue sphere is in front of the blue cone,The blue cone is in front of the blue sphere,front,sphere,blue,cone,blue,000680.png
+The blue sphere is in front of the purple cone,The purple cone is in front of the blue sphere,front,sphere,blue,cone,purple,000685.png
+The brown sphere is in front of the brown cone,The brown cone is in front of the brown sphere,front,sphere,brown,cone,brown,000689.png
+The brown sphere is in front of the green cone,The green cone is in front of the brown sphere,front,sphere,brown,cone,green,000692.png
+The cyan sphere is in front of the blue cone,The blue cone is in front of the cyan sphere,front,sphere,cyan,cone,blue,000696.png
+The gray sphere is in front of the brown cone,The brown cone is in front of the gray sphere,front,sphere,gray,cone,brown,000705.png
+The green sphere is in front of the green cone,The green cone is in front of the green sphere,front,sphere,green,cone,green,000716.png
+The purple sphere is in front of the blue cone,The blue cone is in front of the purple sphere,front,sphere,purple,cone,blue,000720.png
+The purple sphere is in front of the green cone,The green cone is in front of the purple sphere,front,sphere,purple,cone,green,000724.png
+The red sphere is in front of the green cone,The green cone is in front of the red sphere,front,sphere,red,cone,green,000732.png
+The yellow sphere is in front of the blue cone,The blue cone is in front of the yellow sphere,front,sphere,yellow,cone,blue,000736.png
+The yellow sphere is in front of the cyan cone,The cyan cone is in front of the yellow sphere,front,sphere,yellow,cone,cyan,000738.png
+The yellow sphere is in front of the purple cone,The purple cone is in front of the yellow sphere,front,sphere,yellow,cone,purple,000741.png
+The blue cube is in front of the brown cube,The brown cube is in front of the blue cube,front,cube,blue,cube,brown,000744.png
+The brown cube is in front of the gray cube,The gray cube is in front of the brown cube,front,cube,brown,cube,gray,000752.png
+The brown cube is in front of the green cube,The green cube is in front of the brown cube,front,cube,brown,cube,green,000753.png
+The brown cube is in front of the yellow cube,The yellow cube is in front of the brown cube,front,cube,brown,cube,yellow,000756.png
+The gray cube is in front of the yellow cube,The yellow cube is in front of the gray cube,front,cube,gray,cube,yellow,000765.png
+The purple cube is in front of the red cube,The red cube is in front of the purple cube,front,cube,purple,cube,red,000769.png
+The blue sphere is in front of the brown sphere,The brown sphere is in front of the blue sphere,front,sphere,blue,sphere,brown,000772.png
+The brown sphere is in front of the gray sphere,The gray sphere is in front of the brown sphere,front,sphere,brown,sphere,gray,000780.png
+The brown sphere is in front of the green sphere,The green sphere is in front of the brown sphere,front,sphere,brown,sphere,green,000781.png
+The brown sphere is in front of the yellow sphere,The yellow sphere is in front of the brown sphere,front,sphere,brown,sphere,yellow,000784.png
+The gray sphere is in front of the yellow sphere,The yellow sphere is in front of the gray sphere,front,sphere,gray,sphere,yellow,000793.png
+The purple sphere is in front of the red sphere,The red sphere is in front of the purple sphere,front,sphere,purple,sphere,red,000797.png
+The blue cone is in front of the brown cone,The brown cone is in front of the blue cone,front,cone,blue,cone,brown,000800.png
+The brown cone is in front of the gray cone,The gray cone is in front of the brown cone,front,cone,brown,cone,gray,000808.png
+The brown cone is in front of the green cone,The green cone is in front of the brown cone,front,cone,brown,cone,green,000809.png
+The brown cone is in front of the yellow cone,The yellow cone is in front of the brown cone,front,cone,brown,cone,yellow,000812.png
+The gray cone is in front of the yellow cone,The yellow cone is in front of the gray cone,front,cone,gray,cone,yellow,000821.png
+The purple cone is in front of the red cone,The red cone is in front of the purple cone,front,cone,purple,cone,red,000825.png
+The blue cube is behind of the blue cylinder,The blue cylinder is behind of the blue cube,behind,cube,blue,cylinder,blue,000828.png
+The blue cube is behind of the purple cylinder,The purple cylinder is behind of the blue cube,behind,cube,blue,cylinder,purple,000833.png
+The brown cube is behind of the brown cylinder,The brown cylinder is behind of the brown cube,behind,cube,brown,cylinder,brown,000837.png
+The brown cube is behind of the green cylinder,The green cylinder is behind of the brown cube,behind,cube,brown,cylinder,green,000840.png
+The cyan cube is behind of the blue cylinder,The blue cylinder is behind of the cyan cube,behind,cube,cyan,cylinder,blue,000844.png
+The gray cube is behind of the brown cylinder,The brown cylinder is behind of the gray cube,behind,cube,gray,cylinder,brown,000853.png
+The green cube is behind of the green cylinder,The green cylinder is behind of the green cube,behind,cube,green,cylinder,green,000864.png
+The purple cube is behind of the blue cylinder,The blue cylinder is behind of the purple cube,behind,cube,purple,cylinder,blue,000868.png
+The purple cube is behind of the green cylinder,The green cylinder is behind of the purple cube,behind,cube,purple,cylinder,green,000872.png
+The red cube is behind of the green cylinder,The green cylinder is behind of the red cube,behind,cube,red,cylinder,green,000880.png
+The yellow cube is behind of the blue cylinder,The blue cylinder is behind of the yellow cube,behind,cube,yellow,cylinder,blue,000884.png
+The yellow cube is behind of the cyan cylinder,The cyan cylinder is behind of the yellow cube,behind,cube,yellow,cylinder,cyan,000886.png
+The yellow cube is behind of the purple cylinder,The purple cylinder is behind of the yellow cube,behind,cube,yellow,cylinder,purple,000889.png
+The blue cube is behind of the blue cone,The blue cone is behind of the blue cube,behind,cube,blue,cone,blue,000892.png
+The blue cube is behind of the purple cone,The purple cone is behind of the blue cube,behind,cube,blue,cone,purple,000897.png
+The brown cube is behind of the brown cone,The brown cone is behind of the brown cube,behind,cube,brown,cone,brown,000901.png
+The brown cube is behind of the green cone,The green cone is behind of the brown cube,behind,cube,brown,cone,green,000904.png
+The cyan cube is behind of the blue cone,The blue cone is behind of the cyan cube,behind,cube,cyan,cone,blue,000908.png
+The gray cube is behind of the brown cone,The brown cone is behind of the gray cube,behind,cube,gray,cone,brown,000917.png
+The green cube is behind of the green cone,The green cone is behind of the green cube,behind,cube,green,cone,green,000928.png
+The purple cube is behind of the blue cone,The blue cone is behind of the purple cube,behind,cube,purple,cone,blue,000932.png
+The purple cube is behind of the green cone,The green cone is behind of the purple cube,behind,cube,purple,cone,green,000936.png
+The red cube is behind of the green cone,The green cone is behind of the red cube,behind,cube,red,cone,green,000944.png
+The yellow cube is behind of the blue cone,The blue cone is behind of the yellow cube,behind,cube,yellow,cone,blue,000948.png
+The yellow cube is behind of the cyan cone,The cyan cone is behind of the yellow cube,behind,cube,yellow,cone,cyan,000950.png
+The yellow cube is behind of the purple cone,The purple cone is behind of the yellow cube,behind,cube,yellow,cone,purple,000953.png
+The blue cylinder is behind of the blue cone,The blue cone is behind of the blue cylinder,behind,cylinder,blue,cone,blue,000956.png
+The blue cylinder is behind of the purple cone,The purple cone is behind of the blue cylinder,behind,cylinder,blue,cone,purple,000961.png
+The brown cylinder is behind of the brown cone,The brown cone is behind of the brown cylinder,behind,cylinder,brown,cone,brown,000965.png
+The brown cylinder is behind of the green cone,The green cone is behind of the brown cylinder,behind,cylinder,brown,cone,green,000968.png
+The cyan cylinder is behind of the blue cone,The blue cone is behind of the cyan cylinder,behind,cylinder,cyan,cone,blue,000972.png
+The gray cylinder is behind of the brown cone,The brown cone is behind of the gray cylinder,behind,cylinder,gray,cone,brown,000981.png
+The green cylinder is behind of the green cone,The green cone is behind of the green cylinder,behind,cylinder,green,cone,green,000992.png
+The purple cylinder is behind of the blue cone,The blue cone is behind of the purple cylinder,behind,cylinder,purple,cone,blue,000996.png
+The purple cylinder is behind of the green cone,The green cone is behind of the purple cylinder,behind,cylinder,purple,cone,green,001000.png
+The red cylinder is behind of the green cone,The green cone is behind of the red cylinder,behind,cylinder,red,cone,green,001008.png
+The yellow cylinder is behind of the blue cone,The blue cone is behind of the yellow cylinder,behind,cylinder,yellow,cone,blue,001012.png
+The yellow cylinder is behind of the cyan cone,The cyan cone is behind of the yellow cylinder,behind,cylinder,yellow,cone,cyan,001014.png
+The yellow cylinder is behind of the purple cone,The purple cone is behind of the yellow cylinder,behind,cylinder,yellow,cone,purple,001017.png
+The blue cube is behind of the brown cube,The brown cube is behind of the blue cube,behind,cube,blue,cube,brown,001020.png
+The brown cube is behind of the gray cube,The gray cube is behind of the brown cube,behind,cube,brown,cube,gray,001028.png
+The brown cube is behind of the green cube,The green cube is behind of the brown cube,behind,cube,brown,cube,green,001029.png
+The brown cube is behind of the yellow cube,The yellow cube is behind of the brown cube,behind,cube,brown,cube,yellow,001032.png
+The gray cube is behind of the yellow cube,The yellow cube is behind of the gray cube,behind,cube,gray,cube,yellow,001041.png
+The purple cube is behind of the red cube,The red cube is behind of the purple cube,behind,cube,purple,cube,red,001045.png
+The blue cylinder is behind of the brown cylinder,The brown cylinder is behind of the blue cylinder,behind,cylinder,blue,cylinder,brown,001048.png
+The brown cylinder is behind of the gray cylinder,The gray cylinder is behind of the brown cylinder,behind,cylinder,brown,cylinder,gray,001056.png
+The brown cylinder is behind of the green cylinder,The green cylinder is behind of the brown cylinder,behind,cylinder,brown,cylinder,green,001057.png
+The brown cylinder is behind of the yellow cylinder,The yellow cylinder is behind of the brown cylinder,behind,cylinder,brown,cylinder,yellow,001060.png
+The gray cylinder is behind of the yellow cylinder,The yellow cylinder is behind of the gray cylinder,behind,cylinder,gray,cylinder,yellow,001069.png
+The purple cylinder is behind of the red cylinder,The red cylinder is behind of the purple cylinder,behind,cylinder,purple,cylinder,red,001073.png
+The blue cone is behind of the brown cone,The brown cone is behind of the blue cone,behind,cone,blue,cone,brown,001076.png
+The brown cone is behind of the gray cone,The gray cone is behind of the brown cone,behind,cone,brown,cone,gray,001084.png
+The brown cone is behind of the green cone,The green cone is behind of the brown cone,behind,cone,brown,cone,green,001085.png
+The brown cone is behind of the yellow cone,The yellow cone is behind of the brown cone,behind,cone,brown,cone,yellow,001088.png
+The gray cone is behind of the yellow cone,The yellow cone is behind of the gray cone,behind,cone,gray,cone,yellow,001097.png
+The purple cone is behind of the red cone,The red cone is behind of the purple cone,behind,cone,purple,cone,red,001101.png
