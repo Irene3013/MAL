@@ -19,7 +19,7 @@ class RELDataset(Dataset):
     """
     BISCOR Dataset
     """
-    def __init__(self, split="train", data_path="data", model=None, config=None):
+    def __init__(self, version="v1", split="train", data_path="data", model=None, config=None):
 
         # Validations
         self.data_path = Path(data_path) #relative path
@@ -28,14 +28,23 @@ class RELDataset(Dataset):
         
         # Data / Images path
         self.model = model
+
+        self.version = version #data_path.split('/')[-1]
+        image_version = 'v3' if self.version == 'v4' else self.version
+        image_version = 'v5' if self.version == 'v6' else self.version
+
         self.split = split 
         if self.split == 'test':
-            self.image_path = Path(data_path) / "test_images"
+            self.image_path = Path(data_path) / image_version / "test_images"
         else:
-            self.image_path = Path(data_path) / "train_images"
-
-        self.version = data_path.split('/')[-1]
-        self.data_path = Path(data_path) / f"{self.version}_{self.split}.csv"
+            self.image_path = Path(data_path) / image_version / "train_images"
+        
+        if self.version == 'v6':
+            v_split = 'test_paraphrase' if self.split=='test' else self.split
+            self.data_path = Path(data_path) / 'v5' / f"v5_{v_split}.csv"
+        else:
+            self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
+        
         self.dataset = self._load_csv()
 
         # Input processing
@@ -107,6 +116,7 @@ class RELDataModule(pl.LightningDataModule):
         self.root = args.root
         self.model = args.model
         self.config = config
+        self.version = args.variant
 
         # Setup dataloader
         self.setup()
@@ -135,7 +145,8 @@ class RELDataModule(pl.LightningDataModule):
         #     model=self.model,
         #     config=self.config 
         # )
-        self.test_dataset = BISCORDataset(
+        self.test_dataset = RELDataset(
+            version = self.version,
             split="test",
             data_path=self.root,
             model=self.model,

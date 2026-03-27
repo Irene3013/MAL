@@ -9,7 +9,6 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-user=irene.etxarri@ehu.eus
 
-#source /gscratch/users/asalaberria009/env/p39-cu115/bin/activate
 source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
@@ -17,9 +16,29 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 srun python main.py --model "clip" \
    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
    --run_name clip_v1 --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant v1
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
 
 srun python main.py --model "clip" \
    --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
    --run_name clip_v2 --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data --precision 32 --variant v1
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v2
+
+srun python main.py --model "clip" \
+   --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+   --run_name clip_v3 --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
+
+srun python main.py --model "clip" \
+   --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+   --run_name clip_v4 --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v4
+
+srun python main.py --model "clip" \
+   --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+   --run_name clip_v5 --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+
+srun python main.py --model "clip" \
+   --lr 2e-5 --batch_size 4 --max_steps 20000 --accumulate_grad_batches 2 \
+   --run_name clip_v6 --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
