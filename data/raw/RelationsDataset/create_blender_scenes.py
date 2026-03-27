@@ -166,11 +166,11 @@ def build_scene(obj1, obj2, relation, properties_path, shape_path, swap_position
             "material":  material2,
             "size":      size2,
             "3d_coords": [x2, y2, z2],
-        },
-        "clevr_source": {
-            "obj1_index":     obj1.get("object_index", -1),
-            "obj2_index":     obj2.get("object_index", -1),
-        }
+        }#,
+        # "clevr_source": {
+        #     "obj1_index":     obj1.get("object_index", -1),
+        #     "obj2_index":     obj2.get("object_index", -1),
+        # }
     }
 
 # ── MAIN ─────────────────────────────────────────────────────────────────────
@@ -243,10 +243,10 @@ def main():
                 
                 scene_meta = build_scene(obj1, obj2, rel_key, PROPERTIES_JSON, SHAPE_DIR, swap_positions=True)
                 img_path  = os.path.join(img_dir,  f"neg_{imageID}.png")
-                json_path = os.path.join(json_dir, f"neg_{imageID}.json")
+                #json_path = os.path.join(json_dir, f"neg_{imageID}.json")
                 
                 render_scene(img_path)
-                save_scene_json(json_path, scene_meta)
+                #save_scene_json(json_path, scene_meta)
                             
             print(f" {split} done")
 
