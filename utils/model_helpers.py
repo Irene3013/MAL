@@ -52,12 +52,14 @@ def load_vision_model_components(model_name: str):
     
     elif model_name == "qwen2":
         # https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct 
-        from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
+        # https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct
+        from transformers import Qwen3VLForConditionalGeneration, AutoProcessor #Qwen2VLForConditionalGeneration
 
-        model_id = "Qwen/Qwen2-VL-7B-Instruct"
-        model = Qwen2VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
+        #model_id = "Qwen/Qwen2-VL-7B-Instruct"
+        model_id = "Qwen/Qwen3-VL-8B-Instruct"
+        model = Qwen3VLForConditionalGeneration.from_pretrained(model_id, torch_dtype="auto")
         config_output = {
-            "processor": AutoProcessor.from_pretrained("Qwen/Qwen2-VL-7B-Instruct"),
+            "processor": AutoProcessor.from_pretrained(model_id),
             "transform": None, #PREPROCESS_TRANSFORM # crop images for comparable results
             "tokenizer": None,
             "params": None
@@ -162,5 +164,5 @@ def create_qwen_messages_biscor(image_pos, image_neg, caption_pos, caption_neg):
                 ],
             }
         ])
-    print(messages)
+    #print(messages)
     return messages 

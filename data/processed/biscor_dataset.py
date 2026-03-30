@@ -9,7 +9,7 @@ import pytorch_lightning as pl
 from PIL import Image
 from utils.data_helpers import biscor_dual_encoder_collate
 from utils.model_helpers import create_qwen_messages_biscor
-from qwen_vl_utils import process_vision_info
+#from qwen_vl_utils import process_vision_info
 
 
 # -----------------------------
@@ -101,17 +101,25 @@ class BISCORDataset(Dataset):
         messages = create_qwen_messages_biscor(img_path_pos, img_path_neg, pos_capt, neg_capt)
         inputs = []
         for message in messages: #Process image - message in pairs
-            text = self.processor.apply_chat_template(
-                message, tokenize=False, add_generation_prompt=True
-            )
-            image_inputs, video_inputs = process_vision_info(message)
+            # text = self.processor.apply_chat_template(
+            #     message, tokenize=False, add_generation_prompt=True
+            # )
+            # image_inputs, video_inputs = process_vision_info(message)
 
-            input = self.processor(
-                text=[text],
-                images=image_inputs,
-                videos=video_inputs,
-                padding=True,
-                return_tensors="pt",
+            # input = self.processor(
+            #     text=[text],
+            #     images=image_inputs,
+            #     videos=video_inputs,
+            #     padding=True,
+            #     return_tensors="pt",
+            # )
+
+            inputs = self.processor.apply_chat_template(
+                message,
+                tokenize=True,
+                add_generation_prompt=True,
+                return_dict=True,
+                return_tensors="pt"
             )
             # assert input is not None, "input is none"
             inputs.append(input)
