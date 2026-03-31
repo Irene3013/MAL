@@ -13,115 +13,46 @@ FOLDER_DIR = ROOT / "data"
 SCENES_DIR = ROOT / "original_clevr"
 RELATIONS = ["left", "right", "front", "behind"]
 
-# Umbral mínimo de separación proyectada (en unidades de la escena CLEVR)
 # CLEVR usa coordenadas aprox en [-3, 3] por eje
-MIN_PROJECTION_DIFF = 1.5   # separación mínima en la dirección de la relación
-MAX_PERP_RATIO      = 0.85  # la componente perpendicular no puede dominar demasiado
+MAX_CONE_ANGLE_DEG = 40.0   # half-angle del cono — ajusta con el widget
+MIN_DISTANCE       = 1.2    # distancia mínima en coordenadas CLEVR (rango ~[-3,3])
 
-# def center_distance_xy(obj1, obj2):
-#     """
-#     Distancia euclídea entre los centros en el plano XY.
-#     """
-#     x1, y1, _ = obj1["3d_coords"]
-#     x2, y2, _ = obj2["3d_coords"]
-#     return math.hypot(x2 - x1, y2 - y1)
-
-
-# def distance_ok_by_size(obj1, obj2, relation,
-#                         factor=1.5, margin=0.1,
-#                         front_behind_extra=0.5):
-#     """
-#     Threshold adaptativo:
-#     min_dist = factor * (size1 + size2) + margin
-
-#     Si relation es 'front' o 'behind', se añade un extra al umbral.
-#     """
-#     size_map = {
-#         "small": 0.35,
-#         "large": 0.7,
-#     }
-#     dist = center_distance_xy(obj1, obj2)
-#     s1 = size_map[obj1["size"]]
-#     s2 = size_map[obj2["size"]]
-#     min_dist = factor * (s1 + s2) + margin
-#     if relation in ("front", "behind"):
-#         min_dist += front_behind_extra
-#     return dist >= min_dist
-     
-# def OK(scene, obj1ID, obj2ID, relation):
-#     obj1 = scene['objects'][obj1ID]
-#     obj2 = scene['objects'][obj2ID]
-
-#     directions = scene['directions']
-
-#     if relation == 'left':
-#         0
-#     elif relation == 'right':
-#         0
-#     elif relation == 'front':
-#         0
-#     elif relation == 'behind':
-#         0
-#     else:
-#         raise NotImplementedError
-
+    
 def OK(scene, obj1ID, obj2ID, relation):
     """
-    Valida que la relación espacial entre obj1 y obj2 sea visualmente clara.
-
-    En CLEVR, las relaciones se definen así:
-      - 'left'  / 'right' : obj1 está a la izquierda/derecha de obj2
-      - 'front' / 'behind': obj1 está delante/detrás de obj2
-
-    La convención de CLEVR es:
-      obj1 [relation] obj2  =>  scene["relationships"][relation][obj2ID] contiene obj1ID
-    Es decir: obj2 es el objeto de referencia, obj1 es el que está "en la relación".
+    Valida que la relación espacial sea visualmente clara.
     
-    Para que sea CLARA exigimos:
-      1. La proyección de (pos_obj1 - pos_obj2) sobre el vector de dirección
-         supere MIN_PROJECTION_DIFF.
-      2. La magnitud de la componente perpendicular no supere MAX_PERP_RATIO
-         veces la componente principal (evita casos "casi al lado").
+    Estrategia: calcula el ángulo entre el vector delta (p1-p2) y el
+    vector de dirección canónico de la relación. Si ese ángulo es menor
+    que MAX_CONE_ANGLE_DEG Y la distancia supera MIN_DISTANCE → válido.
+    
+    Convención CLEVR:
+      relationships[relation][obj2ID] contiene obj1ID
+      → obj1 está en la dirección 'relation' respecto a obj2
+      → delta = p1 - p2 debe apuntar en esa dirección
     """
     obj1 = scene['objects'][obj1ID]
     obj2 = scene['objects'][obj2ID]
     directions = scene['directions']
 
-    # Posiciones 3D (x, y, z) — en CLEVR z es la altura, usamos solo x,y para relaciones horizontales
     p1 = np.array(obj1['3d_coords'])
     p2 = np.array(obj2['3d_coords'])
-    delta = p1 - p2  # vector de obj2 a obj1
+    delta = p1 - p2
 
-    # Vectores de dirección de la escena (definidos en scene['directions'])
-    # Cada uno es un vector 3D unitario (aprox)
-    if relation == 'left':
-        main_dir  = np.array(directions['left'])
-        perp_dirs = [np.array(directions['front']), np.array(directions['behind'])]
-    elif relation == 'right':
-        main_dir  = np.array(directions['right'])
-        perp_dirs = [np.array(directions['front']), np.array(directions['behind'])]
-    elif relation == 'front':
-        main_dir  = np.array(directions['front'])
-        perp_dirs = [np.array(directions['left']), np.array(directions['right'])]
-    elif relation == 'behind':
-        main_dir  = np.array(directions['behind'])
-        perp_dirs = [np.array(directions['left']), np.array(directions['right'])]
-    else:
-        raise NotImplementedError(f"Relación desconocida: {relation}")
-
-    # 1. Proyección principal: debe ser positiva y superar el umbral
-    proj_main = np.dot(delta, main_dir)
-    if proj_main < MIN_PROJECTION_DIFF:
+    # Distancia euclidiana (ignoramos z para relaciones horizontales)
+    dist_2d = np.linalg.norm(delta[:2])
+    if dist_2d < MIN_DISTANCE:
         return False
 
-    # 2. Componente perpendicular: la media de ambas proyecciones laterales
-    #    no debe dominar sobre la principal
-    proj_perp = np.mean([abs(np.dot(delta, d)) for d in perp_dirs])
-    if proj_perp > MAX_PERP_RATIO * proj_main:
-        return False
+    # Vector de dirección canónico de la escena (ya viene normalizado en CLEVR)
+    dir_vec = np.array(directions[relation])
 
-    return True
-    
+    # Ángulo entre delta y la dirección principal
+    cos_theta = np.dot(delta, dir_vec) / (np.linalg.norm(delta) * np.linalg.norm(dir_vec) + 1e-8)
+    cos_theta = np.clip(cos_theta, -1.0, 1.0)
+    angle_deg = np.degrees(np.arccos(cos_theta))
+
+    return angle_deg <= MAX_CONE_ANGLE_DEG
 
 def decimal_to_float(obj):
     if isinstance(obj, Decimal): return float(obj)

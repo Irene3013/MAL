@@ -1,0 +1,176 @@
+
+<style>
+.ctrl { display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:13px;color:var(--color-text-secondary); }
+.ctrl label { min-width:130px; }
+.ctrl input[type=range] { flex:1; }
+.ctrl .val { min-width:44px;text-align:right;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary); }
+.bdg { display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:500; }
+.bdg.ok  { background:#E1F5EE;color:#085041; }
+.bdg.amb { background:#FAEEDA;color:#633806; }
+.bdg.far { background:#FCEBEB;color:#791F1F; }
+.cbox { font-family:var(--font-mono);font-size:11px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:8px 12px;margin-top:10px;line-height:1.8;color:var(--color-text-secondary); }
+.cbox b { color:var(--color-text-primary);font-weight:500; }
+</style>
+
+<div style="display:flex;gap:0;align-items:flex-start;padding:4px 0 0;">
+  <canvas id="cv" width="380" height="380" style="flex-shrink:0;border-radius:8px;border:0.5px solid var(--color-border-tertiary);cursor:crosshair;touch-action:none;"></canvas>
+  <div style="flex:1;padding:0 0 0 18px;min-width:0;">
+    <div class="ctrl"><label>Cone half-angle</label><input type="range" id="sc" min="5" max="85" step="1" value="40"><span class="val" id="lc">40°</span></div>
+    <div class="ctrl"><label>Min distance</label><input type="range" id="sd" min="0" max="3" step="0.05" value="1.2"><span class="val" id="ld">1.20</span></div>
+    <div style="margin:14px 0 6px;font-size:12px;color:var(--color-text-secondary);">Sample point</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;">
+      <span id="bdg" class="bdg ok">BEHIND — valid</span>
+    </div>
+    <div id="inf" style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;"></div>
+    <div class="cbox" id="cb"></div>
+    <div style="margin-top:12px;font-size:11px;color:var(--color-text-tertiary);line-height:1.6;">Arrastra el punto o haz clic para moverlo.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const W=380,H=380,CX=W/2,CY=H/2,R=155;
+let cone=40,minD=1.2,px=CX,py=CY-120,drag=false;
+const DIRS={behind:90,front:270,left:180,right:0};
+
+function dark(){ return window.matchMedia('(prefers-color-scheme: dark)').matches; }
+function toPx(c){ return c/3*R; }
+function toCLEVR(p){ return p/R*3; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+
+function result(dx,dy){
+  const d=Math.sqrt(dx*dx+dy*dy),mp=toPx(minD);
+  if(d<mp) return {s:'close'};
+  const a=(((Math.atan2(-dy,dx)*180/Math.PI)%360)+360)%360;
+  let br=null,bd=999;
+  for(const[r,b] of Object.entries(DIRS)){let df=Math.abs(a-b);if(df>180)df=360-df;if(df<bd){bd=df;br=r;}}
+  return bd<=cone?{s:'ok',rel:br,diff:bd}:{s:'amb',rel:br,diff:bd};
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const dk=dark();
+  const okFill  = dk?'rgba(8,80,65,0.25)':'rgba(30,158,117,0.13)';
+  const axCol   = dk?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';
+  const bdCol   = dk?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.07)';
+  const coneCol = dk?'rgba(255,255,255,0.2)':'rgba(0,0,0,0.18)';
+  const lblCol  = dk?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.35)';
+  const minCol  = dk?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.2)';
+  const obj2Col = dk?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.7)';
+  const arwCol  = '#1D9E75';
+
+  const dx=px-CX,dy=py-CY;
+  const res=result(dx,dy);
+  const ex=clamp(px,CX-R,CX+R),ey=clamp(py,CY-R,CY+R);
+
+  for(const[,b] of Object.entries(DIRS)){
+    const a1=b*Math.PI/180-cone*Math.PI/180;
+    const a2=b*Math.PI/180+cone*Math.PI/180;
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,R,-a2,-a1);ctx.closePath();
+    ctx.fillStyle=okFill;ctx.fill();
+  }
+
+  ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);
+  ctx.strokeStyle=bdCol;ctx.lineWidth=1;ctx.stroke();
+
+  ctx.setLineDash([4,4]);ctx.strokeStyle=axCol;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(CX,CY-R-4);ctx.lineTo(CX,CY+R+4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(CX-R-4,CY);ctx.lineTo(CX+R+4,CY);ctx.stroke();
+  ctx.setLineDash([]);
+
+  for(const[,b] of Object.entries(DIRS)){
+    const a1=(b-cone)*Math.PI/180,a2=(b+cone)*Math.PI/180;
+    ctx.setLineDash([3,3]);ctx.strokeStyle=coneCol;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+R*Math.cos(a1),CY-R*Math.sin(a1));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+R*Math.cos(a2),CY-R*Math.sin(a2));ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  const mp=toPx(minD);
+  ctx.beginPath();ctx.arc(CX,CY,mp,0,Math.PI*2);
+  ctx.setLineDash([4,3]);ctx.strokeStyle=minCol;ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+
+  ctx.fillStyle=lblCol;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='500 11px var(--font-sans,sans-serif)';
+  ctx.fillText('behind',CX,CY-R-13);
+  ctx.fillText('front', CX,CY+R+14);
+  ctx.textAlign='left'; ctx.fillText('right',CX+R+7,CY);
+  ctx.textAlign='right';ctx.fillText('left', CX-R-7,CY);
+  ctx.textAlign='center';
+
+  const ang=Math.atan2(ey-CY,ex-CX);
+  ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(ex,ey);
+  ctx.strokeStyle=arwCol;ctx.lineWidth=1.5;ctx.stroke();
+  ctx.save();ctx.translate(ex,ey);ctx.rotate(ang);
+  ctx.beginPath();ctx.moveTo(-8,-4.5);ctx.lineTo(0,0);ctx.lineTo(-8,4.5);
+  ctx.strokeStyle=arwCol;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.stroke();
+  ctx.restore();
+
+  ctx.strokeStyle=obj2Col;ctx.lineWidth=1.5;
+  const S=10;
+  ctx.strokeRect(CX-S,CY-S,S*2,S*2);
+  ctx.beginPath();ctx.moveTo(CX-S,CY-S);ctx.lineTo(CX+S,CY+S);
+  ctx.moveTo(CX+S,CY-S);ctx.lineTo(CX-S,CY+S);ctx.stroke();
+
+  const ptCol=res.s==='ok'?'#1D9E75':res.s==='close'?'#E24B4A':'#BA7517';
+  ctx.beginPath();ctx.arc(ex,ey,8,0,Math.PI*2);
+  ctx.fillStyle=ptCol;ctx.fill();
+  ctx.strokeStyle=dk?'rgba(0,0,0,0.5)':'rgba(255,255,255,0.8)';ctx.lineWidth=1.5;ctx.stroke();
+
+  if(res.s!=='close'){
+    const bRad=DIRS[res.rel]*Math.PI/180;
+    const ptAngle=(((Math.atan2(-dy,dx)*180/Math.PI)%360)+360)%360;
+    const diff=((ptAngle-DIRS[res.rel])+540)%360-180;
+    const arcR=Math.min(Math.sqrt(dx*dx+dy*dy)*0.4,34);
+    const startA=-bRad,endA=-Math.atan2(-dy,dx);
+    ctx.beginPath();
+    if(diff>0) ctx.arc(CX,CY,arcR,startA,endA,false);
+    else       ctx.arc(CX,CY,arcR,endA,startA,false);
+    ctx.strokeStyle=res.s==='ok'?'#1D9E75':'#BA7517';
+    ctx.lineWidth=1;ctx.setLineDash([2,2]);ctx.stroke();ctx.setLineDash([]);
+
+    const ma=-(bRad+(diff>0?1:-1)*Math.abs(diff)*Math.PI/180/2);
+    ctx.fillStyle=res.s==='ok'?'#1D9E75':'#BA7517';
+    ctx.font='10px var(--font-mono,monospace)';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(res.diff.toFixed(1)+'°',CX+(arcR+16)*Math.cos(ma),CY+(arcR+16)*Math.sin(ma));
+  }
+
+  const cdx=toCLEVR(dx).toFixed(2),cdy=(-toCLEVR(dy)).toFixed(2);
+  const dist=toCLEVR(Math.sqrt(dx*dx+dy*dy)).toFixed(2);
+  document.getElementById('inf').textContent='delta=('+cdx+', '+cdy+')  |d|='+dist;
+
+  const bdg=document.getElementById('bdg');
+  if(res.s==='ok'){bdg.className='bdg ok';bdg.textContent=res.rel.toUpperCase()+' — valid';}
+  else if(res.s==='close'){bdg.className='bdg far';bdg.textContent='too close — resample';}
+  else{bdg.className='bdg amb';bdg.textContent='ambiguous — resample';}
+
+  document.getElementById('cb').innerHTML='<b>MAX_CONE_ANGLE_DEG</b> = '+cone+'<br><b>MIN_DISTANCE</b>       = '+minD.toFixed(2);
+}
+
+function coords(e){
+  const r=cv.getBoundingClientRect(),sx=W/r.width,sy=H/r.height;
+  const s=e.touches?e.touches[0]:e;
+  return[(s.clientX-r.left)*sx,(s.clientY-r.top)*sy];
+}
+function setpt(x,y){
+  const dx=x-CX,dy=y-CY,d=Math.sqrt(dx*dx+dy*dy);
+  if(d>R){px=CX+dx/d*R;py=CY+dy/d*R;}else{px=x;py=y;}
+  draw();
+}
+
+cv.addEventListener('mousedown', e=>{drag=true;const[x,y]=coords(e);setpt(x,y);});
+cv.addEventListener('touchstart',e=>{drag=true;e.preventDefault();const[x,y]=coords(e);setpt(x,y);},{passive:false});
+document.addEventListener('mousemove', e=>{if(drag){const[x,y]=coords(e);setpt(x,y);}});
+document.addEventListener('touchmove', e=>{if(drag){e.preventDefault();const[x,y]=coords(e);setpt(x,y);}},{passive:false});
+document.addEventListener('mouseup',()=>drag=false);
+document.addEventListener('touchend',()=>drag=false);
+
+document.getElementById('sc').addEventListener('input',function(){cone=+this.value;document.getElementById('lc').textContent=cone+'°';draw();});
+document.getElementById('sd').addEventListener('input',function(){minD=parseFloat(this.value);document.getElementById('ld').textContent=minD.toFixed(2);draw();});
+
+draw();
+})();
+</script>
