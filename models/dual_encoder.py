@@ -33,18 +33,6 @@ class DualEncoder(pl.LightningModule):
         self.model_name = args.model
         self.model, self.config = load_vision_model_components(self.model_name)
 
-        # --- Accuracy depending on dataset ---
-        if args.dataset == "whatsup":
-            # precision / pair-wise / set-wise
-            self.compute_accuracy = WhatsUpDataset.compute_accuracy
-
-        elif args.dataset == "biscor":
-            # BISCOR accuracy
-            self.compute_accuracy = BISCORDataset.compute_accuracy
-        else:
-            # precision
-            self.compute_accuracy = VSRDataset.compute_accuracy
-
     # -----------------------------
     # STEP (train/val/test)
     # -----------------------------
@@ -52,7 +40,7 @@ class DualEncoder(pl.LightningModule):
         if split == "train":
             return self.train_step(batch, split)
         else:
-            return self.eval_step_biscor(batch, split)#self.eval_step(batch, split)
+            return self.eval_step(batch, split)
 
     def train_step(self, batch, split):
         images = batch["image"].to(self.device)
@@ -72,39 +60,56 @@ class DualEncoder(pl.LightningModule):
         # Logging
         self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return loss
-
-
-    def eval_step(self, batch, split):
-        labels = batch["label"].to(self.device)
-        inputs_list = batch["input"]
-
-        # Forward pass each input
-        logits_list = []
-        for inputs in inputs_list:
-
-            if self.model_name == "pecore":
-                image = inputs['image'].to(self.device)
-                captions = inputs['captions'].to(self.device)
-                image_features, text_features, logit_scale = self.model(image, captions)
-                I2T_logits = logit_scale * image_features @ text_features.T
-
-            else:
-                inputs = inputs.to(self.device)
-                outputs = self.model(**inputs)
-                I2T_logits = outputs.logits_per_image
-
-            logits_list.append(I2T_logits)
-
-        logits = torch.cat(logits_list, dim=0)
-        acc = self.compute_accuracy(logits, labels, self.score)
-
-        # Logging
-        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-        return acc
     
-    def eval_step_biscor(self, batch, split):
+    # def train_step(self, batch, split):
+    #     images = batch["image"].to(self.device)
+    #     texts  = batch["text"].to(self.device)
 
-        
+    #     outputs = self.model(texts, images) 
+    #     logits_per_image, logits_per_text  = outputs.logits_per_image, outputs.logits_per_text
+
+    #     batch_size = images.size(0)
+    #     ground_truth = torch.arange(batch_size, device=self.device, dtype=torch.long) # Every caption is true
+
+    #     loss = 0.5 * (
+    #         self.cross_entropy(logits_per_image, ground_truth) +
+    #         self.cross_entropy(logits_per_text,  ground_truth)
+    #     )
+
+    #     # Logging
+    #     self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+    #     return loss
+
+
+    # def eval_step(self, batch, split):
+    #     labels = batch["label"].to(self.device)
+    #     inputs_list = batch["input"]
+
+    #     # Forward pass each input
+    #     logits_list = []
+    #     for inputs in inputs_list:
+
+    #         if self.model_name == "pecore":
+    #             image = inputs['image'].to(self.device)
+    #             captions = inputs['captions'].to(self.device)
+    #             image_features, text_features, logit_scale = self.model(image, captions)
+    #             I2T_logits = logit_scale * image_features @ text_features.T
+
+    #         else:
+    #             inputs = inputs.to(self.device)
+    #             outputs = self.model(**inputs)
+    #             I2T_logits = outputs.logits_per_image
+
+    #         logits_list.append(I2T_logits)
+
+    #     logits = torch.cat(logits_list, dim=0)
+    #     acc = self.compute_accuracy(logits, labels, self.score)
+
+    #     # Logging
+    #     self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+    #     return acc
+    
+    def eval_step(self, batch, split): 
         inputs = batch["input"]
         print(inputs)
 
@@ -130,17 +135,22 @@ class DualEncoder(pl.LightningModule):
         pred_t2i = logits_t2i.argmax(dim=1)
         pred_i2t = logits_i2t.argmax(dim=1)
 
-        hard_score = (
-            torch.equal(pred_t2i, labels) and
-            torch.equal(pred_i2t, labels)
-        )
-        # Must guess all
-        acc = 1 if hard_score else 0
+        acc = self.compute_accuracy(pred_t2i, pred_i2t, labels)
 
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc
-
+    
+    # -----------------------------
+    # COMPUTE ACCURACY
+    # -----------------------------
+    def compute_accuracy(self, t2i, i2t, labels):
+        all_equal = (
+            torch.equal(t2i, labels) and
+            torch.equal(i2t, labels)
+        )
+        return 1 if all_equal else 0 # Must guess all
+    
     # -----------------------------
     # LIGHTNING STEP METHODS
     # -----------------------------
