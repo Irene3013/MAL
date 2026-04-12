@@ -1,1 +1,15 @@
-log_prompt.log
+# Logs
+*.log
+*.err
+
+# Python
+__pycache__/
+*.pyc
+
+# Modelos / checkpoints
+*.ckpt
+*.pt
+*.bin
+
+# HuggingFace cache (por si acaso)
+.cache/
