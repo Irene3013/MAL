@@ -111,7 +111,6 @@ class DualEncoder(pl.LightningModule):
     
     def eval_step(self, batch, split): 
         inputs = batch["input"]
-        print(inputs)
 
         if self.model_name == "pecore":
             image_pos, image_neg = inputs['image']
