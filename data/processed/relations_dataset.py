@@ -27,23 +27,39 @@ class RELDataset(Dataset):
         assert split in ['train', 'val', 'test'], f"Unsupported split: '{split}'. Must be one of ['train', 'val', 'test']."
         
         # Data / Images path
-        self.model = model
-
-        self.version = version #data_path.split('/')[-1]
-        image_version = 'v3' if self.version == 'v4' else self.version
-        image_version = 'v5' if self.version == 'v6' else self.version
-
+        self.model = model 
+        self.version = version
+        mapping = {
+            "v4": "v3",
+            "v6": "v5",
+        }
+        image_version = mapping.get(self.version, self.version)
         self.split = split 
-        if self.split == 'test':
-            self.image_path = Path(data_path) / image_version / "test_images"
-        else:
-            self.image_path = Path(data_path) / image_version / "train_images"
-        
+
+        # ---- IMAGE PATH ----
+        img_folder = "test_images" if self.split == "test" else "train_images"
+        self.image_path = Path(data_path) / image_version / img_folder
+
+        # ---- CSV PATH ----
         if self.version == 'v6':
-            v_split = 'test_paraphrase' if self.split=='test' else self.split
-            self.data_path = Path(data_path) / 'v5' / f"v5_{v_split}.csv"
+            if self.split == 'test':
+                csv_name = "v5_test_paraphrase.csv"
+            else:
+                csv_name = f"v5_{self.split}.csv"
+            self.data_path = Path(data_path) / "v5" / csv_name
         else:
             self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
+
+        # if self.split == 'test':
+        #     self.image_path = Path(data_path) / image_version / "test_images"
+        # else:
+        #     self.image_path = Path(data_path) / image_version / "train_images"
+        
+        # if self.version == 'v6':
+        #     v_split = 'test_paraphrase' if self.split=='test' else self.split
+        #     self.data_path = Path(data_path) / 'v5' / f"v5_{v_split}.csv"
+        # else:
+        #     self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
         
         self.dataset = self._load_csv()
 
