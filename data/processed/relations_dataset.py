@@ -49,17 +49,6 @@ class RELDataset(Dataset):
             self.data_path = Path(data_path) / "v5" / csv_name
         else:
             self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
-
-        # if self.split == 'test':
-        #     self.image_path = Path(data_path) / image_version / "test_images"
-        # else:
-        #     self.image_path = Path(data_path) / image_version / "train_images"
-        
-        # if self.version == 'v6':
-        #     v_split = 'test_paraphrase' if self.split=='test' else self.split
-        #     self.data_path = Path(data_path) / 'v5' / f"v5_{v_split}.csv"
-        # else:
-        #     self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
         
         self.dataset = self._load_csv()
 
@@ -106,13 +95,13 @@ class RELDataset(Dataset):
         neg_img = f'neg_{image}'
 
         # **A. Val/Test (return caption-pairs to Collate):**
-        if self.split != "train":
-            return {
-                "caption_pos": pos_capt,
-                "caption_neg": neg_capt,
-                "image_pos": self._load_image(pos_img),
-                "image_neg": self._load_image(neg_img),
-            }
+        #if self.split != "train":
+        return {
+            "caption_pos": pos_capt,
+            "caption_neg": neg_capt,
+            "image_pos": self._load_image(pos_img),
+            "image_neg": self._load_image(neg_img),
+        }
     
 
 
@@ -147,20 +136,22 @@ class RELDataModule(pl.LightningDataModule):
             self.collate_fn_eval = None
 
         # Setup train/val/test datasets
-        # self.train_dataset = BISCORDataset(
-        #     split="train",
-        #     data_path=self.root,
-        #     dataset_name=self.dataset_name,
-        #     model=self.model,
-        #     config=self.config 
-        # )
-        # self.val_dataset = BISCORDataset(
-        #     split="val",
-        #     data_path=self.root,
-        #     dataset_name=self.dataset_name,
-        #     model=self.model,
-        #     config=self.config 
-        # )
+        self.train_dataset = RELDataset(
+            version = self.version,
+            split="train",
+            data_path=self.root,
+            model=self.model,
+            config=self.config 
+        )
+
+        self.val_dataset = RELDataset(
+            version = self.version,
+            split="val",
+            data_path=self.root,
+            model=self.model,
+            config=self.config 
+        )
+
         self.test_dataset = RELDataset(
             version = self.version,
             split="test",
@@ -169,22 +160,23 @@ class RELDataModule(pl.LightningDataModule):
             config=self.config 
         )
 
-    # def train_dataloader(self):
-    #     return DataLoader(
-    #         self.train_dataset,
-    #         batch_size=self.batch_size,
-    #         shuffle=True,
-    #         num_workers=self.num_workers,
-    #     )
+    # DATALOADERS #
+    def train_dataloader(self):
+        return DataLoader(
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.num_workers,
+        )
     
-    # def val_dataloader(self):
-    #     return DataLoader(
-    #         self.val_dataset,
-    #         batch_size=self.batch_size,
-    #         shuffle=False,
-    #         num_workers=self.num_workers,
-    #         collate_fn=self.collate_fn_eval
-    #     )
+    def val_dataloader(self):
+        return DataLoader(
+            self.val_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            collate_fn=self.collate_fn_eval
+        )
     
     def test_dataloader(self):
         return DataLoader(
