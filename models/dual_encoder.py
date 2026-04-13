@@ -1,5 +1,6 @@
 #models/dual_encoder.py
 import torch
+from torch.nn.functional import softmax
 import pytorch_lightning as pl
 from data.processed.vsr_dataset import VSRDataset
 from data.processed.whatsup_dataset import WhatsUpDataset
@@ -43,73 +44,62 @@ class DualEncoder(pl.LightningModule):
             return self.eval_step(batch, split)
 
     def train_step(self, batch, split):
-        inputs = {k: v.to(self.device) for k, v in batch.items()}
+        inputs = self.move_to_device(batch, self.device)
 
         outputs = self.model(**inputs)
         logits_per_image = outputs.logits_per_image
         logits_per_text = outputs.logits_per_text
 
-        batch_size = logits_per_image.shape[0]
-
-        ground_truth = torch.arange(batch_size, device=self.device)
-
+        ground_truth = torch.arange(2*self.batch_size, device=self.device)        
         loss = 0.5 * (
             self.cross_entropy(logits_per_image, ground_truth) +
             self.cross_entropy(logits_per_text, ground_truth)
         )
 
-        self.log(f'{split}_loss', loss, batch_size=batch_size)
+        self.log(f'{split}_loss', loss, batch_size=self.batch_size)
         return loss
-    
-    def move_to_device(self, x, device):
-      if isinstance(x, torch.Tensor):
-          return x.to(device)
-      elif isinstance(x, dict):
-          return {k: self.move_to_device(v, device) for k, v in x.items()}
-      elif isinstance(x, list):
-          return [self.move_to_device(v, device) for v in x]
-      else:
-          return x
-    
+      
+    def move_to_device(self, batch, device):
+        if self.model_name == "pecore":
+            return {
+                "image":    batch["image"].to(device),
+                "captions": batch["captions"].to(device),
+            }
+        else:
+            return {k: v.to(device) for k, v in batch.items()}
+       
     def eval_step(self, batch, split): 
         inputs = self.move_to_device(batch, self.device)
 
         if self.model_name == "pecore":
             image_features, text_features, logit_scale = self.model(inputs["image"], inputs["captions"])
-            logits_i2t = logit_scale * image_features @ text_features.T
-            logits_t2i = logits_i2t.T
+            logits = logit_scale * image_features @ text_features.T
         else:
             outputs = self.model(**inputs)
-            logits_i2t = outputs.logits_per_image
-            logits_t2i = outputs.logits_per_text
-
-        # Accuracy per each pair
-        acc = 0
+            logits = outputs.logits_per_image
+        
+        acc = 0 # Accuracy per each pair
         for i in range(self.batch_size):
-          t2i = logits_t2i[2*i:2*i+2, 2*i:2*i+2]
-          i2t = logits_i2t[2*i:2*i+2, 2*i:2*i+2]
+            start = 2 * i
+            end   = 2 * i + 2
+            sub = logits[start:end, start:end]
 
-          labels = torch.arange(2, device=self.device)
-          pred_t2i = t2i.argmax(dim=1)
-          pred_i2t = i2t.argmax(dim=1)
+            a, b = sub[0, 0], sub[0, 1]
+            c, d = sub[1, 0], sub[1, 1]
 
-          acc += self.compute_accuracy(pred_t2i, pred_i2t, labels)
+            Ipos_2T = (a > c).item()
+            Ineg_2T = (d > b).item()
+            Tpos_2I = (a > b).item()
+            Tneg_2I = (d > c).item()
 
-        acc /= self.batch_size # batch accuracy
+            group_score = Ipos_2T and Ineg_2T and Tpos_2I and Tneg_2I
+            acc += int(group_score)
+
+        acc /= self.batch_size
 
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc
-    
-    # -----------------------------
-    # COMPUTE ACCURACY
-    # -----------------------------
-    def compute_accuracy(self, t2i, i2t, labels):
-        all_equal = (
-            torch.equal(t2i, labels) and
-            torch.equal(i2t, labels)
-        )
-        return 1 if all_equal else 0 # Must guess all
     
     # -----------------------------
     # LIGHTNING STEP METHODS
@@ -136,25 +126,6 @@ class DualEncoder(pl.LightningModule):
                 "interval": "step"
             }
             return [optimizer], [scheduler]
-        
-    # def train_step(self, batch, split):
-    #     images = batch["image"].to(self.device)
-    #     texts  = batch["text"].to(self.device)
-
-    #     outputs = self.model(texts, images) 
-    #     logits_per_image, logits_per_text  = outputs.logits_per_image, outputs.logits_per_text
-
-    #     batch_size = images.size(0)
-    #     ground_truth = torch.arange(batch_size, device=self.device, dtype=torch.long) # Every caption is true
-
-    #     loss = 0.5 * (
-    #         self.cross_entropy(logits_per_image, ground_truth) +
-    #         self.cross_entropy(logits_per_text,  ground_truth)
-    #     )
-
-    #     # Logging
-    #     self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-    #     return loss
 
     # def train_step(self, batch, split):
     #     images = batch["image"].to(self.device)
