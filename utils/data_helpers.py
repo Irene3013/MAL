@@ -214,7 +214,7 @@ def biscor_dual_encoder_collate(batch, config, model_name):
 
         inputs = {
             "image": image_tensor,
-            "text": text_tensor
+            "captions": text_tensor
         }
 
     elif model_name in ["clip", "siglip", "siglip2"]:

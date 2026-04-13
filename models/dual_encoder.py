@@ -61,34 +61,41 @@ class DualEncoder(pl.LightningModule):
         self.log(f'{split}_loss', loss, batch_size=batch_size)
         return loss
     
+    def move_to_device(self, x, device):
+      if isinstance(x, torch.Tensor):
+          return x.to(device)
+      elif isinstance(x, dict):
+          return {k: self.move_to_device(v, device) for k, v in x.items()}
+      elif isinstance(x, list):
+          return [self.move_to_device(v, device) for v in x]
+      else:
+          return x
     
     def eval_step(self, batch, split): 
-        inputs = batch["input"]
-        print(inputs)
+        inputs = self.move_to_device(batch, self.device)
 
         if self.model_name == "pecore":
-            image_pos, image_neg = inputs['image']
-            image_pos = image_pos.to(self.device)
-            image_neg = image_neg.to(self.device)
-            captions = inputs['captions'].to(self.device)
-            
-            image_features_pos, text_features, logit_scale = self.model(image_pos, captions)
-            image_features_neg, _, _ = self.model(image_neg, captions)
-
-            all_image_features = torch.cat([image_features_pos, image_features_neg], dim=0) # [2, d]
-            logits_i2t = logit_scale * all_image_features @ text_features.T
+            image_features, text_features, logit_scale = self.model(inputs["image"], inputs["captions"])
+            logits_i2t = logit_scale * image_features @ text_features.T
             logits_t2i = logits_i2t.T
         else:
-            inputs = {k: v.to(self.device) for k, v in inputs.items()}
             outputs = self.model(**inputs)
             logits_i2t = outputs.logits_per_image
             logits_t2i = outputs.logits_per_text
 
-        labels = torch.arange(2, device=self.device)
-        pred_t2i = logits_t2i.argmax(dim=1)
-        pred_i2t = logits_i2t.argmax(dim=1)
+        # Accuracy per each pair
+        acc = 0
+        for i in range(self.batch_size):
+          t2i = logits_t2i[2*i:2*i+2, 2*i:2*i+2]
+          i2t = logits_i2t[2*i:2*i+2, 2*i:2*i+2]
 
-        acc = self.compute_accuracy(pred_t2i, pred_i2t, labels)
+          labels = torch.arange(2, device=self.device)
+          pred_t2i = t2i.argmax(dim=1)
+          pred_i2t = i2t.argmax(dim=1)
+
+          acc += self.compute_accuracy(pred_t2i, pred_i2t, labels)
+
+        acc /= self.batch_size # batch accuracy
 
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
