@@ -96,6 +96,9 @@ def parse_args():
         "--max_steps", type=int, default=88000, help="Steps to be done during training."
     )
     parser.add_argument(
+        "--max_epochs", type=int, default=10, help="Epochs to be done during training."
+    )
+    parser.add_argument(
         "--seed", type=int, default=-1, help="Seed."
     )
     
@@ -148,6 +151,7 @@ def main_program():
         datamodule = BISCORDataModule(args, config=model.config)
     elif args.dataset == 'rel':
         datamodule = RELDataModule(args, config=model.config)
+        args.max_steps = args.max_epochs * (datamodule.length() // args.batch_size) // args.accumulate_grad_batches
     else:
         print(f"Dataset {args.dataset} not implemented.")
         sys.exit()  
@@ -174,6 +178,7 @@ def main_program():
         save_top_k=1)
     
     # Prepare Trainer
+    
     trainer = pl.Trainer(
                 devices=args.gpus, 
                 fast_dev_run=False, 

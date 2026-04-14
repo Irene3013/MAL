@@ -6,10 +6,10 @@
 __pycache__/
 *.pyc
 
-# Modelos / checkpoints
+# Models / checkpoints
 *.ckpt
 *.pt
 *.bin
 
-# HuggingFace cache (por si acaso)
+# HuggingFace cache 
 .cache/

@@ -160,6 +160,9 @@ class RELDataModule(pl.LightningDataModule):
             config=self.config 
         )
 
+    def length(self):
+        return self.train_dataset.__len__()
+
     # DATALOADERS #
     def train_dataloader(self):
         return DataLoader(
