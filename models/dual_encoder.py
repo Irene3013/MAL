@@ -28,7 +28,6 @@ class DualEncoder(pl.LightningModule):
         self.score = args.score
 
         print(f"args.gpus: {args.gpus}")
-        #self.device = "cpu" if args.gpus == 0 else "cuda"
 
         # --- Load Model ---
         self.model_name = args.model
@@ -58,15 +57,7 @@ class DualEncoder(pl.LightningModule):
 
         self.log(f'{split}_loss', loss, batch_size=self.batch_size)
         return loss
-      
-    def move_to_device(self, batch, device):
-        if self.model_name == "pecore":
-            return {
-                "image":    batch["image"].to(device),
-                "captions": batch["captions"].to(device),
-            }
-        else:
-            return {k: v.to(device) for k, v in batch.items()}
+    
        
     def eval_step(self, batch, split): 
         inputs = self.move_to_device(batch, self.device)
@@ -78,18 +69,21 @@ class DualEncoder(pl.LightningModule):
             outputs = self.model(**inputs)
             logits = outputs.logits_per_image
         
-        acc = 0 # Accuracy per each pair
+        acc = 0 # Group score per each pair
         for i in range(self.batch_size):
             start = 2 * i
             end   = 2 * i + 2
             sub = logits[start:end, start:end]
-
-            a, b = sub[0, 0], sub[0, 1]
-            c, d = sub[1, 0], sub[1, 1]
+            
+            #        TexPos TexNeg
+            # ImgPos   a      b
+            # ImgNeg   c      d
+            a, b = sub[0, 0], sub[0, 1] 
+            c, d = sub[1, 0], sub[1, 1] 
 
             Ipos_2T = (a > c).item()
-            Ineg_2T = (d > b).item()
             Tpos_2I = (a > b).item()
+            Ineg_2T = (d > b).item()
             Tneg_2I = (d > c).item()
 
             group_score = Ipos_2T and Ineg_2T and Tpos_2I and Tneg_2I
@@ -100,6 +94,16 @@ class DualEncoder(pl.LightningModule):
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
         return acc
+    
+
+    def move_to_device(self, batch, device):
+        if self.model_name == "pecore":
+            return {
+                "image":    batch["image"].to(device),
+                "captions": batch["captions"].to(device),
+            }
+        else:
+            return {k: v.to(device) for k, v in batch.items()}
     
     # -----------------------------
     # LIGHTNING STEP METHODS
@@ -126,51 +130,3 @@ class DualEncoder(pl.LightningModule):
                 "interval": "step"
             }
             return [optimizer], [scheduler]
-
-    # def train_step(self, batch, split):
-    #     images = batch["image"].to(self.device)
-    #     texts  = batch["text"].to(self.device)
-
-    #     outputs = self.model(texts, images) 
-    #     logits_per_image, logits_per_text  = outputs.logits_per_image, outputs.logits_per_text
-
-    #     batch_size = images.size(0)
-    #     ground_truth = torch.arange(batch_size, device=self.device, dtype=torch.long) # Every caption is true
-
-    #     loss = 0.5 * (
-    #         self.cross_entropy(logits_per_image, ground_truth) +
-    #         self.cross_entropy(logits_per_text,  ground_truth)
-    #     )
-
-    #     # Logging
-    #     self.log(f'{split}_loss', loss, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-    #     return loss
-
-
-    # def eval_step(self, batch, split):
-    #     labels = batch["label"].to(self.device)
-    #     inputs_list = batch["input"]
-
-    #     # Forward pass each input
-    #     logits_list = []
-    #     for inputs in inputs_list:
-
-    #         if self.model_name == "pecore":
-    #             image = inputs['image'].to(self.device)
-    #             captions = inputs['captions'].to(self.device)
-    #             image_features, text_features, logit_scale = self.model(image, captions)
-    #             I2T_logits = logit_scale * image_features @ text_features.T
-
-    #         else:
-    #             inputs = inputs.to(self.device)
-    #             outputs = self.model(**inputs)
-    #             I2T_logits = outputs.logits_per_image
-
-    #         logits_list.append(I2T_logits)
-
-    #     logits = torch.cat(logits_list, dim=0)
-    #     acc = self.compute_accuracy(logits, labels, self.score)
-
-    #     # Logging
-    #     self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
-    #     return acc
