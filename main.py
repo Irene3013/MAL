@@ -11,6 +11,7 @@ from data.processed.relations_dataset import RELDataModule
 import argparse
 import torch.serialization
 import sys
+import math
 
 
 
@@ -84,16 +85,28 @@ def parse_args():
         "--val_check_interval", type=float, default=1.0, help="How often within a training epoch to check the val set. (1.0 == every epoch)"
     )
     parser.add_argument(
-        "--lr", type=float, default=5e-5, help="Learning rate."
+        "--lr", type=float, default=1e-6, help="Learning rate."
+    )
+    parser.add_argument(
+        '--beta-1',       type=float, default=0.9
+    )
+    parser.add_argument(
+        '--beta-2',       type=float, default=0.98
+    )
+    parser.add_argument(
+        '--eps',          type=float, default=1e-6
+    )
+    parser.add_argument(
+        '--weight-decay', type=float, default=0.1
     )
     parser.add_argument(
         "--precision", type=int, default=32, choices=[16, 32, 64], help="Precision for the GPUs."
     )
     parser.add_argument(
-        "--warmup_steps", type=int, default=2000, help="Warmup steps to be done during training."
+        "--warmup_steps", type=int, default=50, help="Warmup steps to be done during training."
     )
     parser.add_argument(
-        "--max_steps", type=int, default=88000, help="Steps to be done during training."
+        "--max_steps", type=int, default=10000, help="Steps to be done during training."
     )
     parser.add_argument(
         "--max_epochs", type=int, default=10, help="Epochs to be done during training."
@@ -151,7 +164,8 @@ def main_program():
         datamodule = BISCORDataModule(args, config=model.config)
     elif args.dataset == 'rel':
         datamodule = RELDataModule(args, config=model.config)
-        args.max_steps = args.max_epochs * (datamodule.length() // args.batch_size) // args.accumulate_grad_batches
+        steps_per_epoch = math.ceil(datamodule.length() / args.batch_size)
+        args.max_steps = args.max_epochs * (steps_per_epoch // args.accumulate_grad_batches)
     else:
         print(f"Dataset {args.dataset} not implemented.")
         sys.exit()  

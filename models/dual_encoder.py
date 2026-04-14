@@ -22,6 +22,11 @@ class DualEncoder(pl.LightningModule):
         self.warmup_steps = args.warmup_steps
         self.max_steps = args.max_steps
         self.lr = args.lr
+        self.beta_1 = args.beta_1
+        self.beta_2 = args.beta_2
+        self.eps = args.eps
+        self.weight_decay = args.weight_decay
+
         self.scheduler_off = args.scheduler_off
         self.batch_size = args.batch_size
         self.cross_entropy = torch.nn.CrossEntropyLoss()
@@ -170,7 +175,14 @@ class DualEncoder(pl.LightningModule):
     # CONFIGURE OPTIMIZER
     # -----------------------------
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
+        #optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.AdamW(
+            self.parameters(), 
+            lr=self.lr,
+            betas=(self.beta_1, self.beta_2),
+            eps=self.eps,
+            weight_decay=self.weight_decay
+        )
         if self.scheduler_off:
             return [optimizer]
         else:
