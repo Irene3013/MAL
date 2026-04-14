@@ -62,7 +62,7 @@ def parse_args():
         "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial", "biscor", "rel"], help="Select dataset to be trained on."
     )
     parser.add_argument(
-        "--batch_size", type=int, default=56, help="Batch size (per gpu)."
+        "--batch_size", type=int, default=200, help="Batch size (per gpu)."
     )
     parser.add_argument(
         "--variant", type=str, default=None, help="Select dataset variant to be trained on."

@@ -55,12 +55,14 @@ class DualEncoder(pl.LightningModule):
             logits_per_text = outputs.logits_per_text
             logits = logits_per_image
 
-            ground_truth = torch.arange(2*self.batch_size, device=self.device)        
+            N = logits_per_image.shape[0]
+            N_pairs = logits_per_image.shape[0]/2
+            ground_truth = torch.arange(N, device=self.device)        
             loss = 0.5 * (
                 self.cross_entropy(logits_per_image, ground_truth) +
                 self.cross_entropy(logits_per_text, ground_truth)
             )
-            self.log(f'{split}_loss', loss, batch_size=self.batch_size)
+            self.log(f'{split}_loss', loss, batch_size=N_pairs)
         else:
             if self.model_name == "pecore":
                 image_features, text_features, logit_scale = self.model(inputs["image"], inputs["captions"])
@@ -70,7 +72,8 @@ class DualEncoder(pl.LightningModule):
                 logits = outputs.logits_per_image
         
         acc = 0 # Group score per each pair
-        for i in range(self.batch_size):
+        N_pairs = logits.shape[0] // 2
+        for i in range(N_pairs):
             start = 2 * i
             end   = 2 * i + 2
             sub = logits[start:end, start:end]
@@ -81,18 +84,18 @@ class DualEncoder(pl.LightningModule):
             a, b = sub[0, 0], sub[0, 1] 
             c, d = sub[1, 0], sub[1, 1] 
 
-            Ipos_2T = (a > c).item()
-            Tpos_2I = (a > b).item()
-            Ineg_2T = (d > b).item()
-            Tneg_2I = (d > c).item()
+            Tpos_2I = (a > c).item()
+            Ipos_2T = (a > b).item()
+            Tneg_2I = (d > b).item()
+            Ineg_2T = (d > c).item()
 
             group_score = Ipos_2T and Ineg_2T and Tpos_2I and Tneg_2I
             acc += int(group_score)
 
-        acc /= self.batch_size
+        acc /= N_pairs
 
         # Logging
-        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=self.batch_size)
+        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=N_pairs)
         return loss if split == 'train' else acc
         
         
