@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=clip_zs                     # Name of the process
+#SBATCH --job-name=clip_ft                     # Name of the process
 #SBATCH --cpus-per-task=2                      # Number of CPU cores (2 is reasonable)
 #SBATCH --gres=gpu:1                           # Number of GPUs (usually light processes only need 1)
 #SBATCH --mem=64G                              # RAM memory needed (8-16GB is reasonable for our servers, sometimes you'll need more)
