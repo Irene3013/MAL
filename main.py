@@ -164,8 +164,6 @@ def main_program():
         datamodule = BISCORDataModule(args, config=model.config)
     elif args.dataset == 'rel':
         datamodule = RELDataModule(args, config=model.config)
-        #steps_per_epoch = math.ceil(datamodule.length() / args.batch_size)
-        #args.max_steps = args.max_epochs * (steps_per_epoch // args.accumulate_grad_batches)
     else:
         print(f"Dataset {args.dataset} not implemented.")
         sys.exit()  
@@ -197,8 +195,8 @@ def main_program():
                 devices=args.gpus, 
                 fast_dev_run=False, 
                 logger=logger, 
-                #max_steps=args.max_steps, 
-                max_epochs = args.max_epochs,
+                max_steps=args.max_steps, 
+                #max_epochs = args.max_epochs,
                 accumulate_grad_batches=args.accumulate_grad_batches, 
                 strategy= 'auto', 
                 precision=args.precision, 
