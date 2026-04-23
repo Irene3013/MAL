@@ -11,8 +11,7 @@ from data.processed.relations_dataset import RELDataModule
 import argparse
 import torch.serialization
 import sys
-import math
-
+import time
 
 
 ## Parse arguments
@@ -205,11 +204,19 @@ def main_program():
     
     # Train model
     if args.train:
-        model.train()
         print("Training starts!")
         model.train()
+        start = time.time()
         trainer.fit(model, datamodule)
+        end = time.time()
         print("Training finished!")
+
+        # log total training time
+        total_time = end -  start
+        print(f"Total training time: {total_time/60:.2f} minutes")
+
+        hours = total_time / 3600
+        trainer.logger.experiment.add_scalar("train/total_time_hours", hours, 0)
 
     # Evaluate model
     if args.evaluate and args.train:
