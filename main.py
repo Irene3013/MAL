@@ -213,10 +213,11 @@ def main_program():
 
         # log total training time
         total_time = end -  start
-        print(f"Total training time: {total_time/60:.2f} minutes")
-
+        minutes = total_time / 60
         hours = total_time / 3600
-        trainer.logger.experiment.add_scalar("train/total_time_hours", hours, 0)
+        exp = trainer.logger.experiment
+        exp.add_scalar("train/total_time_minutes", minutes, 0)
+        exp.add_scalar("train/total_time_hours", hours, 0)
 
     # Evaluate model
     if args.evaluate and args.train:
