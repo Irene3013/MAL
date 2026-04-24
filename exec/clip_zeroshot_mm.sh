@@ -14,52 +14,97 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
 
+# PROBA LR
+srun python main.py --model "clip" \
+   --lr 2e-5 --batch_size 4 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name v1_lr --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
+
+# V2 BATCH 2
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_finetuning_batchsize2 --train --evaluate --dataset rel \
+   --run_name clip_ft_batch_2_v2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v2
+#####################
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 4 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v2
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v4
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v7
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_2 --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 16 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E7 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
-srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 4 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_ft_batch_4 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
+#### 64
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name clip_v8 --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v2
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v4
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v7
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 64 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name E8 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
