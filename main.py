@@ -105,6 +105,9 @@ def parse_args():
         "--warmup_steps", type=int, default=50, help="Warmup steps to be done during training."
     )
     parser.add_argument(
+        "--use_epochs", action="store_true", help="Use max_epoch for training duration."
+    )
+    parser.add_argument(
         "--max_steps", type=int, default=10000, help="Steps to be done during training."
     )
     parser.add_argument(
@@ -189,18 +192,29 @@ def main_program():
         save_top_k=1)
     
     # Prepare Trainer
+    if args.use_epochs:
+        trainer = pl.Trainer(
+                    devices=args.gpus, 
+                    fast_dev_run=False, 
+                    logger=logger, 
+                    max_epochs = args.max_epochs,
+                    accumulate_grad_batches=args.accumulate_grad_batches, 
+                    strategy= 'auto', 
+                    precision=args.precision, 
+                    callbacks=[checkpoint_callback]
+                )
     
-    trainer = pl.Trainer(
-                devices=args.gpus, 
-                fast_dev_run=False, 
-                logger=logger, 
-                max_steps=args.max_steps, 
-                #max_epochs = args.max_epochs,
-                accumulate_grad_batches=args.accumulate_grad_batches, 
-                strategy= 'auto', 
-                precision=args.precision, 
-                callbacks=[checkpoint_callback]
-            )
+    else: 
+        trainer = pl.Trainer(
+                    devices=args.gpus, 
+                    fast_dev_run=False, 
+                    logger=logger, 
+                    max_steps=args.max_steps, 
+                    accumulate_grad_batches=args.accumulate_grad_batches, 
+                    strategy= 'auto', 
+                    precision=args.precision, 
+                    callbacks=[checkpoint_callback]
+                )
     
     # Train model
     if args.train:
