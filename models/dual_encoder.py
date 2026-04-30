@@ -37,33 +37,9 @@ class DualEncoder(pl.LightningModule):
         self.model, self.config = load_vision_model_components(self.model_name)
 
     # -----------------------------
-    # STEP (train/val/test)
+    # Group score ACCURACY
     # -----------------------------
-    def step(self, batch, split):
-        inputs = self.move_to_device(batch, self.device)
-
-        if split == "train":
-            outputs = self.model(**inputs)
-            logits_per_image = outputs.logits_per_image
-            logits_per_text = outputs.logits_per_text
-            logits = logits_per_image
-
-            N = logits_per_image.shape[0]
-            N_pairs = logits_per_image.shape[0] // 2
-            ground_truth = torch.arange(N, device=self.device)        
-            loss = 0.5 * (
-                self.cross_entropy(logits_per_image, ground_truth) +
-                self.cross_entropy(logits_per_text, ground_truth)
-            )
-            self.log(f'{split}_loss', loss, batch_size=N_pairs)
-        else:
-            if self.model_name == "pecore":
-                image_features, text_features, logit_scale = self.model(inputs["image"], inputs["captions"])
-                logits = logit_scale * image_features @ text_features.T
-            else:
-                outputs = self.model(**inputs)
-                logits = outputs.logits_per_image
-        
+    def compute_group_score(self, logits):
         acc = 0 # Group score per each pair
         N_pairs = logits.shape[0] // 2
         for i in range(N_pairs):
@@ -84,13 +60,67 @@ class DualEncoder(pl.LightningModule):
 
             group_score = Ipos_2T and Ineg_2T and Tpos_2I and Tneg_2I
             acc += int(group_score)
+        return acc / N_pairs
+    # -----------------------------
+    # STEP (train/val/test)
+    # -----------------------------
+    def step(self, batch, split):
+        if self.model_name == "pecore":
+            return self.PEcore_step(batch, split)
+        else:
+            return self.CLIP_step(batch, split)
 
-        acc /= N_pairs
+    def CLIP_step(self, batch, split):
+        inputs = self.move_to_device(batch, self.device)
+        outputs = self.model(**inputs)
+        logits = outputs.logits_per_image
+        N_pairs = logits.shape[0] // 2 #for logging
+
+        if split == "train":
+            # compute loss
+            logits_per_image = outputs.logits_per_image
+            logits_per_text = outputs.logits_per_text
+
+            N = logits_per_image.shape[0]
+            ground_truth = torch.arange(N, device=self.device)        
+            loss = 0.5 * (
+                self.cross_entropy(logits_per_image, ground_truth) +
+                self.cross_entropy(logits_per_text, ground_truth)
+            )
+            self.log(f'{split}_loss', loss, batch_size=N_pairs)
+
+        # compute accuracy
+        acc = self.compute_group_score(logits)
 
         # Logging
         self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=N_pairs)
         return loss if split == 'train' else acc
-    
+
+    def PEcore_step(self, batch, split):   
+        inputs = self.move_to_device(batch, self.device)
+        image_features, text_features, logit_scale = self.model(inputs["image"], inputs["captions"])
+        logits = (logit_scale * image_features @ text_features.T)
+        N_pairs = logits.shape[0] // 2 #for logging
+
+        if split == "train":
+            # compute loss
+            logits_per_image = (logit_scale * image_features @ text_features.T)
+            logits_per_text = logits_per_image.T
+
+            N = logits_per_image.shape[0]
+            ground_truth = torch.arange(N, dtype=torch.long, device=self.device)
+            loss = 0.5 * (
+                self.cross_entropy(logits_per_image, ground_truth) +
+                self.cross_entropy(logits_per_text, ground_truth)
+            )
+            self.log(f'{split}_loss', loss, batch_size=N_pairs)    
+
+        # compute accuracy
+        acc = self.compute_group_score(logits)
+
+        # Logging
+        self.log(f'{split}_accuracy', acc, on_epoch=True, prog_bar=(split=="train"), logger=True, batch_size=N_pairs)
+        return loss if split == 'train' else acc
 
     def move_to_device(self, batch, device):
         if self.model_name == "pecore":
