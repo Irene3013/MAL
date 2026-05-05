@@ -187,7 +187,7 @@ def main_program():
         dirpath=args.output_path, 
         monitor='val_accuracy', 
         mode='max', 
-        filename=f"{args.model}-{tb_run_name}-{args.variant}" + "-{variant}-{epoch:02d}-{val_accuracy:.2f}", 
+        filename=f"{args.model}-{tb_run_name}-{args.variant}" + "-{epoch:02d}-{val_accuracy:.2f}", 
         save_weights_only=True, 
         save_top_k=1)
     
