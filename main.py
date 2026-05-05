@@ -212,7 +212,7 @@ def main_program():
                     max_steps=args.max_steps, 
                     accumulate_grad_batches=args.accumulate_grad_batches, 
                     strategy= 'auto', 
-                    precision= "16-mixed", # args.precision, 
+                    precision=args.precision, 
                     callbacks=[checkpoint_callback]
                 )
     
