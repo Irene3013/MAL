@@ -79,7 +79,10 @@ def main_program():
             model = CLIPModel.from_pretrained(model_name)
             model.eval()
         else:
-           return 0
+            checkpoint = torch.load(args.ckpt, map_location="cpu")
+            print(checkpoint.keys())  
+            print(list(checkpoint["state_dict"].keys())[:5])
+            return 0
     else:
         raise NotImplementedError
     
@@ -121,9 +124,9 @@ def main_program():
                 embs = get_text_embeddings([anchor, hard_neg], model, tokenizer, device)
                 similarity = (embs[0] @ embs[1]).item()
                 
-                print(f"Anchor:    {anchor}")
-                print(f"Hard-neg:  {hard_neg}")
-                print(f"Similarity: {similarity:.4f}\n")
+                # print(f"Anchor:    {anchor}")
+                # print(f"Hard-neg:  {hard_neg}")
+                # print(f"Similarity: {similarity:.4f}\n")
 
                 writer.writerow({
                     "relation":    relation,
@@ -159,9 +162,9 @@ def main_program():
                     embs = get_text_embeddings([anchor, paraphrase], model, tokenizer, device)
                     similarity = (embs[0] @ embs[1]).item()
 
-                    print(f"Anchor:      {anchor}")
-                    print(f"Paraphrase:  {paraphrase}")
-                    print(f"Similarity:  {similarity:.4f}\n")
+                    # print(f"Anchor:      {anchor}")
+                    # print(f"Paraphrase:  {paraphrase}")
+                    # print(f"Similarity:  {similarity:.4f}\n")
 
                     writer.writerow({
                         "relation":    relation,
