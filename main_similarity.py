@@ -195,7 +195,7 @@ def main_program():
                             "template_1":   idx1,        # 0, 1 o 2
                             "caption_1":    cap1,
                             "template_2":   idx2,        # 0, 1 o 2
-                            "caption_1":    cap2,
+                            "caption_2":    cap2,
                             "similarity":    round(similarity, 4),
                         })
         
