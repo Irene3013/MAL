@@ -57,9 +57,11 @@ def parse_args():
 def get_text_embeddings(texts, model, tokenizer, device):
     inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
     inputs = {k: v.to(device) for k, v in inputs.items()}
+    # with torch.no_grad():
+    #     output = model.text_model(**inputs)
+    #     embeddings = output.pooler_output  # (B, hidden_dim) - espacio textual puro
     with torch.no_grad():
-        output = model.text_model(**inputs)
-        embeddings = output.pooler_output  # (B, hidden_dim) - espacio textual puro
+        embeddings = model.get_text_features(**inputs)
     embeddings = F.normalize(embeddings, p=2, dim=-1)
     return embeddings
 
@@ -73,20 +75,24 @@ def main_program():
 
     # Cargar modelo y tokenizer base
     if args.model == "clip":
+        model_name = "openai/clip-vit-base-patch32"
+        tokenizer = CLIPTokenizer.from_pretrained(model_name)
         if args.ckpt == None:
-            model_name = "openai/clip-vit-base-patch32"
-            tokenizer = CLIPTokenizer.from_pretrained(model_name)
             model = CLIPModel.from_pretrained(model_name)
-            model.eval()
         else:
             checkpoint = torch.load(args.ckpt, map_location="cpu")
-            print(checkpoint.keys())  
-            print(list(checkpoint["state_dict"].keys())[:5])
-            return 0
+            state_dict = checkpoint["state_dict"]
+            
+            # Stripear el prefijo "model."
+            stripped = {k[len("model."):]: v for k, v in state_dict.items() if k.startswith("model.")}
+            
+            model = CLIPModel.from_pretrained(model_name)  # arquitectura base
+            model.load_state_dict(stripped)
     else:
         raise NotImplementedError
     
     # Move to device
+    model.eval()
     device = torch.device("cuda" if args.gpus > 0 and torch.cuda.is_available() else "cpu")
     model = model.to(device)
     
