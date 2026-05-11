@@ -144,12 +144,13 @@ def main_program():
         from itertools import product
     
         output_file = os.path.join(args.output_path, f"par_similarity_{args.model}_{args.variant}.csv")
-        with open(output_file, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["relation", "caption_v1", "caption_v2", "similarity"])
-            writer.writeheader()
+        
+        if args.group_size == 1:  # o args.group_size si quieres parametrizarlo
 
+            with open(output_file, "w", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=["relation", "caption_1", "caption_2", "similarity"])
+                writer.writeheader()
 
-            if args.group_size == 1:  # o args.group_size si quieres parametrizarlo
                 for sample, sample2 in zip(dataset, dataset2):
                     anchor   = sample["caption_pos"]
                     paraphrase = sample2["caption_pos"]
@@ -168,10 +169,14 @@ def main_program():
                         "caption_2": paraphrase,
                         "similarity":  round(similarity, 4),
                     })
-            else:
-                # Agrupar ambos datasets en grupos de 3 (por imagen compartida)
-                samples1 = list(dataset)
-                samples2 = list(dataset2)
+        else:
+            # Agrupar ambos datasets en grupos de 3 (por imagen compartida)
+            samples1 = list(dataset)
+            samples2 = list(dataset2)
+
+            with open(output_file, "w", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=["relation", "template_1", "caption_1", "template_2", "caption_2", "similarity"])
+                writer.writeheader()
 
                 for i in range(0, len(samples1), args.group_size):
                     group1 = samples1[i:i + args.group_size]
