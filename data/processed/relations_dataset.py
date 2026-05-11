@@ -53,10 +53,11 @@ class RELDataset(Dataset):
         self.dataset = self._load_csv()
 
         # Input processing
-        self.transform = config["transform"]
-        self.tokenizer = config["tokenizer"]
-        self.processor = config["processor"]
-        self.params = config.get("params", {})
+        if config is not None:
+            self.transform = config["transform"]
+            self.tokenizer = config["tokenizer"]
+            self.processor = config["processor"]
+            self.params = config.get("params", {})
 
     def _load_csv(self):
         with open(self.data_path, newline="\n", encoding="utf-8") as f:
