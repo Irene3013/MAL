@@ -102,6 +102,7 @@ class RELDataset(Dataset):
             "caption_neg": neg_capt,
             "image_pos": self._load_image(pos_img),
             "image_neg": self._load_image(neg_img),
+            "relation": relation,
         }
     
 

@@ -1,5 +1,7 @@
 from transformers import CLIPModel, CLIPTokenizer
 import torch
+import csv
+import os
 import argparse
 import torch.nn.functional as F
 from data.processed.relations_dataset import RELDataset
@@ -36,11 +38,15 @@ def parse_args():
     parser.add_argument(
         "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial", "biscor", "rel"], help="Select dataset to be trained on."
     )
+    
     parser.add_argument(
         "--experiment", type=str, help="Select dataset to be trained on."
     )
     parser.add_argument(
         "--variant", type=str, default=None, help="Select dataset variant to be trained on."
+    )
+    parser.add_argument(
+        "--paraphrase", type=str, default=None, help="Model's checkpoint to be loaded before training."
     )
     args = parser.parse_args()
     return args
@@ -48,13 +54,12 @@ def parse_args():
 
 def get_text_embeddings(texts, model, tokenizer, device):
     inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
-    inputs = {k: v.to(device) for k, v in inputs.items()}  # <- esto
+    inputs = {k: v.to(device) for k, v in inputs.items()}
     with torch.no_grad():
-        embeddings = model.get_text_features(**inputs)
+        output = model.text_model(**inputs)
+        embeddings = output.pooler_output  # (B, hidden_dim) - espacio textual puro
     embeddings = F.normalize(embeddings, p=2, dim=-1)
     return embeddings
-
-
 
 def main_program():
 
@@ -89,15 +94,68 @@ def main_program():
             config=None
     )
     
-    for sample in dataset:
-        anchor   = sample["caption_pos"]
-        hard_neg = sample["caption_neg"]
+    
+    if args.paraphrase is None: 
+
+        output_file = os.path.join(args.output_path, f"neg_similarity_{args.model}_{args.variant}.csv")
+        with open(output_file, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["relation", "caption_pos", "caption_neg", "similarity"])
+            writer.writeheader()
+
+            # pos vs neg
+            for sample in dataset:
+                anchor   = sample["caption_pos"]
+                hard_neg = sample["caption_neg"]
+                relation = sample["relation"]
+                
+                embs = get_text_embeddings([anchor, hard_neg], model, tokenizer, device)
+                similarity = (embs[0] @ embs[1]).item()
+                
+                print(f"Anchor:    {anchor}")
+                print(f"Hard-neg:  {hard_neg}")
+                print(f"Similarity: {similarity:.4f}\n")
+
+                writer.writerow({
+                    "relation":    relation,
+                    "caption_pos": anchor,
+                    "caption_neg": hard_neg,
+                    "similarity":  round(similarity, 4),
+                })
+
+    else:
+        dataset2 = RELDataset(
+            version = args.paraphrase,
+            split="test",
+            data_path=args.root,
+            model=args.model,
+            config=None
+        )
         
-        embs = get_text_embeddings([anchor, hard_neg], model, tokenizer, device)
-        similarity = (embs[0] @ embs[1]).item()
+        output_file = os.path.join(args.output_path, f"par_similarity_{args.model}_{args.variant}.csv")
+        with open(output_file, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["relation", "caption_pos", "paraphrased", "similarity"])
+            writer.writeheader()
+
+            #orig vs paraphrase
+            for sample, sample2 in zip(dataset, dataset2):
+                anchor   = sample["caption_pos"]
+                paraphrase = sample2["caption_pos"]
+                relation = sample["relation"]
+
+                embs = get_text_embeddings([anchor, paraphrase], model, tokenizer, device)
+                similarity = (embs[0] @ embs[1]).item()
+
+                print(f"Anchor:      {anchor}")
+                print(f"Paraphrase:  {paraphrase}")
+                print(f"Similarity:  {similarity:.4f}\n")
+
+                writer.writerow({
+                    "relation":    relation,
+                    "caption_pos": anchor,
+                    "paraphrased": paraphrase,
+                    "similarity":  round(similarity, 4),
+                })
         
-        print(f"Anchor:    {anchor}")
-        print(f"Hard-neg:  {hard_neg}")
-        print(f"Similarity: {similarity:.4f}\n")
+    
 if __name__ == "__main__":
     main_program()
