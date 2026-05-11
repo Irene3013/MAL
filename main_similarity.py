@@ -38,7 +38,9 @@ def parse_args():
     parser.add_argument(
         "--dataset", type=str, required=True, choices=["vsr", "whatsup", "cocospatial", "gqaspatial", "biscor", "rel"], help="Select dataset to be trained on."
     )
-    
+    parser.add_argument(
+        "--group_size", type=int, default=1, help="Precision for the GPUs."
+    )
     parser.add_argument(
         "--experiment", type=str, help="Select dataset to be trained on."
     )
@@ -97,6 +99,8 @@ def main_program():
     
     if args.paraphrase is None: 
 
+        seen = set()
+
         output_file = os.path.join(args.output_path, f"neg_similarity_{args.model}_{args.variant}.csv")
         with open(output_file, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=["relation", "caption_pos", "caption_neg", "similarity"])
@@ -107,6 +111,12 @@ def main_program():
                 anchor   = sample["caption_pos"]
                 hard_neg = sample["caption_neg"]
                 relation = sample["relation"]
+
+                # Saltar si ya procesamos este par
+                pair_key = (anchor, hard_neg)
+                if pair_key in seen:
+                    continue
+                seen.add(pair_key)
                 
                 embs = get_text_embeddings([anchor, hard_neg], model, tokenizer, device)
                 similarity = (embs[0] @ embs[1]).item()
@@ -130,31 +140,64 @@ def main_program():
             model=args.model,
             config=None
         )
-        
+
+        from itertools import product
+    
         output_file = os.path.join(args.output_path, f"par_similarity_{args.model}_{args.variant}.csv")
         with open(output_file, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["relation", "caption_pos", "paraphrased", "similarity"])
+            writer = csv.DictWriter(f, fieldnames=["relation", "caption_v1", "caption_v2", "similarity"])
             writer.writeheader()
 
-            #orig vs paraphrase
-            for sample, sample2 in zip(dataset, dataset2):
-                anchor   = sample["caption_pos"]
-                paraphrase = sample2["caption_pos"]
-                relation = sample["relation"]
 
-                embs = get_text_embeddings([anchor, paraphrase], model, tokenizer, device)
-                similarity = (embs[0] @ embs[1]).item()
+            if args.group_size == 1:  # o args.group_size si quieres parametrizarlo
+                for sample, sample2 in zip(dataset, dataset2):
+                    anchor   = sample["caption_pos"]
+                    paraphrase = sample2["caption_pos"]
+                    relation = sample["relation"]
 
-                print(f"Anchor:      {anchor}")
-                print(f"Paraphrase:  {paraphrase}")
-                print(f"Similarity:  {similarity:.4f}\n")
+                    embs = get_text_embeddings([anchor, paraphrase], model, tokenizer, device)
+                    similarity = (embs[0] @ embs[1]).item()
 
-                writer.writerow({
-                    "relation":    relation,
-                    "caption_pos": anchor,
-                    "paraphrased": paraphrase,
-                    "similarity":  round(similarity, 4),
-                })
+                    print(f"Anchor:      {anchor}")
+                    print(f"Paraphrase:  {paraphrase}")
+                    print(f"Similarity:  {similarity:.4f}\n")
+
+                    writer.writerow({
+                        "relation":    relation,
+                        "caption_1": anchor,
+                        "caption_2": paraphrase,
+                        "similarity":  round(similarity, 4),
+                    })
+            else:
+                # Agrupar ambos datasets en grupos de 3 (por imagen compartida)
+                samples1 = list(dataset)
+                samples2 = list(dataset2)
+
+                for i in range(0, len(samples1), args.group_size):
+                    group1 = samples1[i:i + args.group_size]
+                    group2 = samples2[i:i + args.group_size]
+
+                    relation = group1[0]["relation"]
+
+                    # Todas las combinaciones entre plantillas de v1 y v2
+                    for (idx1, s1), (idx2, s2) in product(enumerate(group1), enumerate(group2)):
+                        cap1 = s1["caption_pos"]
+                        cap2 = s2["caption_pos"]
+
+                        if cap1 == cap2:
+                            continue
+
+                        embs = get_text_embeddings([cap1, cap2], model, tokenizer, device)
+                        similarity = (embs[0] @ embs[1]).item()
+
+                        writer.writerow({
+                            "relation":      relation,
+                            "template_1":   idx1,        # 0, 1 o 2
+                            "caption_1":    cap1,
+                            "template_2":   idx2,        # 0, 1 o 2
+                            "caption_1":    cap2,
+                            "similarity":    round(similarity, 4),
+                        })
         
     
 if __name__ == "__main__":
