@@ -79,7 +79,7 @@ def main_program():
             model = CLIPModel.from_pretrained(model_name)
             model.eval()
         else:
-           raise NotImplementedError
+           return 0
     else:
         raise NotImplementedError
     
