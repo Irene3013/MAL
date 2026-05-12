@@ -17,12 +17,12 @@ source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
 srun python main.py --model "pecore" \
    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
    --run_name proba_E0 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
 
 srun python main.py --model "pecore" \
    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
    --run_name E0 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v2
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v4
 
 # srun python main.py --model "pecore" \
 #    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \

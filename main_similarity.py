@@ -57,11 +57,12 @@ def parse_args():
 def get_text_embeddings(texts, model, tokenizer, device):
     inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
     inputs = {k: v.to(device) for k, v in inputs.items()}
-    # with torch.no_grad():
-    #     output = model.text_model(**inputs)
-    #     embeddings = output.pooler_output  # (B, hidden_dim) - espacio textual puro
     with torch.no_grad():
-        embeddings = model.get_text_features(**inputs)
+        outputs = model.get_text_features(**inputs)
+        if hasattr(outputs, "pooler_output"):
+            embeddings = outputs.pooler_output
+        else:
+            embeddings = outputs
     embeddings = F.normalize(embeddings, p=2, dim=-1)
     return embeddings
 
@@ -89,6 +90,7 @@ def main_program():
             model = CLIPModel.from_pretrained(model_name)  # arquitectura base
             model.load_state_dict(stripped)
     else:
+        # TODO PE core
         raise NotImplementedError
     
     # Move to device
@@ -96,7 +98,6 @@ def main_program():
     device = torch.device("cuda" if args.gpus > 0 and torch.cuda.is_available() else "cpu")
     model = model.to(device)
     
-    # Tu dataset de pares (ejemplo, hard-negative)
     dataset = RELDataset(
             version = args.variant,
             split="test",
@@ -154,7 +155,7 @@ def main_program():
     
         output_file = os.path.join(args.output_path, f"par_similarity_{args.model}_{args.variant}.csv")
         
-        if args.group_size == 1:  # o args.group_size si quieres parametrizarlo
+        if args.group_size == 1: 
 
             with open(output_file, "w", newline="") as f:
                 writer = csv.DictWriter(f, fieldnames=["relation", "caption_1", "caption_2", "similarity"])
@@ -179,7 +180,6 @@ def main_program():
                         "similarity":  round(similarity, 4),
                     })
         else:
-            # Agrupar ambos datasets en grupos de 3 (por imagen compartida)
             samples1 = list(dataset)
             samples2 = list(dataset2)
 
@@ -193,7 +193,7 @@ def main_program():
 
                     relation = group1[0]["relation"]
 
-                    # Todas las combinaciones entre plantillas de v1 y v2
+                    # formatu guztien arteko konbinaketak
                     for (idx1, s1), (idx2, s2) in product(enumerate(group1), enumerate(group2)):
                         cap1 = s1["caption_pos"]
                         cap2 = s2["caption_pos"]
@@ -206,9 +206,9 @@ def main_program():
 
                         writer.writerow({
                             "relation":      relation,
-                            "template_1":   idx1,        # 0, 1 o 2
+                            "template_1":   idx1,        
                             "caption_1":    cap1,
-                            "template_2":   idx2,        # 0, 1 o 2
+                            "template_2":   idx2,        
                             "caption_2":    cap2,
                             "similarity":    round(similarity, 4),
                         })

@@ -12,7 +12,7 @@ args: !!python/object:argparse.Namespace
   image_path: /gaueko0/users/ietxarri010/MAL/data
   lr: 1.0e-06
   max_epochs: 10
-  max_steps: 1000
+  max_steps: 5000
   model: pecore
   num_workers: 2
   output_path: /gaueko0/users/ietxarri010/out/
