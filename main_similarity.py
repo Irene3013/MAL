@@ -74,7 +74,7 @@ def main_program():
     args = parse_args()
 
 
-    # Cargar modelo y tokenizer base
+    # Load model and tokenizer 
     if args.model == "clip":
         model_name = "openai/clip-vit-base-patch32"
         tokenizer = CLIPTokenizer.from_pretrained(model_name)
@@ -84,7 +84,7 @@ def main_program():
             checkpoint = torch.load(args.ckpt, map_location="cpu")
             state_dict = checkpoint["state_dict"]
             
-            # Stripear el prefijo "model."
+            # prepare state dict to load (stripe ".model")
             stripped = {k[len("model."):]: v for k, v in state_dict.items() if k.startswith("model.")}
             
             model = CLIPModel.from_pretrained(model_name)  # arquitectura base
