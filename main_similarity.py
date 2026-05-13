@@ -4,7 +4,9 @@ import csv
 import os
 import argparse
 import torch.nn.functional as F
-from data.processed.relations_dataset import RELDataset
+from torch.utils.data import Dataset
+from pathlib import Path
+from itertools import product
 
 
 ## Parse arguments
@@ -19,7 +21,7 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the data files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data/par", help="Path to the data files."
     )
     parser.add_argument(
         "--image_path", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the image files if its different from the annotations files."
@@ -45,15 +47,39 @@ def parse_args():
         "--experiment", type=str, help="Select dataset to be trained on."
     )
     parser.add_argument(
-        "--variant", type=str, default=None, help="Select dataset variant to be trained on."
+        "--variant1", type=str, default=None, help="Select dataset variant to be trained on."
     )
     parser.add_argument(
-        "--paraphrase", type=str, default=None, help="Model's checkpoint to be loaded before training."
+        "--variant2", type=str, default=None, help="Select dataset variant to be trained on."
     )
     args = parser.parse_args()
     return args
 
 
+class RELDataset(Dataset):
+    def __init__(self, version="1", data_path="data"):
+        self.data_path = Path(data_path) / f"paraphrase_{version}.csv"
+        assert self.data_path.exists(), f"Root directory does not exist."
+        self.dataset = self._load_csv()
+
+    def _load_csv(self):
+        with open(self.data_path, newline="\n", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader)
+            return list(reader)
+    
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        pos_capt,neg_capt,relation,shape1,color1,shape2,color2,image = self.dataset[idx]
+        return {
+            "caption_pos": pos_capt,
+            "caption_neg": neg_capt,
+            "relation": relation
+        }
+        
+    
 def get_text_embeddings(texts, model, tokenizer, device):
     inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
     inputs = {k: v.to(device) for k, v in inputs.items()}
@@ -98,121 +124,42 @@ def main_program():
     device = torch.device("cuda" if args.gpus > 0 and torch.cuda.is_available() else "cpu")
     model = model.to(device)
     
-    dataset = RELDataset(
-            version = args.variant,
-            split="test",
+    dataset1 = RELDataset(
+            version = args.variant1,
             data_path=args.root,
-            model=args.model,
-            config=None
     )
     
-    
-    if args.paraphrase is None: 
-
-        seen = set()
-
-        output_file = os.path.join(args.output_path, f"neg_similarity_{args.model}_{args.variant}.csv")
-        with open(output_file, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["relation", "caption_pos", "caption_neg", "similarity"])
-            writer.writeheader()
-
-            # pos vs neg
-            for sample in dataset:
-                anchor   = sample["caption_pos"]
-                hard_neg = sample["caption_neg"]
-                relation = sample["relation"]
-
-                # Saltar si ya procesamos este par
-                pair_key = (anchor, hard_neg)
-                if pair_key in seen:
-                    continue
-                seen.add(pair_key)
-                
-                embs = get_text_embeddings([anchor, hard_neg], model, tokenizer, device)
-                similarity = (embs[0] @ embs[1]).item()
-                
-                # print(f"Anchor:    {anchor}")
-                # print(f"Hard-neg:  {hard_neg}")
-                # print(f"Similarity: {similarity:.4f}\n")
-
-                writer.writerow({
-                    "relation":    relation,
-                    "caption_pos": anchor,
-                    "caption_neg": hard_neg,
-                    "similarity":  round(similarity, 4),
-                })
-
-    else:
-        dataset2 = RELDataset(
-            version = args.paraphrase,
-            split="test",
+    dataset2 = RELDataset(
+            version = args.variant2,
             data_path=args.root,
-            model=args.model,
-            config=None
-        )
-
-        from itertools import product
+    )
     
-        output_file = os.path.join(args.output_path, f"par_similarity_{args.model}_{args.variant}.csv")
-        
-        if args.group_size == 1: 
+    output_file = os.path.join(args.output_path, f"{args.model}_p{args.variant1}_p{args.variant2}.csv")
+    with open(output_file, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["relation", "caption_1", "caption_2", "similarity"])
+        writer.writeheader()
 
-            with open(output_file, "w", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=["relation", "caption_1", "caption_2", "similarity"])
-                writer.writeheader()
+        for sample1, sample2 in zip(dataset1, dataset2):
+            pos_p1 = sample1["caption_pos"]
+            neg_p1 = sample1["caption_neg"]
+            pos_p2 = sample2["caption_pos"]
+            relation = sample1["relation"]
 
-                for sample, sample2 in zip(dataset, dataset2):
-                    anchor   = sample["caption_pos"]
-                    paraphrase = sample2["caption_pos"]
-                    relation = sample["relation"]
+            # similarity_1: pos vs neg
+            embs = get_text_embeddings([pos_p1, neg_p1], model, tokenizer, device)
+            similarity_1 = (embs[0] @ embs[1]).item()
 
-                    embs = get_text_embeddings([anchor, paraphrase], model, tokenizer, device)
-                    similarity = (embs[0] @ embs[1]).item()
+            # similarity_2: pos1 vs pos2
+            embs = get_text_embeddings([pos_p1, neg_p1], model, tokenizer, device)
+            similarity_2 = (embs[0] @ embs[1]).item()
 
-                    # print(f"Anchor:      {anchor}")
-                    # print(f"Paraphrase:  {paraphrase}")
-                    # print(f"Similarity:  {similarity:.4f}\n")
+            score = 1 if similarity_2 > similarity_1 else 0
 
-                    writer.writerow({
-                        "relation":    relation,
-                        "caption_1": anchor,
-                        "caption_2": paraphrase,
-                        "similarity":  round(similarity, 4),
-                    })
-        else:
-            samples1 = list(dataset)
-            samples2 = list(dataset2)
+            writer.writerow({
+                "relation":  relation,
+                "score": score,
+            })
 
-            with open(output_file, "w", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=["relation", "template_1", "caption_1", "template_2", "caption_2", "similarity"])
-                writer.writeheader()
-
-                for i in range(0, len(samples1), args.group_size):
-                    group1 = samples1[i:i + args.group_size]
-                    group2 = samples2[i:i + args.group_size]
-
-                    relation = group1[0]["relation"]
-
-                    # formatu guztien arteko konbinaketak
-                    for (idx1, s1), (idx2, s2) in product(enumerate(group1), enumerate(group2)):
-                        cap1 = s1["caption_pos"]
-                        cap2 = s2["caption_pos"]
-
-                        if cap1 == cap2:
-                            continue
-
-                        embs = get_text_embeddings([cap1, cap2], model, tokenizer, device)
-                        similarity = (embs[0] @ embs[1]).item()
-
-                        writer.writerow({
-                            "relation":      relation,
-                            "template_1":   idx1,        
-                            "caption_1":    cap1,
-                            "template_2":   idx2,        
-                            "caption_2":    cap2,
-                            "similarity":    round(similarity, 4),
-                        })
-        
     
 if __name__ == "__main__":
     main_program()
