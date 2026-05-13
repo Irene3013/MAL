@@ -150,7 +150,7 @@ def main_program():
             similarity_1 = (embs[0] @ embs[1]).item()
 
             # similarity_2: pos1 vs pos2
-            embs = get_text_embeddings([pos_p1, neg_p1], model, tokenizer, device)
+            embs = get_text_embeddings([pos_p1, pos_p2], model, tokenizer, device)
             similarity_2 = (embs[0] @ embs[1]).item()
 
             score = 1 if similarity_2 > similarity_1 else 0
