@@ -14,35 +14,35 @@ source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
 
-srun python main.py --model "pecore" \
-   --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
-   --run_name E0 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
-
-srun python main.py --model "pecore" \
-   --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
-   --run_name E0 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v4
-
-srun python main.py --model "pecore" \
-   --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
-   --run_name E0 --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+# srun python main.py --model "pecore" \
+#    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
+#    --run_name E0 --train --evaluate --dataset rel \
+#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
 
 # srun python main.py --model "pecore" \
 #    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
 #    --run_name E0 --train --evaluate --dataset rel \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v4
 
 # srun python main.py --model "pecore" \
 #    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
 #    --run_name E0 --train --evaluate --dataset rel \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v7
+#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
-# srun python main.py --model "pecore" \
-#    --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
-#    --run_name E0 --train --evaluate --dataset rel \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
+srun python main.py --model "pecore" \
+   --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
+   --run_name E0 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+srun python main.py --model "pecore" \
+   --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
+   --run_name E0 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v7
+
+srun python main.py --model "pecore" \
+   --lr 1e-6 --batch_size 200 --max_steps 5000 --accumulate_grad_batches 1 \
+   --run_name E0 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 
 
