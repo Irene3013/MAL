@@ -9,6 +9,7 @@ from pathlib import Path
 from PIL import Image
 
 
+
 ## Parse arguments
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -24,10 +25,10 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data/whatsup", help="Path to the data files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data/raw/whatsup", help="Path to the data files."
     )
     parser.add_argument(
-        "--output_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Output directory for plots and models."
+        "--output_path", type=str, default="/gaueko0/users/ietxarri010/MAL/", help="Output directory for plots and models."
     )
 
     # Model args
@@ -141,7 +142,31 @@ def evaluate_setwise(model, processor, dataset, device):
     print(f"[Set-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_sets})")
     return accuracy
 
+
+def save_results(output_path, args, accuracy):
+    results_file = Path(output_path) / "results.json"
     
+    # Cargar resultados anteriores si existen
+    if results_file.exists():
+        with open(results_file, "r") as f:
+            results = json.load(f)
+    else:
+        results = []
+
+    # Añadir nueva entrada
+    results.append({
+        "model": args.model,
+        "ckpt": args.ckpt,
+        "score": args.score,
+        "accuracy": accuracy,
+    })
+
+    os.makedirs(output_path, exist_ok=True)
+    with open(results_file, "w") as f:
+        json.dump(results, f, indent=2)
+
+    print(f"Results saved to {results_file}")
+
 def main_program():
 
     torch.serialization.add_safe_globals([argparse.Namespace])
@@ -176,7 +201,8 @@ def main_program():
     dataset = WhatsupDataset(data_path=args.root)
 
     print(f"Evaluating with '{args.score}' scoring on {len(dataset)} samples...")
-    evaluate(model, processor, dataset, device, score_mode=args.score)
+    accuracy = evaluate(model, processor, dataset, device, score_mode=args.score)
+    save_results(args.output_path, args, accuracy)
 
 if __name__ == "__main__":
     main_program()
