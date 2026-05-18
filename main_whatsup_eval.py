@@ -18,6 +18,9 @@ def parse_args():
         "--ckpt", type=str, default=None, help="Model's checkpoint to be loaded before training."
     )
     parser.add_argument(
+        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Model's checkpoint path."
+    )
+    parser.add_argument(
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
@@ -154,7 +157,7 @@ def main_program():
         if args.ckpt == None:
             model = CLIPModel.from_pretrained(model_name)
         else:
-            checkpoint = torch.load(args.ckpt, map_location="cpu")
+            checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
             state_dict = checkpoint["state_dict"]
             
             # prepare state dict to load (stripe ".model")
