@@ -108,6 +108,9 @@ def parse_args():
         "--use_epochs", action="store_true", help="Use max_epoch for training duration."
     )
     parser.add_argument(
+        "--batch_accuracy", action="store_true", help="Use max_epoch for training duration."
+    )
+    parser.add_argument(
         "--max_steps", type=int, default=10000, help="Steps to be done during training."
     )
     parser.add_argument(
