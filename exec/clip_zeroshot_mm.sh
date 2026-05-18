@@ -20,7 +20,7 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 
 # Whatsup
-!python /content/MAL/main_whatsup_eval.py --model "clip" \
+srun python /content/MAL/main_whatsup_eval.py --model "clip" \
    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
    --score "individual" --ckpt "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt"
 
