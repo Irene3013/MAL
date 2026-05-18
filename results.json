@@ -4,5 +4,95 @@
     "ckpt": "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt",
     "score": "individual",
     "accuracy": 0.5122549019607843
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v2-epoch=12-val_accuracy=0.98.ckpt",
+    "score": "individual",
+    "accuracy": 0.5857843137254902
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v3-epoch=06-val_accuracy=0.99.ckpt",
+    "score": "individual",
+    "accuracy": 0.4583333333333333
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v4-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "individual",
+    "accuracy": 0.5735294117647058
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v5-epoch=05-val_accuracy=1.00.ckpt",
+    "score": "individual",
+    "accuracy": 0.4264705882352941
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v6-epoch=09-val_accuracy=0.99.ckpt",
+    "score": "individual",
+    "accuracy": 0.4068627450980392
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v7-epoch=06-val_accuracy=0.99.ckpt",
+    "score": "individual",
+    "accuracy": 0.5906862745098039
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v8-epoch=25-val_accuracy=1.00.ckpt",
+    "score": "individual",
+    "accuracy": 0.3602941176470588
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.058823529411764705
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v2-epoch=12-val_accuracy=0.98.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.09803921568627451
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v3-epoch=06-val_accuracy=0.99.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.0392156862745098
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v4-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.09803921568627451
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v5-epoch=05-val_accuracy=1.00.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.00980392156862745
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v6-epoch=09-val_accuracy=0.99.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.00980392156862745
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v7-epoch=06-val_accuracy=0.99.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.11764705882352941
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v8-epoch=25-val_accuracy=1.00.ckpt",
+    "score": "set-wise",
+    "accuracy": 0.0
   }
 ]
