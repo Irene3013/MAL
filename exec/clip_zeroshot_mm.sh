@@ -20,33 +20,51 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 
 # Whatsup
+# srun python main_whatsup_eval.py --model "clip" \
+#    --score "individual" --ckpt "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt"
+
 srun python main_whatsup_eval.py --model "clip" \
-   --score "individual" --ckpt "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt"
+   --score "individual" --ckpt "clip-E6-v2-epoch=12-val_accuracy=0.98.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v2-epoch=12-val_accuracy=0.98.ckpt"
+srun python main_whatsup_eval.py --model "clip" \
+   --score "individual" --ckpt "clip-E6-v3-epoch=06-val_accuracy=0.99.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v3-epoch=06-val_accuracy=0.99.ckpt"
+srun python main_whatsup_eval.py --model "clip" \
+   --score "individual" --ckpt "clip-E6-v4-epoch=04-val_accuracy=1.00.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v4-epoch=04-val_accuracy=1.00.ckpt"
+srun python main_whatsup_eval.py --model "clip" \
+   --score "individual" --ckpt "clip-E6-v5-epoch=05-val_accuracy=1.00.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v5-epoch=05-val_accuracy=1.00.ckpt"
+srun python main_whatsup_eval.py --model "clip" \
+   --score "individual" --ckpt "clip-E6-v6-epoch=09-val_accuracy=0.99.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v6-epoch=09-val_accuracy=0.99.ckpt"
+srun python main_whatsup_eval.py --model "clip" \
+   --score "individual" --ckpt "clip-E6-v7-epoch=06-val_accuracy=0.99.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v7-epoch=06-val_accuracy=0.99.ckpt"
+srun python main_whatsup_eval.py --model "clip" \
+   --score "individual" --ckpt "clip-E6-v8-epoch=25-val_accuracy=1.00.ckpt"
 
-# !python /content/MAL/main_whatsup_eval.py --model "clip" \
-#    --root '/content/MAL/data/raw/whatsup/' --output_path "/content/" \
-#    --score "individual" --ckpt "clip-E6-v8-epoch=25-val_accuracy=1.00.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v2-epoch=12-val_accuracy=0.98.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v3-epoch=06-val_accuracy=0.99.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v4-epoch=04-val_accuracy=1.00.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v5-epoch=05-val_accuracy=1.00.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v6-epoch=09-val_accuracy=0.99.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v7-epoch=06-val_accuracy=0.99.ckpt"
+
+srun python main_whatsup_eval.py --model "clip" \
+   --score "set-wise" --ckpt "clip-E6-v8-epoch=25-val_accuracy=1.00.ckpt"
