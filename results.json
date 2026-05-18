@@ -1,0 +1,8 @@
+[
+  {
+    "model": "clip",
+    "ckpt": "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt",
+    "score": "individual",
+    "accuracy": 0.5122549019607843
+  }
+]
