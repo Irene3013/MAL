@@ -6,7 +6,6 @@ import argparse
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from pathlib import Path
-from itertools import product
 
 
 ## Parse arguments
