@@ -32,7 +32,6 @@ class RELDataset(Dataset):
         mapping = {
             "v4": "v3",
             "v6": "v5",
-            "v9": "v8",
         }
         image_version = mapping.get(self.version, self.version)
         self.split = split 

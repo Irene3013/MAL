@@ -13,6 +13,10 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name zeroshot --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 2 --max_steps 10000 --accumulate_grad_batches 1 \
