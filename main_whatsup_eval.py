@@ -84,10 +84,6 @@ def parse_args():
         "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore", "qwen2", "clip-flant5"],
         help = "Model type to be fine-tuned."
     )
-    parser.add_argument(
-        "--score", type=str, required=True, choices=["individual", "pair-wise", "set-wise"],
-        help = "Method to compute score."
-    )
     args = parser.parse_args()
     return args
 
@@ -121,7 +117,7 @@ class WhatsupDataset(Dataset):
         }
     
 
-def evaluate(model, processor, image_processor, tokenizer, dataset, device, score_mode):
+def evaluate(model, processor, image_processor, tokenizer, dataset, device):
     individual = evaluate_individual(model, processor, image_processor, tokenizer, dataset, device)
     pairwise = evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, device)
     setwise = evaluate_setwise(model, processor, image_processor, tokenizer, dataset, device)
@@ -343,12 +339,10 @@ def main_program():
     model = model.to(device)
 
     dataset = WhatsupDataset(data_path=args.root)
-
-    print(f"Evaluating with '{args.score}' scoring on {len(dataset)} samples...")
     if args.model == "clip":
-        accuracies = evaluate(model, processor, None, None, dataset, device, score_mode=args.score)
+        accuracies = evaluate(model, processor, None, None, dataset, device)
     else:
-        accuracies = evaluate(model, None, image_processor, tokenizer, dataset, device, score_mode=args.score)
+        accuracies = evaluate(model, None, image_processor, tokenizer, dataset, device)
 
     save_results(args.output_path, args, accuracies)
 
