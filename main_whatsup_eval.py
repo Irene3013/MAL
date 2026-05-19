@@ -8,54 +8,54 @@ from pathlib import Path
 from PIL import Image
 from itertools import combinations
 
-OPPOSITES = [{"left_of", "right_of"}, {"in-front_of", "behind_of"}]
+# OPPOSITES = [{"left_of", "right_of"}, {"in-front_of", "behind"}]
 
-def parse_image_name(image_path):
-    """Extrae (obj1, relation, obj2) del nombre del fichero."""
-    name = Path(image_path).stem  # e.g. "mug_right_of_knife"
-    # Buscar qué relación contiene
-    for rel in ["left", "right", "front", "behind"]:
-        pattern = f"_{rel}_"
-        if pattern in name:
-            parts = name.split(pattern)
-            obj1 = parts[0]           # "mug"
-            obj2 = parts[1]           # "knife"
-            return obj1, rel, obj2
-    return None
+# def parse_image_name(image_path):
+#     """Extrae (obj1, relation, obj2) del nombre del fichero."""
+#     name = Path(image_path).stem  # e.g. "mug_right_of_knife"
+#     # Buscar qué relación contiene
+#     for rel in ["in-front_of", "behind", "left_of", "right_of"]:
+#         pattern = f"_{rel}_"
+#         if pattern in name:
+#             parts = name.split(pattern)
+#             obj1 = parts[0]           # "mug"
+#             obj2 = parts[1]           # "knife"
+#             return obj1, rel, obj2
+#     return None
 
-def get_object_key(obj1, obj2):
-    """Clave canónica para un par de objetos (orden alfabético)."""
-    return tuple(sorted([obj1, obj2]))
+# def get_object_key(obj1, obj2):
+#     """Clave canónica para un par de objetos (orden alfabético)."""
+#     return tuple(sorted([obj1, obj2]))
 
-def group_dataset(dataset):
-    """
-    Devuelve:
-      - sets:  dict { (obj1, obj2) -> [item, item, item, item] }  (4 relaciones)
-      - pairs: dict { (obj1, obj2, frozenset(rel_pair)) -> [item, item] }
-    """
-    from collections import defaultdict
+# def group_dataset(dataset):
+#     """
+#     Devuelve:
+#       - sets:  dict { (obj1, obj2) -> [item, item, item, item] }  (4 relaciones)
+#       - pairs: dict { (obj1, obj2, frozenset(rel_pair)) -> [item, item] }
+#     """
+#     from collections import defaultdict
     
-    sets  = defaultdict(list)
-    pairs = defaultdict(list)
+#     sets  = defaultdict(list)
+#     pairs = defaultdict(list)
 
-    for item in dataset:
-        parsed = parse_image_name(item["image_path"])
-        if parsed is None:
-            continue
-        obj1, rel, obj2 = parsed
-        obj_key = get_object_key(obj1, obj2)
+#     for item in dataset:
+#         parsed = parse_image_name(item["image_path"])
+#         if parsed is None:
+#             continue
+#         obj1, rel, obj2 = parsed
+#         obj_key = get_object_key(obj1, obj2)
 
-        # Agrupar sets
-        sets[obj_key].append(item)
+#         # Agrupar sets
+#         sets[obj_key].append(item)
 
-        # Agrupar pares según relaciones opuestas
-        for opposite_pair in OPPOSITES:
-            if rel in opposite_pair:
-                pair_key = (obj_key, frozenset(opposite_pair))
-                pairs[pair_key].append(item)
-                break
+#         # Agrupar pares según relaciones opuestas
+#         for opposite_pair in OPPOSITES:
+#             if rel in opposite_pair:
+#                 pair_key = (obj_key, frozenset(opposite_pair))
+#                 pairs[pair_key].append(item)
+#                 break
 
-    return sets, pairs
+#     return sets, pairs
 
 
 ## Parse arguments
@@ -91,7 +91,7 @@ def parse_args():
 
 class WhatsupDataset(Dataset):
     def __init__(self, data_path="data"):
-        self.data_path = Path(data_path) / "controlled_clevr_dataset.json"
+        self.data_path = Path(data_path) / "controlled_clevr_dataset_ordered.json"
         self.image_path = Path(data_path) / "controlled_clevr"
         self.dataset = self._load_json()
 
@@ -112,6 +112,7 @@ class WhatsupDataset(Dataset):
         item = self.dataset[idx]
         return {
             "image": self._load_image(item["image_path"]),
+            "image_path": item["image_path"],
             "caption_options": item["caption_options"],
             "correct_option": item["caption_options"][0], # The first option is the correct one
         }
@@ -175,45 +176,45 @@ def evaluate_setwise(model, processor, image_processor, tokenizer, dataset, devi
     pero varían la preposición. El set se considera correcto solo si el modelo
     acierta TODAS las imágenes del set.
     """
-    sets, _ = group_dataset(dataset)
-    correct_sets = 0
-    total_sets = 0
-
-    for obj_key, items in sets.items():
-        if len(items) != 4:  # set incompleto, lo saltamos
-            continue
-        total_sets += 1
-        set_correct = all(
-            score_image_captions(model, processor, image_processor, tokenizer,
-                                  item["image"], item["caption_options"], device) == 0
-            for item in items
-        )
-        if set_correct:
-            correct_sets += 1
-
-    accuracy = correct_sets / total_sets
-    print(f"[Set-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_sets})")
-    return accuracy
-    # set_size = 4
-    # total_sets = len(dataset) // set_size
+    # sets, _ = group_dataset(dataset)
     # correct_sets = 0
+    # total_sets = 0
 
-    # for set_idx in range(total_sets):
-    #     set_correct = True
-    #     for i in range(set_size):
-    #         item_idx = set_idx * set_size + i
-    #         item = dataset[item_idx]
-    #         pred_idx = score_image_captions(model, processor, image_processor, tokenizer, item["image"], item["caption_options"], device)
-    #         if pred_idx != 0:
-    #             set_correct = False
-    #             break  # falla el set entero, no hace falta seguir
-
+    # for obj_key, items in sets.items():
+    #     if len(items) != 4:  # set incompleto, lo saltamos
+    #         continue
+    #     total_sets += 1
+    #     set_correct = all(
+    #         score_image_captions(model, processor, image_processor, tokenizer,
+    #                               item["image"], item["caption_options"], device) == 0
+    #         for item in items
+    #     )
     #     if set_correct:
     #         correct_sets += 1
 
     # accuracy = correct_sets / total_sets
     # print(f"[Set-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_sets})")
     # return accuracy
+    set_size = 4
+    total_sets = len(dataset) // set_size
+    correct_sets = 0
+
+    for set_idx in range(total_sets):
+        set_correct = True
+        for i in range(set_size):
+            item_idx = set_idx * set_size + i
+            item = dataset[item_idx]
+            pred_idx = score_image_captions(model, processor, image_processor, tokenizer, item["image"], item["caption_options"], device)
+            if pred_idx != 0:
+                set_correct = False
+                break  # falla el set entero, no hace falta seguir
+
+        if set_correct:
+            correct_sets += 1
+
+    accuracy = correct_sets / total_sets
+    print(f"[Set-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_sets})")
+    return accuracy
 
 def evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, device):
     """
@@ -221,46 +222,46 @@ def evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, dev
     con preposiciones contrarias (por ejemplo, right y left). La pareja se considera correcta solo si el modelo 
     acierta AMBAS imagenes de la pareja.
     """
-    _, pairs = group_dataset(dataset)
-    correct_pairs = 0
-    total_pairs = 0
+    # _, pairs = group_dataset(dataset)
+    # correct_pairs = 0
+    # total_pairs = 0
 
-    for pair_key, items in pairs.items():
-        if len(items) != 2:  # par incompleto, lo saltamos
-            continue
-        total_pairs += 1
-        pair_correct = all(
-            score_image_captions(model, processor, image_processor, tokenizer,
-                                  item["image"], item["caption_options"], device) == 0
-            for item in items
-        )
-        if pair_correct:
-            correct_pairs += 1
+    # for pair_key, items in pairs.items():
+    #     if len(items) != 2:  # par incompleto, lo saltamos
+    #         continue
+    #     total_pairs += 1
+    #     pair_correct = all(
+    #         score_image_captions(model, processor, image_processor, tokenizer,
+    #                               item["image"], item["caption_options"], device) == 0
+    #         for item in items
+    #     )
+    #     if pair_correct:
+    #         correct_pairs += 1
 
-    accuracy = correct_pairs / total_pairs
-    print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_pairs}/{total_pairs})")
-    return accuracy
-
-    # pair_size = 2
-    # total_pairs = len(dataset) // pair_size
-    # correct_sets = 0
-
-    # for set_idx in range(total_pairs):
-    #     set_correct = True
-    #     for i in range(pair_size):
-    #         item_idx = set_idx * pair_size + i
-    #         item = dataset[item_idx]
-    #         pred_idx = score_image_captions(model, processor, image_processor, tokenizer, item["image"], item["caption_options"], device)
-    #         if pred_idx != 0:
-    #             set_correct = False
-    #             break  # falla el pair entero, no hace falta seguir
-
-    #     if set_correct:
-    #         correct_sets += 1
-
-    # accuracy = correct_sets / total_pairs
-    # print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_pairs})")
+    # accuracy = correct_pairs / total_pairs
+    # print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_pairs}/{total_pairs})")
     # return accuracy
+
+    pair_size = 2
+    total_pairs = len(dataset) // pair_size
+    correct_sets = 0
+
+    for set_idx in range(total_pairs):
+        set_correct = True
+        for i in range(pair_size):
+            item_idx = set_idx * pair_size + i
+            item = dataset[item_idx]
+            pred_idx = score_image_captions(model, processor, image_processor, tokenizer, item["image"], item["caption_options"], device)
+            if pred_idx != 0:
+                set_correct = False
+                break  # falla el pair entero, no hace falta seguir
+
+        if set_correct:
+            correct_sets += 1
+
+    accuracy = correct_sets / total_pairs
+    print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_pairs})")
+    return accuracy
 
 
 def save_results(output_path, args, accuracies):
