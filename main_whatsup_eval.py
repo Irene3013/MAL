@@ -8,54 +8,24 @@ from pathlib import Path
 from PIL import Image
 from itertools import combinations
 
-# OPPOSITES = [{"left_of", "right_of"}, {"in-front_of", "behind"}]
-
-# def parse_image_name(image_path):
-#     """Extrae (obj1, relation, obj2) del nombre del fichero."""
-#     name = Path(image_path).stem  # e.g. "mug_right_of_knife"
-#     # Buscar qué relación contiene
-#     for rel in ["in-front_of", "behind", "left_of", "right_of"]:
-#         pattern = f"_{rel}_"
-#         if pattern in name:
-#             parts = name.split(pattern)
-#             obj1 = parts[0]           # "mug"
-#             obj2 = parts[1]           # "knife"
-#             return obj1, rel, obj2
-#     return None
-
-# def get_object_key(obj1, obj2):
-#     """Clave canónica para un par de objetos (orden alfabético)."""
-#     return tuple(sorted([obj1, obj2]))
-
-# def group_dataset(dataset):
-#     """
-#     Devuelve:
-#       - sets:  dict { (obj1, obj2) -> [item, item, item, item] }  (4 relaciones)
-#       - pairs: dict { (obj1, obj2, frozenset(rel_pair)) -> [item, item] }
-#     """
-#     from collections import defaultdict
+def get_all_objects(dataset):
+    """
+    Extrae de forma eficiente todos los objetos únicos presentes en el dataset
+    evitando duplicados y problemas con preposiciones largas.
+    """
+    unique_objects = set()
     
-#     sets  = defaultdict(list)
-#     pairs = defaultdict(list)
+    for item in dataset:
+        caption = item['caption_options'][0] 
+        words = caption.strip(".").split()
+        # get objects
+        obj1 = words[1]
+        obj2 = words[-1]
+        # Add to set
+        unique_objects.add(obj1)
+        unique_objects.add(obj2)
+    return sorted(list(unique_objects))
 
-#     for item in dataset:
-#         parsed = parse_image_name(item["image_path"])
-#         if parsed is None:
-#             continue
-#         obj1, rel, obj2 = parsed
-#         obj_key = get_object_key(obj1, obj2)
-
-#         # Agrupar sets
-#         sets[obj_key].append(item)
-
-#         # Agrupar pares según relaciones opuestas
-#         for opposite_pair in OPPOSITES:
-#             if rel in opposite_pair:
-#                 pair_key = (obj_key, frozenset(opposite_pair))
-#                 pairs[pair_key].append(item)
-#                 break
-
-#     return sets, pairs
 
 
 ## Parse arguments
@@ -112,7 +82,6 @@ class WhatsupDataset(Dataset):
         item = self.dataset[idx]
         return {
             "image": self._load_image(item["image_path"]),
-            "image_path": item["image_path"],
             "caption_options": item["caption_options"],
             "correct_option": item["caption_options"][0], # The first option is the correct one
         }
@@ -122,10 +91,12 @@ def evaluate(model, processor, image_processor, tokenizer, dataset, device):
     individual = evaluate_individual(model, processor, image_processor, tokenizer, dataset, device)
     pairwise = evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, device)
     setwise = evaluate_setwise(model, processor, image_processor, tokenizer, dataset, device)
+    similarity = evaluate_object_similarity(model, processor, image_processor, tokenizer, dataset, device)
     return {
         'individual': individual, 
         'pairwise': pairwise, 
         'setwise': setwise,
+        'similarity': similarity,
     }
 
 
@@ -154,6 +125,30 @@ def score_image_captions(model, processor, image_processor, tokenizer, image, ca
             probs  = F.softmax(logits, dim=-1)
     return probs.argmax().item()
 
+def score_caption_similarity(model, processor, image_processor, tokenizer, image, device, objects):
+    captions = [f'a picture of a {obj}' for obj in objects]
+    if processor is not None:
+        inputs = processor(
+            text=captions,
+            images=[image] * len(captions),
+            return_tensors="pt",
+            padding=True,
+        ).to(device)
+
+        with torch.no_grad():
+            outputs = model(**inputs)
+            probs = F.softmax(outputs.logits_per_image, dim=-1)
+    else:
+        # Procesar texto e imagen separados
+        image_input = image_processor(image).unsqueeze(0).to(device)          # (1, C, H, W)
+        text_input  = tokenizer(captions).to(device)                           # (N, seq_len)
+
+        with torch.no_grad():
+            image_features, text_features, logit_scale = model(image_input, text_input)
+            logits = (logit_scale * image_features @ text_features.T).squeeze(0)  # (N,)
+            probs  = F.softmax(logits, dim=-1)
+    return probs.argmax().item()
+        
 
 def evaluate_individual(model, processor, image_processor, tokenizer, dataset, device):
     correct = 0
@@ -176,25 +171,6 @@ def evaluate_setwise(model, processor, image_processor, tokenizer, dataset, devi
     pero varían la preposición. El set se considera correcto solo si el modelo
     acierta TODAS las imágenes del set.
     """
-    # sets, _ = group_dataset(dataset)
-    # correct_sets = 0
-    # total_sets = 0
-
-    # for obj_key, items in sets.items():
-    #     if len(items) != 4:  # set incompleto, lo saltamos
-    #         continue
-    #     total_sets += 1
-    #     set_correct = all(
-    #         score_image_captions(model, processor, image_processor, tokenizer,
-    #                               item["image"], item["caption_options"], device) == 0
-    #         for item in items
-    #     )
-    #     if set_correct:
-    #         correct_sets += 1
-
-    # accuracy = correct_sets / total_sets
-    # print(f"[Set-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_sets})")
-    # return accuracy
     set_size = 4
     total_sets = len(dataset) // set_size
     correct_sets = 0
@@ -222,50 +198,54 @@ def evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, dev
     con preposiciones contrarias (por ejemplo, right y left). La pareja se considera correcta solo si el modelo 
     acierta AMBAS imagenes de la pareja.
     """
-    # _, pairs = group_dataset(dataset)
-    # correct_pairs = 0
-    # total_pairs = 0
-
-    # for pair_key, items in pairs.items():
-    #     if len(items) != 2:  # par incompleto, lo saltamos
-    #         continue
-    #     total_pairs += 1
-    #     pair_correct = all(
-    #         score_image_captions(model, processor, image_processor, tokenizer,
-    #                               item["image"], item["caption_options"], device) == 0
-    #         for item in items
-    #     )
-    #     if pair_correct:
-    #         correct_pairs += 1
-
-    # accuracy = correct_pairs / total_pairs
-    # print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_pairs}/{total_pairs})")
-    # return accuracy
-
     pair_size = 2
     total_pairs = len(dataset) // pair_size
-    correct_sets = 0
+    correct_pairs = 0
 
-    for set_idx in range(total_pairs):
-        set_correct = True
+    for pair_idx in range(total_pairs):
+        pair_correct = True
         for i in range(pair_size):
-            item_idx = set_idx * pair_size + i
+            item_idx = pair_idx * pair_size + i
             item = dataset[item_idx]
             pred_idx = score_image_captions(model, processor, image_processor, tokenizer, item["image"], item["caption_options"], device)
             if pred_idx != 0:
-                set_correct = False
+                pair_correct = False
                 break  # falla el pair entero, no hace falta seguir
+        if pair_correct:
+            correct_pairs += 1
 
-        if set_correct:
-            correct_sets += 1
-
-    accuracy = correct_sets / total_pairs
-    print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_pairs})")
+    accuracy = correct_pairs / total_pairs
+    print(f"[Pair-wise] Accuracy: {accuracy:.4f} ({correct_pairs}/{total_pairs})")
     return accuracy
+
+def evaluate_object_similarity(model, processor, image_processor, tokenizer, dataset, device):
+    objects = get_all_objects(dataset)
+    correct = 0
+    total = len(dataset)
+
+    for i in range(total):
+        item = dataset[i]
+
+        # get current image objects
+        caption = item['caption_options'][0] 
+        words = caption.strip(".").split()
+        obj1 = words[1]
+        obj2 = words[-1]
+        
+        # discard form objects set
+        filtered_objects  = [obj for obj in objects if obj not in [obj1, obj2]]
+
+        pred_idx1 = score_caption_similarity(model, processor, image_processor, tokenizer, item["image"], device, [obj1] + filtered_objects)
+        pred_idx2 = score_caption_similarity(model, processor, image_processor, tokenizer, item["image"], device, [obj2] + filtered_objects)
+        correct += 0.5 * ((pred_idx1 == 0) + (pred_idx2 == 0))
+
+    accuracy = correct / total
+    print(f"[Similarity] Accuracy: {accuracy:.4f} ({correct}/{total})")
+        
 
 
 def save_results(output_path, args, accuracies):
-    results_file = Path(output_path) / "results.json"
+    results_file = Path(output_path) / f"{args.model}_results.json"
     
     # Cargar resultados anteriores si existen
     if results_file.exists():
