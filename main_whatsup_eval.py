@@ -241,7 +241,7 @@ def evaluate_object_similarity(model, processor, image_processor, tokenizer, dat
 
     accuracy = correct / total
     print(f"[Similarity] Accuracy: {accuracy:.4f} ({correct}/{total})")
-        
+    return accuracy    
 
 
 def save_results(output_path, args, accuracies):
