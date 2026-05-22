@@ -1,6 +1,7 @@
 args: !!python/object:argparse.Namespace
   accumulate_grad_batches: 1
-  batch_size: 128
+  batch_accuracy: false
+  batch_size: 200
   beta_1: 0.9
   beta_2: 0.98
   ckpt: null
