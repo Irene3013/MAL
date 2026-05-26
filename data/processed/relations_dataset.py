@@ -90,8 +90,18 @@ class RELDataset(Dataset):
             Val/Test: 2 image - 2 captions
             Train:    2 image - 2 caption (contrastive loss)
         """    
-        pos_capt,neg_capt,relation,shape1,color1,shape2,color2,image = item
+        #pos_capt,neg_capt,relation,shape1,color1,shape2,color2,image = item
+        _,_,relation,shape1,color1,shape2,color2,image = item
+        rel = {
+            'left': 'to its left',
+            'right': 'to its right',
+            'front': 'in front of it',
+            'behind': 'behind it',
+        }
+        pos_capt = f"The {color2} {shape2} has the {color1} {shape1} {rel[relation]}"
+        neg_capt = f"The {color1} {shape1} has the {color2} {shape2} {rel[relation]}"
 
+        # Image name
         pos_img = f'pos_{image}'
         neg_img = f'neg_{image}'
 

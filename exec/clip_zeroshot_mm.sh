@@ -21,32 +21,37 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name E9 --evaluate --dataset rel \
+   --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
 
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name E9 --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+   --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v2
 
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name E9 --evaluate --dataset rel \
+   --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v3
+
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
+   --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v7
 
-
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name E9 --evaluate --dataset rel \
+   --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
-
-
-srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name E9 --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
 
 # srun python main_whatsup_eval.py --model "clip" \
 #    --ckpt "clip-E6-v1-epoch=10-val_accuracy=0.99.ckpt"
