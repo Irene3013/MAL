@@ -8,9 +8,54 @@ from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from PIL import Image
 from utils.data_helpers import biscor_dual_encoder_collate
-# from utils.model_helpers import create_qwen_messages_biscor
-# from qwen_vl_utils import process_vision_info
 
+
+def P1(shape1, shape2, relation, color1, color2):
+    if relation == 'left':
+        return f"The {color1} {shape1} is to the left of the {color2} {shape2}"
+    elif relation == 'right':
+        return f"The {color1} {shape1} is to the right of the {color2} {shape2}"     
+    elif relation == 'front':
+        return f"The {color1} {shape1} is in front of the {color2} {shape2}"
+    elif relation == 'behind':
+        return f"The {color1} {shape1} is behind the {color2} {shape2}"
+    raise NameError(f"Unrecognized relation: {relation}")
+
+def P2(shape1, shape2, relation, color1, color2):
+    if relation == 'left':
+        return f"To the left of the {color2} {shape2} is the {color1} {shape1}"
+    elif relation == 'right':
+        return f"To the right of the {color2} {shape2} is the {color1} {shape1}"     
+    elif relation == 'front':
+        return f"In front of the {color2} {shape2} is the {color1} {shape1}"
+    elif relation == 'behind':
+        return f"Behind the {color2} {shape2} is the {color1} {shape1}"
+    raise NameError(f"Unrecognized relation: {relation}")
+
+def P3(shape1, shape2, relation, color1, color2):
+    if relation == 'left':
+        return f"The {color2} {shape2} has the {color1} {shape1} to its left"
+    elif relation == 'right':
+        return f"The {color2} {shape2} has the {color1} {shape1} to its right"     
+    elif relation == 'front':
+        return f"The {color2} {shape2} has the {color1} {shape1} in front of it"
+    elif relation == 'behind':
+        return f"The {color2} {shape2} has the {color1} {shape1} behind it"
+    raise NameError(f"Unrecognized relation: {relation}")
+
+def P4(shape1, shape2, relation, color1, color2):
+    if relation == 'left':
+        return f"The {color1} {shape1} is on the left side of the {color2} {shape2}"
+    elif relation == 'right':
+        return f"The {color1} {shape1} is on the right side of the {color2} {shape2}"     
+    elif relation == 'front':
+        return f"The {color1} {shape1} is ahead of the {color2} {shape2}"
+    elif relation == 'behind':
+        return f"The {color1} {shape1} is at the back of the {color2} {shape2}"
+    raise NameError(f"Unrecognized relation: {relation}")
+
+
+PARAPHRASES = [P1, P2, P3, P4]
 
 # -----------------------------
 # DATASET
@@ -19,7 +64,7 @@ class RELDataset(Dataset):
     """
     BISCOR Dataset
     """
-    def __init__(self, version="v1", split="train", data_path="data", model=None, config=None):
+    def __init__(self, version="v1", split="train", data_path="data", model=None, config=None, parafrase=0):
 
         # Validations
         self.data_path = Path(data_path) #relative path
@@ -35,6 +80,7 @@ class RELDataset(Dataset):
         }
         image_version = mapping.get(self.version, self.version)
         self.split = split 
+        self.parafrase = parafrase
 
         # ---- IMAGE PATH ----
         img_folder = "test_images" if self.split == "test" else "train_images"
@@ -59,6 +105,13 @@ class RELDataset(Dataset):
             self.processor = config["processor"]
             self.params = config.get("params", {})
 
+        # Prepare Praphrases
+        if self.parafrase > 0:
+            self.PARAPHRASE_TEST = PARAPHRASES[self.parafrase - 1]
+            self.PARAPHRASE_TRAIN = [p for i, p in enumerate(PARAPHRASES) if i != self.parafrase - 1]
+
+            
+
     def _load_csv(self):
         with open(self.data_path, newline="\n", encoding="utf-8") as f:
             reader = csv.reader(f)
@@ -78,35 +131,28 @@ class RELDataset(Dataset):
         item = self.dataset[idx]
 
         if self.model in ["clip", "siglip", "siglip2", "pecore"]: # Dual encoder
-            return self._dual_encoder_item(item)
+            return self._dual_encoder_item(item, idx)
         else:
             raise NotImplementedError()
         
     
     # --- GET ITEM METHODS ---
-    def _dual_encoder_item(self, item):
+    def _dual_encoder_item(self, item, idx):
         """
         Prepare item for Dual Encoder models.
             Val/Test: 2 image - 2 captions
             Train:    2 image - 2 caption (contrastive loss)
         """    
-        #pos_capt,neg_capt,relation,shape1,color1,shape2,color2,image = item
-        _,_,relation,shape1,color1,shape2,color2,image = item
-        rel = {
-            'left': 'to its left',
-            'right': 'to its right',
-            'front': 'in front of it',
-            'behind': 'behind it',
-        }
-        pos_capt = f"The {color2} {shape2} has the {color1} {shape1} {rel[relation]}"
-        neg_capt = f"The {color1} {shape1} has the {color2} {shape2} {rel[relation]}"
+        pos_capt,neg_capt,relation,shape1,color1,shape2,color2,image = item
 
+        if self.parafrase > 0:
+            pos_capt, neg_capt = self._parahprase_text(idx, shape1, shape2, relation, color1, color2)
+        
         # Image name
         pos_img = f'pos_{image}'
         neg_img = f'neg_{image}'
 
         # **A. Val/Test (return caption-pairs to Collate):**
-        #if self.split != "train":
         return {
             "caption_pos": pos_capt,
             "caption_neg": neg_capt,
@@ -114,7 +160,22 @@ class RELDataset(Dataset):
             "image_neg": self._load_image(neg_img),
         }
     
+    # PARAPHRASES
+    def _parahprase_text(self, idx, shape1, shape2, relation, color1, color2):
 
+        # aplicar el parafrase que toca. si es test, simplemente pillar el self.parafhrase
+        # si es train, elegir entre los otros 3 pero segun el idx del elemento.
+        if self.split == 'test':
+            pos_capt = self.PARAPHRASE_TEST(shape1, shape2, relation, color1, color2)
+            neg_capt = self.PARAPHRASE_TEST(shape2, shape1, relation, color2, color1)
+        else:
+            pos_capt = self.PARAPHRASE_TRAIN[idx%3](shape1, shape2, relation, color1, color2)
+            neg_capt = self.PARAPHRASE_TRAIN[idx%3](shape2, shape1, relation, color2, color1)
+        return pos_capt, neg_capt
+        
+    
+
+    
 
 # -----------------------------
 # DATAMODULE
@@ -133,6 +194,7 @@ class RELDataModule(pl.LightningDataModule):
         self.model = args.model
         self.config = config
         self.version = args.variant
+        self.parafrase = args.test_paraphrase
 
         # Setup dataloader
         self.setup()
@@ -152,7 +214,8 @@ class RELDataModule(pl.LightningDataModule):
             split="train",
             data_path=self.root,
             model=self.model,
-            config=self.config 
+            config=self.config,
+            parafrase=self.parafrase
         )
 
         self.val_dataset = RELDataset(
@@ -160,7 +223,8 @@ class RELDataModule(pl.LightningDataModule):
             split="val",
             data_path=self.root,
             model=self.model,
-            config=self.config 
+            config=self.config,
+            parafrase=self.parafrase
         )
 
         self.test_dataset = RELDataset(
@@ -168,7 +232,8 @@ class RELDataModule(pl.LightningDataModule):
             split="test",
             data_path=self.root,
             model=self.model,
-            config=self.config 
+            config=self.config,
+            parafrase=self.parafrase 
         )
 
     def length(self):

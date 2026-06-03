@@ -69,6 +69,9 @@ def parse_args():
     parser.add_argument(
         "--num_workers", type=int, default=2, help="Workers used in the dataloader." 
     )
+    parser.add_argument(
+        "--test_paraphrase", type=int, default=0, help="Workers used in the dataloader." 
+    )
 
     # Trainer args
     parser.add_argument(
