@@ -76,24 +76,16 @@ class RELDataset(Dataset):
         self.version = version
         mapping = {
             "v4": "v3",
-            #"v6": "v5",
         }
         image_version = mapping.get(self.version, self.version)
         self.split = split 
         self.parafrase = parafrase
 
-        # ---- IMAGE PATH ----
+        # IMAGE PATH 
         img_folder = "test_images" if self.split == "test" else "train_images"
         self.image_path = Path(data_path) / image_version / img_folder
 
-        # ---- CSV PATH ----
-        # if self.version == 'v6':
-        #     if self.split == 'test':
-        #         csv_name = "v5_test_paraphrase.csv"
-        #     else:
-        #         csv_name = f"v5_{self.split}.csv"
-        #     self.data_path = Path(data_path) / "v5" / csv_name
-        # else:
+        # CSV PATH
         self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
         
         self.dataset = self._load_csv()
@@ -109,8 +101,6 @@ class RELDataset(Dataset):
         if self.parafrase > 0:
             self.PARAPHRASE_TEST = PARAPHRASES[self.parafrase - 1]
             self.PARAPHRASE_TRAIN = [p for i, p in enumerate(PARAPHRASES) if i != self.parafrase - 1]
-
-            
 
     def _load_csv(self):
         with open(self.data_path, newline="\n", encoding="utf-8") as f:
@@ -163,14 +153,23 @@ class RELDataset(Dataset):
     # PARAPHRASES
     def _parahprase_text(self, idx, shape1, shape2, relation, color1, color2):
 
-        # aplicar el parafrase que toca. si es test, simplemente pillar el self.parafhrase
-        # si es train, elegir entre los otros 3 pero segun el idx del elemento.
+        # aplicar el parafrase que toca. 
         if self.split == 'test':
+            # Aplicar self.parafrase
             pos_capt = self.PARAPHRASE_TEST(shape1, shape2, relation, color1, color2)
             neg_capt = self.PARAPHRASE_TEST(shape2, shape1, relation, color2, color1)
-        else:
+
+        elif self.split == 'val':
+            # Aplicar el resto de parafrases. Turnandose (uno cada)
             pos_capt = self.PARAPHRASE_TRAIN[idx%3](shape1, shape2, relation, color1, color2)
             neg_capt = self.PARAPHRASE_TRAIN[idx%3](shape2, shape1, relation, color2, color1)
+        else:
+            # Aplicar uno de los dos parafrases restantes quitando self.parafrase y el que se usa en val. Turnandose (uno cada)
+            triplet_idx = idx // 2
+            val_paraphrase_idx = triplet_idx % 3  # cuál se usó en val para este triplete
+            paraphrases_left = [p for i, p in enumerate(self.PARAPHRASE_TRAIN) if i != val_paraphrase_idx]
+            pos_capt = paraphrases_left[idx%2](shape1, shape2, relation, color1, color2)
+            neg_capt = paraphrases_left[idx%2](shape2, shape1, relation, color2, color1)
         return pos_capt, neg_capt
         
     
