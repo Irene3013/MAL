@@ -13,53 +13,45 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
-# srun python main.py --model "clip" \
-#    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-#    --run_name E9 --evaluate --dataset rel \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v1
-
-
 
 # ID
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name ID --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 1 \
+   --run_name ID_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 32 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name ID --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 2 \
+   --run_name ID_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 1 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name ID --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 3 \
+   --run_name ID_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 4 \
+   --run_name ID_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
 
 # OOD
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name OOD --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 1 \
+   --run_name OOD_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 32 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name OOD --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 2 \
+   --run_name OOD_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 1 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name OOD --train --evaluate --dataset rel \
-   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 3 \
+   --run_name OOD_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
 
-# ID_P - OOD_P
-# srun python main.py --model "clip" \
-#    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-#    --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
-
-
-# srun python main.py --model "clip" \
-#    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-#    --run_name W1 --evaluate --dataset rel --output_path /gaueko0/users/ietxarri010/out_p4/ \
-#    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 4 \
+   --run_name OOD_P --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
