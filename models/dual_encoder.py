@@ -1,10 +1,6 @@
 #models/dual_encoder.py
 import torch
-from torch.nn.functional import softmax
 import pytorch_lightning as pl
-from data.processed.vsr_dataset import VSRDataset
-from data.processed.whatsup_dataset import WhatsUpDataset
-from data.processed.biscor_dataset import BISCORDataset
 import transformers
 from utils.model_helpers import load_vision_model_components
 
@@ -29,7 +25,6 @@ class DualEncoder(pl.LightningModule):
         self.scheduler_off = args.scheduler_off
         self.cross_entropy = torch.nn.CrossEntropyLoss()
         self.score = args.score
-        #self.batch_accuracy = args.batch_accuracy
 
         print(f"args.gpus: {args.gpus}")
 
@@ -62,6 +57,7 @@ class DualEncoder(pl.LightningModule):
             group_score = Ipos_2T and Ineg_2T and Tpos_2I and Tneg_2I
             acc += int(group_score)
         return acc / N_pairs
+    
     # -----------------------------
     # STEP (train/val/test)
     # -----------------------------
@@ -91,12 +87,6 @@ class DualEncoder(pl.LightningModule):
             self.log(f'{split}_loss', loss, batch_size=N_pairs)
 
         # compute accuracy
-        # if split != "test" and self.batch_accuracy:
-        #     ground_truth = torch.arange(N, device=self.device)
-        #     acc_i2t = (logits_per_image.argmax(dim=1) == ground_truth).float().mean()
-        #     acc_t2i = (logits_per_text.argmax(dim=1) == ground_truth).float().mean()
-        #     acc = 0.5 * (acc_i2t + acc_t2i)
-        # else:
         acc = self.compute_group_score(logits)
 
         # Logging
@@ -154,7 +144,6 @@ class DualEncoder(pl.LightningModule):
     # CONFIGURE OPTIMIZER
     # -----------------------------
     def configure_optimizers(self):
-        #optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
         optimizer = torch.optim.AdamW(
             self.parameters(), 
             lr=self.lr,

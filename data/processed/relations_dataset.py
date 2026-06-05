@@ -76,7 +76,7 @@ class RELDataset(Dataset):
         self.version = version
         mapping = {
             "v4": "v3",
-            "v6": "v5",
+            #"v6": "v5",
         }
         image_version = mapping.get(self.version, self.version)
         self.split = split 
@@ -87,14 +87,14 @@ class RELDataset(Dataset):
         self.image_path = Path(data_path) / image_version / img_folder
 
         # ---- CSV PATH ----
-        if self.version == 'v6':
-            if self.split == 'test':
-                csv_name = "v5_test_paraphrase.csv"
-            else:
-                csv_name = f"v5_{self.split}.csv"
-            self.data_path = Path(data_path) / "v5" / csv_name
-        else:
-            self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
+        # if self.version == 'v6':
+        #     if self.split == 'test':
+        #         csv_name = "v5_test_paraphrase.csv"
+        #     else:
+        #         csv_name = f"v5_{self.split}.csv"
+        #     self.data_path = Path(data_path) / "v5" / csv_name
+        # else:
+        self.data_path = Path(data_path) / self.version / f"{self.version}_{self.split}.csv"
         
         self.dataset = self._load_csv()
 

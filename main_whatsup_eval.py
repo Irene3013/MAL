@@ -276,59 +276,60 @@ def main_program():
     print("Parsing args...")
     args = parse_args()
 
-    # # Load model and processor 
-    # if args.model == "clip":
-    #     from transformers import CLIPModel, CLIPProcessor
+    # Load model and processor 
+    if args.model == "clip":
+        from transformers import CLIPModel, CLIPProcessor
 
-    #     model_name = "openai/clip-vit-base-patch32"
-    #     processor = CLIPProcessor.from_pretrained(model_name)
+        model_name = "openai/clip-vit-base-patch32"
+        processor = CLIPProcessor.from_pretrained(model_name)
 
-    #     if args.ckpt == None:
-    #         model = CLIPModel.from_pretrained(model_name)
-    #     else:
-    #         checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
-    #         state_dict = checkpoint["state_dict"]
+        if args.ckpt == None:
+            model = CLIPModel.from_pretrained(model_name)
+        else:
+            checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
+            state_dict = checkpoint["state_dict"]
             
-    #         # prepare state dict to load (stripe ".model")
-    #         stripped = {k[len("model."):]: v for k, v in state_dict.items() if k.startswith("model.")}
-    #         model = CLIPModel.from_pretrained(model_name)  # arquitectura base
-    #         model.load_state_dict(stripped)
-    # else:
-    #     import core.vision_encoder.pe as pe
-    #     import core.vision_encoder.transforms as coreTransforms
+            # prepare state dict to load (stripe ".model")
+            stripped = {k[len("model."):]: v for k, v in state_dict.items() if k.startswith("model.")}
+            model = CLIPModel.from_pretrained(model_name)  # arquitectura base
+            model.load_state_dict(stripped)
+    else:
+        import core.vision_encoder.pe as pe
+        import core.vision_encoder.transforms as coreTransforms
 
-    #     model_name = "PE-Core-B16-224"
+        model_name = "PE-Core-B16-224"
 
-    #     if args.ckpt == None:
-    #         model = pe.CLIP.from_config(model_name, pretrained=True)
-    #     else:
-    #         checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
-    #         state_dict = checkpoint["state_dict"]
+        if args.ckpt == None:
+            model = pe.CLIP.from_config(model_name, pretrained=True)
+        else:
+            checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
+            state_dict = checkpoint["state_dict"]
 
-    #         # prepare state dict to load (stripe ".model")
-    #         stripped = {k[len("model."):]: v for k, v in state_dict.items() if k.startswith("model.")}
-    #         model = pe.CLIP.from_config(model_name, pretrained=True)  # arquitectura base
-    #         model.load_state_dict(stripped)
+            # prepare state dict to load (stripe ".model")
+            stripped = {k[len("model."):]: v for k, v in state_dict.items() if k.startswith("model.")}
+            model = pe.CLIP.from_config(model_name, pretrained=True)  # arquitectura base
+            model.load_state_dict(stripped)
 
-    #     # Load image processor and tokenizer
-    #     image_processor = coreTransforms.get_image_transform(model.image_size)
-    #     tokenizer = coreTransforms.get_text_tokenizer(model.context_length)
+        # Load image processor and tokenizer
+        image_processor = coreTransforms.get_image_transform(model.image_size)
+        tokenizer = coreTransforms.get_text_tokenizer(model.context_length)
     
-    # # Move to device
-    # model.eval()
-    # device = torch.device("cuda" if args.gpus > 0 and torch.cuda.is_available() else "cpu")
-    # model = model.to(device)
+    # Move to device
+    model.eval()
+    device = torch.device("cuda" if args.gpus > 0 and torch.cuda.is_available() else "cpu")
+    model = model.to(device)
 
     dataset = WhatsupDataset(data_path=args.root)
-    # if args.model == "clip":
-    #     accuracies = evaluate(model, processor, None, None, dataset, device)
-    # else:
-    #     accuracies = evaluate(model, None, image_processor, tokenizer, dataset, device)
+    if args.model == "clip":
+        accuracies = evaluate(model, processor, None, None, dataset, device)
+    else:
+        accuracies = evaluate(model, None, image_processor, tokenizer, dataset, device)
 
-    # save_results(args.output_path, args, accuracies)
+    save_results(args.output_path, args, accuracies)
 
+    #PRINT OBJECTS
     objects = get_all_objects(dataset)
-    print(len(objects))
+    print(f"Total number of objects: {len(objects)}")
     print(objects)
 
 if __name__ == "__main__":
