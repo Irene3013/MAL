@@ -23,33 +23,33 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 # ID
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name ID --evaluate --dataset rel \
+   --run_name ID --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 32 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name ID --evaluate --dataset rel \
+   --run_name ID --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 1 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name ID --evaluate --dataset rel \
+   --run_name ID --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 # OOD
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 200 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name OOD --evaluate --dataset rel \
+   --run_name OOD --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 32 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name OOD --evaluate --dataset rel \
+   --run_name OOD --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
    --lr 1e-6 --batch_size 1 --max_steps 10000 --accumulate_grad_batches 1 \
-   --run_name OOD --evaluate --dataset rel \
+   --run_name OOD --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 # ID_P - OOD_P
