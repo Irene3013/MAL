@@ -15,12 +15,12 @@ source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
 
 # ID
 srun python main.py --model "pecore" \
-   --lr 1e-6 --batch_size 128 --max_steps 5000 --accumulate_grad_batches 1 \
-   --run_name Pb_ID --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 128 --max_steps 5000 \
+   --run_name ID --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 # OOD
 srun python main.py --model "pecore" \
-   --lr 1e-6 --batch_size 128 --max_steps 5000 --accumulate_grad_batches 1 \
-   --run_name Pb_OOD --train --evaluate --dataset rel \
+   --lr 1e-6 --batch_size 128 --max_steps 5000 \
+   --run_name OOD --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
