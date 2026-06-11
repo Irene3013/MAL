@@ -289,7 +289,12 @@ def main_program():
         if args.ckpt == None:
             model = CLIPModel.from_pretrained(model_name)
         else:
-            checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
+            #checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
+            checkpoint = torch.load(
+                f"{args.ckpt_path}/{args.ckpt}",
+                map_location="cpu",
+                weights_only=False
+            )
             state_dict = checkpoint["state_dict"]
             
             # prepare state dict to load (stripe ".model")
@@ -305,7 +310,12 @@ def main_program():
         if args.ckpt == None:
             model = pe.CLIP.from_config(model_name, pretrained=True)
         else:
-            checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
+            #checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
+            checkpoint = torch.load(
+                f"{args.ckpt_path}/{args.ckpt}",
+                map_location="cpu",
+                weights_only=False
+            )
             state_dict = checkpoint["state_dict"]
 
             # prepare state dict to load (stripe ".model")
