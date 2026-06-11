@@ -43,10 +43,13 @@ def parse_args():
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
     )
     parser.add_argument(
-        "--root", type=str, default="./data/raw/whatsup", help="Path to the data files."
+        "--root", type=str, default="/gaueko0/users/ietxarri010/MAL/data/raw/whatsup", help="Path to the data files."
     )
     parser.add_argument(
         "--output_path", type=str, default="/gaueko0/users/ietxarri010/MAL/", help="Output directory for plots and models."
+    )
+    parser.add_argument(
+        "--output_name", type=str, required=True, help="Name for output file."
     )
 
     # Model args
@@ -245,7 +248,7 @@ def evaluate_object_similarity(model, processor, image_processor, tokenizer, dat
 
 
 def save_results(output_path, args, accuracies):
-    results_file = Path(output_path) / f"{args.model}_results.json"
+    results_file = Path(output_path) / f"{args.model}_{args.output_name}_results.json"
     
     # Cargar resultados anteriores si existen
     if results_file.exists():
