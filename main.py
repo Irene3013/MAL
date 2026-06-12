@@ -32,7 +32,7 @@ def parse_args():
         "--image_path", type=str, default="/gaueko0/users/ietxarri010/MAL/data", help="Path to the image files if its different from the annotations files."
     )
     parser.add_argument(
-        "--output_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Output directory for plots and models."
+        "--output_path", type=str, default="/gaueko0/users/ietxarri010/out_L/", help="Output directory for plots and models."
     )
     parser.add_argument(
         "--train", action="store_true", help="Fine-tune model."

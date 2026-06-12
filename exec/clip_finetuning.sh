@@ -15,94 +15,94 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 
 # ID - BATCH SIZE ####################################################################################################
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 1 --max_steps 10000 \
+   --lr 1e-6 --batch_size 1 --max_steps 5000 \
    --run_name ID_z --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 200 --max_steps 10000 \
+   --lr 1e-6 --batch_size 200 --max_steps 5000 \
    --run_name ID_b200 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
    
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 128 --max_steps 10000 \
+   --lr 1e-6 --batch_size 128 --max_steps 5000 \
    --run_name ID_b128 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 64 --max_steps 10000 \
+   --lr 1e-6 --batch_size 64 --max_steps 5000 \
    --run_name ID_b64 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 32 --max_steps 10000 \
+   --lr 1e-6 --batch_size 32 --max_steps 5000 \
    --run_name ID_b32 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 16 --max_steps 10000 \
+   --lr 1e-6 --batch_size 16 --max_steps 5000 \
    --run_name ID_b16 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 4 --max_steps 10000 \
+   --lr 1e-6 --batch_size 4 --max_steps 5000 \
    --run_name ID_b4 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 \
    --run_name ID_b2 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 1 --max_steps 10000 \
+   --lr 1e-6 --batch_size 1 --max_steps 5000 \
    --run_name ID_b1 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v5
 
 # OOD - BATCH SIZE ####################################################################################################
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 1 --max_steps 10000 \
+   --lr 1e-6 --batch_size 1 --max_steps 5000 \
    --run_name OOD_z --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 200 --max_steps 10000 \
+   --lr 1e-6 --batch_size 200 --max_steps 5000 \
    --run_name OOD_b200 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
    
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 128 --max_steps 10000 \
+   --lr 1e-6 --batch_size 128 --max_steps 5000 \
    --run_name OOD_b128 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 64 --max_steps 10000 \
+   --lr 1e-6 --batch_size 64 --max_steps 5000 \
    --run_name OOD_b64 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 32 --max_steps 10000 \
+   --lr 1e-6 --batch_size 32 --max_steps 5000 \
    --run_name OOD_b32 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 16 --max_steps 10000 \
+   --lr 1e-6 --batch_size 16 --max_steps 5000 \
    --run_name OOD_b16 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 4 --max_steps 10000 \
+   --lr 1e-6 --batch_size 4 --max_steps 5000 \
    --run_name OOD_b4 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 2 --max_steps 10000 \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 \
    --run_name OOD_b2 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
 srun python main.py --model "clip" \
-   --lr 1e-6 --batch_size 1 --max_steps 10000 \
+   --lr 1e-6 --batch_size 1 --max_steps 5000 \
    --run_name OOD_b1 --train --evaluate --dataset rel \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v8
 
