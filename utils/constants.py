@@ -7,6 +7,11 @@ PREPROCESS_TRANSFORM = Compose([
     CenterCrop(224),
 ])
 
+PECORE_L14_TRANSFORM = Compose([
+    PREPROCESS_TRANSFORM,
+    Resize(336, interpolation=InterpolationMode.BICUBIC, antialias=True),
+])
+
 NEGATE_RELATIONS = {
     # Adjacency
     "adjacent to": "nonadjacent to", 

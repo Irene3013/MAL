@@ -2,7 +2,7 @@
 import torch
 import string
 import os
-from utils.constants import PREPROCESS_TRANSFORM
+from utils.constants import PREPROCESS_TRANSFORM, PECORE_L14_TRANSFORM
 
 def load_vision_model_components(model_name: str):
     """
@@ -14,10 +14,11 @@ def load_vision_model_components(model_name: str):
     if model_name == "clip":
         # https://huggingface.co/openai/clip-vit-base-patch32
         from transformers import CLIPModel, CLIPProcessor
-
-        model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+        #model_id = "openai/clip-vit-base-patch32"
+        model_id = "openai/clip-vit-large-patch14"
+        model = CLIPModel.from_pretrained(model_id)
         config_output = {
-            "processor": CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32"),
+            "processor": CLIPProcessor.from_pretrained(model_id),
             "transform": None,
             "tokenizer": None,
             "params": {"padding": "max_length", "max_length": 64}
@@ -41,11 +42,12 @@ def load_vision_model_components(model_name: str):
         # https://huggingface.co/facebook/PE-Core-B16-224
         import core.vision_encoder.pe as pe
         import core.vision_encoder.transforms as coreTransforms
-
-        model = pe.CLIP.from_config("PE-Core-B16-224", pretrained=True)
+        #model_id = "PE-Core-B16-224"
+        model_id = "PE-Core-L14-336"
+        model = pe.CLIP.from_config(model_id, pretrained=True)
         config_output = {
             "processor": coreTransforms.get_image_transform(model.image_size),
-            "transform": PREPROCESS_TRANSFORM, 
+            "transform": PECORE_L14_TRANSFORM, 
             "tokenizer": coreTransforms.get_text_tokenizer(model.context_length),
             "params": None
       }
