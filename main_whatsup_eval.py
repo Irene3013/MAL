@@ -37,7 +37,7 @@ def parse_args():
         "--ckpt", type=str, default=None, help="Model's checkpoint to be loaded before training."
     )
     parser.add_argument(
-        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Model's checkpoint path."
+        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out_L/", help="Model's checkpoint path."
     )
     parser.add_argument(
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"

@@ -13,26 +13,29 @@ source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
 
 #export TRANSFORMERS_CACHE="/ncache/hub/"
 
+# BASELINE
+srun python main_whatsup_eval.py --model "pecore" --output_name ZS  
+
 # ID
-srun python main_whatsup_eval.py --model "pecore" --output_name ID --ckpt pecore-ID-v5-epoch=16-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "pecore" --output_name ID --ckpt pecore-ID_b2-v5-epoch=02-val_accuracy=1.00.ckpt 
    
 # OOD
-srun python main_whatsup_eval.py --model "pecore" --output_name OOD --ckpt pecore-OOD-v8-epoch=01-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "pecore" --output_name OOD --ckpt pecore-OOD_b2-v8-epoch=05-val_accuracy=1.00.ckpt
 
 # ID_P
-srun python main_whatsup_eval.py --model "pecore" --output_name ID_P1 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00.ckpt  
+srun python main_whatsup_eval.py --model "pecore" --output_name ID_P1 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00.ckpt
 
-srun python main_whatsup_eval.py --model "pecore" --output_name ID_P2 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00-v1.ckpt 
+srun python main_whatsup_eval.py --model "pecore" --output_name ID_P2 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00-v1.ckpt
 
 srun python main_whatsup_eval.py --model "pecore" --output_name ID_P3 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00-v2.ckpt 
 
-srun python main_whatsup_eval.py --model "pecore" --output_name ID_P4 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00-v3.ckpt
+srun python main_whatsup_eval.py --model "pecore" --output_name ID_P4 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00-v3.ckpt 
 
 # OOD_P
-srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P1 --ckpt pecore-pecore_OOD_P-v9-epoch=02-val_accuracy=1.00.ckpt 
+srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P1 --ckpt pecore-OOD_P_b1-v9-epoch=00-val_accuracy=1.00.ckpt  
 
-srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P2 --ckpt pecore-pecore_OOD_P-v9-epoch=03-val_accuracy=1.00.ckpt 
+srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P2 --ckpt pecore-OOD_P_b1-v9-epoch=01-val_accuracy=0.69.ckpt 
 
-srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P3 --ckpt pecore-pecore_OOD_P-v9-epoch=03-val_accuracy=1.00-v1.ckpt 
+srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P3 --ckpt pecore-OOD_P_b1-v9-epoch=01-val_accuracy=1.00.ckpt 
 
-srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P4 --ckpt pecore-pecore_OOD_P-v9-epoch=03-val_accuracy=1.00-v2.ckpt 
+srun python main_whatsup_eval.py --model "pecore" --output_name OOD_P4 --ckpt pecore-OOD_P_b1-v9-epoch=01-val_accuracy=1.00-v1.ckpt 
