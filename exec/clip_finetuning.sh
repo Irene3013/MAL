@@ -150,6 +150,48 @@ srun python main.py --model "clip" \
    --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
 
 
+# ID
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 1 \
+   --run_name ID_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 2 \
+   --run_name ID_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 3 \
+   --run_name ID_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 4 \
+   --run_name ID_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v6
+
+# OOD
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 1 \
+   --run_name OOD_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 2 \
+   --run_name OOD_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 3 \
+   --run_name OOD_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
+
+srun python main.py --model "clip" \
+   --lr 1e-6 --batch_size 2 --max_steps 5000 --test_paraphrase 4 \
+   --run_name OOD_P_b2 --train --evaluate --dataset rel \
+   --root /gaueko0/users/ietxarri010/MAL/data/raw/RelationsDataset --precision 32 --variant v9
+
 # EVALS##################
 
 # ID
