@@ -283,7 +283,7 @@ def main_program():
     if args.model == "clip":
         from transformers import CLIPModel, CLIPProcessor
 
-        model_name = "openai/clip-vit-base-patch32"
+        model_name = "openai/clip-vit-large-patch14"
         processor = CLIPProcessor.from_pretrained(model_name)
 
         if args.ckpt == None:
@@ -305,7 +305,7 @@ def main_program():
         import core.vision_encoder.pe as pe
         import core.vision_encoder.transforms as coreTransforms
 
-        model_name = "PE-Core-B16-224"
+        model_name = "PE-Core-L14-336"
 
         if args.ckpt == None:
             model = pe.CLIP.from_config(model_name, pretrained=True)
