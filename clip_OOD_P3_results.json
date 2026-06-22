@@ -1,0 +1,26 @@
+[
+  {
+    "model": "clip",
+    "ckpt": "clip-OOD_P_b1-v9-epoch=01-val_accuracy=1.00-v2.ckpt",
+    "score": "individual",
+    "accuracy": 0.29901960784313725
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-OOD_P_b1-v9-epoch=01-val_accuracy=1.00-v2.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.09313725490196079
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-OOD_P_b1-v9-epoch=01-val_accuracy=1.00-v2.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "clip",
+    "ckpt": "clip-OOD_P_b1-v9-epoch=01-val_accuracy=1.00-v2.ckpt",
+    "score": "similarity",
+    "accuracy": 0.7757352941176471
+  }
+]

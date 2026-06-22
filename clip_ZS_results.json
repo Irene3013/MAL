@@ -1,0 +1,26 @@
+[
+  {
+    "model": "clip",
+    "ckpt": null,
+    "score": "individual",
+    "accuracy": 0.25245098039215685
+  },
+  {
+    "model": "clip",
+    "ckpt": null,
+    "score": "pairwise",
+    "accuracy": 0.00980392156862745
+  },
+  {
+    "model": "clip",
+    "ckpt": null,
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "clip",
+    "ckpt": null,
+    "score": "similarity",
+    "accuracy": 0.7965686274509803
+  }
+]

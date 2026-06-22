@@ -1,0 +1,26 @@
+[
+  {
+    "model": "pecore",
+    "ckpt": "pecore-OOD_P_b1-v9-epoch=01-val_accuracy=0.69.ckpt",
+    "score": "individual",
+    "accuracy": 0.41421568627450983
+  },
+  {
+    "model": "pecore",
+    "ckpt": "pecore-OOD_P_b1-v9-epoch=01-val_accuracy=0.69.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.09803921568627451
+  },
+  {
+    "model": "pecore",
+    "ckpt": "pecore-OOD_P_b1-v9-epoch=01-val_accuracy=0.69.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "pecore",
+    "ckpt": "pecore-OOD_P_b1-v9-epoch=01-val_accuracy=0.69.ckpt",
+    "score": "similarity",
+    "accuracy": 0.7855392156862745
+  }
+]
