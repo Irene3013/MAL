@@ -1,0 +1,167 @@
+[
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "individual",
+    "accuracy": 0.3284313725490196
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "pairwise",
+    "accuracy": 0.014705882352941176
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "similarity",
+    "accuracy": 0.7928921568627451
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.0,
+        "front": 0.0,
+        "behind": 0.0
+      },
+      "right": {
+        "left": 0.0,
+        "right": null,
+        "front": 0.0882,
+        "behind": 0.2255
+      },
+      "front": {
+        "left": 0.0,
+        "right": 0.0882,
+        "front": null,
+        "behind": 0.0294
+      },
+      "behind": {
+        "left": 0.0,
+        "right": 0.2255,
+        "front": 0.0294,
+        "behind": null
+      }
+    }
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt",
+    "score": "individual",
+    "accuracy": 0.48284313725490197
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.08333333333333333
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt",
+    "score": "similarity",
+    "accuracy": 0.7401960784313726
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt",
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.0392,
+        "front": 0.0392,
+        "behind": 0.0098
+      },
+      "right": {
+        "left": 0.0392,
+        "right": null,
+        "front": 0.6569,
+        "behind": 0.1961
+      },
+      "front": {
+        "left": 0.0392,
+        "right": 0.6569,
+        "front": null,
+        "behind": 0.1275
+      },
+      "behind": {
+        "left": 0.0098,
+        "right": 0.1961,
+        "front": 0.1275,
+        "behind": null
+      }
+    }
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt",
+    "score": "individual",
+    "accuracy": 0.33578431372549017
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.03431372549019608
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt",
+    "score": "similarity",
+    "accuracy": 0.7892156862745098
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt",
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.0392,
+        "front": 0.0196,
+        "behind": 0.0
+      },
+      "right": {
+        "left": 0.0392,
+        "right": null,
+        "front": 0.2941,
+        "behind": 0.0294
+      },
+      "front": {
+        "left": 0.0196,
+        "right": 0.2941,
+        "front": null,
+        "behind": 0.0294
+      },
+      "behind": {
+        "left": 0.0,
+        "right": 0.0294,
+        "front": 0.0294,
+        "behind": null
+      }
+    }
+  }
+]

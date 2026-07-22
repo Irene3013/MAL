@@ -1,0 +1,167 @@
+[
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "individual",
+    "accuracy": 0.3088235294117647
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "pairwise",
+    "accuracy": 0.004901960784313725
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "similarity",
+    "accuracy": 0.6519607843137255
+  },
+  {
+    "model": "ZS",
+    "ckpt": null,
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.0098,
+        "front": 0.0392,
+        "behind": 0.0
+      },
+      "right": {
+        "left": 0.0098,
+        "right": null,
+        "front": 0.2843,
+        "behind": 0.0
+      },
+      "front": {
+        "left": 0.0392,
+        "right": 0.2843,
+        "front": null,
+        "behind": 0.0
+      },
+      "behind": {
+        "left": 0.0,
+        "right": 0.0,
+        "front": 0.0,
+        "behind": null
+      }
+    }
+  },
+  {
+    "model": "ID",
+    "ckpt": "clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt",
+    "score": "individual",
+    "accuracy": 0.5833333333333334
+  },
+  {
+    "model": "ID",
+    "ckpt": "clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.24509803921568626
+  },
+  {
+    "model": "ID",
+    "ckpt": "clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0784313725490196
+  },
+  {
+    "model": "ID",
+    "ckpt": "clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt",
+    "score": "similarity",
+    "accuracy": 0.5723039215686274
+  },
+  {
+    "model": "ID",
+    "ckpt": "clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt",
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.2255,
+        "front": 0.3039,
+        "behind": 0.1471
+      },
+      "right": {
+        "left": 0.2255,
+        "right": null,
+        "front": 0.5686,
+        "behind": 0.3431
+      },
+      "front": {
+        "left": 0.3039,
+        "right": 0.5686,
+        "front": null,
+        "behind": 0.2647
+      },
+      "behind": {
+        "left": 0.1471,
+        "right": 0.3431,
+        "front": 0.2647,
+        "behind": null
+      }
+    }
+  },
+  {
+    "model": "OOD",
+    "ckpt": "clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt",
+    "score": "individual",
+    "accuracy": 0.3700980392156863
+  },
+  {
+    "model": "OOD",
+    "ckpt": "clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.07352941176470588
+  },
+  {
+    "model": "OOD",
+    "ckpt": "clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "OOD",
+    "ckpt": "clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt",
+    "score": "similarity",
+    "accuracy": 0.6409313725490197
+  },
+  {
+    "model": "OOD",
+    "ckpt": "clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt",
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.1471,
+        "front": 0.0392,
+        "behind": 0.0294
+      },
+      "right": {
+        "left": 0.1471,
+        "right": null,
+        "front": 0.2843,
+        "behind": 0.0392
+      },
+      "front": {
+        "left": 0.0392,
+        "right": 0.2843,
+        "front": null,
+        "behind": 0.0
+      },
+      "behind": {
+        "left": 0.0294,
+        "right": 0.0392,
+        "front": 0.0,
+        "behind": null
+      }
+    }
+  }
+]
