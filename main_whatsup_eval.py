@@ -6,7 +6,12 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from pathlib import Path
 from PIL import Image
+import itertools
 from itertools import combinations
+import numpy as np
+
+RELATIONS = ["left", "right", "front", "behind"]
+
 
 def get_all_objects(dataset):
     """
@@ -37,7 +42,7 @@ def parse_args():
         "--ckpt", type=str, default=None, help="Model's checkpoint to be loaded before training."
     )
     parser.add_argument(
-        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out_L/", help="Model's checkpoint path."
+        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Model's checkpoint path."
     )
     parser.add_argument(
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
@@ -93,6 +98,7 @@ class WhatsupDataset(Dataset):
 def evaluate(model, processor, image_processor, tokenizer, dataset, device):
     individual = evaluate_individual(model, processor, image_processor, tokenizer, dataset, device)
     pairwise = evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, device)
+    pairwise_matrix = evaluate_pairwise_matrix(model, processor, image_processor, tokenizer, dataset, device)
     setwise = evaluate_setwise(model, processor, image_processor, tokenizer, dataset, device)
     similarity = evaluate_object_similarity(model, processor, image_processor, tokenizer, dataset, device)
     return {
@@ -100,6 +106,7 @@ def evaluate(model, processor, image_processor, tokenizer, dataset, device):
         'pairwise': pairwise, 
         'setwise': setwise,
         'similarity': similarity,
+        'pairwise_matrix': pairwise_matrix
     }
 
 
@@ -195,6 +202,48 @@ def evaluate_setwise(model, processor, image_processor, tokenizer, dataset, devi
     print(f"[Set-wise] Accuracy: {accuracy:.4f} ({correct_sets}/{total_sets})")
     return accuracy
 
+def evaluate_pairwise_matrix(model, processor, image_processor, tokenizer, dataset, device):
+    set_size = 4
+    total_sets = len(dataset) // set_size
+    n = set_size
+
+    pair_correct = np.zeros((n, n))
+    pair_total = np.zeros((n, n))
+
+    for set_idx in range(total_sets):
+        correct = []
+        for i in range(set_size):
+            item_idx = set_idx * set_size + i
+            item = dataset[item_idx]
+            pred_idx = score_image_captions(
+                model, processor, image_processor, tokenizer,
+                item["image"], item["caption_options"], device
+            )
+            correct.append(pred_idx == 0)
+
+        for i, j in itertools.combinations(range(n), 2):
+            pair_total[i, j] += 1
+            pair_total[j, i] += 1
+            if correct[i] and correct[j]:
+                pair_correct[i, j] += 1
+                pair_correct[j, i] += 1
+
+    pairwise_acc = np.divide(
+        pair_correct, pair_total,
+        out=np.zeros_like(pair_correct),
+        where=pair_total != 0
+    )
+
+    header = f"{'':10}" + "".join(f"{r.capitalize():>10}" for r in RELATIONS)
+    print(header)
+    for i, r in enumerate(RELATIONS):
+        row = f"{r.capitalize():10}"
+        for j in range(n):
+            row += f"{'—':>10}" if i == j else f"{pairwise_acc[i, j] * 100:>10.1f}"
+        print(row)
+
+    return pairwise_acc
+
 def evaluate_pairwise(model, processor, image_processor, tokenizer, dataset, device):
     """
     Pair-wise: una pareja son todos los pares de imágenes que comparten el mismo par de objetos, pero
@@ -247,18 +296,48 @@ def evaluate_object_similarity(model, processor, image_processor, tokenizer, dat
     return accuracy    
 
 
+def save_pairwise_matrix_txt(output_path, args, pairwise_acc):
+    """Guarda la matriz pairwise en un .txt con formato tabla, uno por modelo/ckpt."""
+    matrix_file = Path(output_path) / f"{args.output_name}_pairwise_matrix.txt"
+
+    lines = []
+    header = f"{'':10}" + "".join(f"{r.capitalize():>10}" for r in RELATIONS)
+    lines.append(header)
+    for i, r in enumerate(RELATIONS):
+        row = f"{r.capitalize():10}"
+        for j in range(len(RELATIONS)):
+            row += f"{'—':>10}" if i == j else f"{pairwise_acc[i, j] * 100:>10.1f}"
+        lines.append(row)
+
+    os.makedirs(output_path, exist_ok=True)
+    with open(matrix_file, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+    print(f"Pairwise matrix saved to {matrix_file}")
+
+
+def pairwise_matrix_to_dict(pairwise_acc):
+    """Convierte la matriz numpy a un dict anidado {rel1: {rel2: valor}} serializable en JSON."""
+    return {
+        r_i: {
+            r_j: (None if i == j else round(float(pairwise_acc[i, j]), 4))
+            for j, r_j in enumerate(RELATIONS)
+        }
+        for i, r_i in enumerate(RELATIONS)
+    }
+
 def save_results(output_path, args, accuracies):
     results_file = Path(output_path) / f"{args.model}_L_results.json"
-    
-    # Cargar resultados anteriores si existen
+
     if results_file.exists():
         with open(results_file, "r") as f:
             results = json.load(f)
     else:
         results = []
 
-    # Añadir nueva entrada
     for key, score in accuracies.items():
+        if key == "pairwise_matrix":
+            continue  # se guarda aparte, no es un escalar
         results.append({
             "model": args.output_name,
             "ckpt": args.ckpt,
@@ -266,11 +345,44 @@ def save_results(output_path, args, accuracies):
             "accuracy": score,
         })
 
+    # Añadimos la matriz como una entrada especial, con el dict anidado
+    results.append({
+        "model": args.output_name,
+        "ckpt": args.ckpt,
+        "score": "pairwise_matrix",
+        "accuracy": pairwise_matrix_to_dict(accuracies["pairwise_matrix"]),
+    })
+
     os.makedirs(output_path, exist_ok=True)
     with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
 
     print(f"Results saved to {results_file}")
+
+# def save_results(output_path, args, accuracies):
+#     results_file = Path(output_path) / f"{args.model}_L_results.json"
+    
+#     # Cargar resultados anteriores si existen
+#     if results_file.exists():
+#         with open(results_file, "r") as f:
+#             results = json.load(f)
+#     else:
+#         results = []
+
+#     # Añadir nueva entrada
+#     for key, score in accuracies.items():
+#         results.append({
+#             "model": args.output_name,
+#             "ckpt": args.ckpt,
+#             "score": key,
+#             "accuracy": score,
+#         })
+
+#     os.makedirs(output_path, exist_ok=True)
+#     with open(results_file, "w") as f:
+#         json.dump(results, f, indent=2)
+
+#     print(f"Results saved to {results_file}")
 
 def main_program():
 
@@ -283,8 +395,9 @@ def main_program():
     if args.model == "clip":
         from transformers import CLIPModel, CLIPProcessor
 
-        model_name = "openai/clip-vit-large-patch14"
-        #model_name = "openai/clip-vit-base-patch32"
+        #model_name = "openai/clip-vit-large-patch14"
+        model_name = "openai/clip-vit-base-patch32"
+
         processor = CLIPProcessor.from_pretrained(model_name)
 
         if args.ckpt == None:
@@ -306,8 +419,8 @@ def main_program():
         import core.vision_encoder.pe as pe
         import core.vision_encoder.transforms as coreTransforms
 
-        model_name = "PE-Core-L14-336"
-        #model_name = "PE-Core-B16-224"
+        #model_name = "PE-Core-L14-336"
+        model_name = "PE-Core-B16-224"
         if args.ckpt == None:
             model = pe.CLIP.from_config(model_name, pretrained=True)
         else:
