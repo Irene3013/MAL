@@ -298,7 +298,7 @@ def evaluate_object_similarity(model, processor, image_processor, tokenizer, dat
 
 def save_pairwise_matrix_txt(output_path, args, pairwise_acc):
     """Guarda la matriz pairwise en un .txt con formato tabla, uno por modelo/ckpt."""
-    matrix_file = Path(output_path) / f"{args.output_name}_pairwise_matrix.txt"
+    matrix_file = Path(output_path) / f"{args.model}_{args.output_name}_pairwise_matrix.txt"
 
     lines = []
     header = f"{'':10}" + "".join(f"{r.capitalize():>10}" for r in RELATIONS)
@@ -327,7 +327,7 @@ def pairwise_matrix_to_dict(pairwise_acc):
     }
 
 def save_results(output_path, args, accuracies):
-    results_file = Path(output_path) / f"{args.model}_L_results.json"
+    results_file = Path(output_path) / f"{args.model}_results.json"
 
     if results_file.exists():
         with open(results_file, "r") as f:
