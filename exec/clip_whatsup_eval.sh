@@ -17,12 +17,12 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 srun python main_whatsup_eval.py --model "clip" --output_name ZS  
 
 # ID
-srun python main_whatsup_eval.py --model "clip" --output_name ID --ckpt clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt
-#srun python main_whatsup_eval.py --model "clip" --output_name ID --ckpt clip-ID_b4-v5-epoch=07-val_accuracy=1.00.ckpt
+#srun python main_whatsup_eval.py --model "clip" --output_name ID --ckpt clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt
+srun python main_whatsup_eval.py --model "clip" --output_name ID --ckpt clip-ID_b4-v5-epoch=07-val_accuracy=1.00.ckpt
    
 # OOD
-srun python main_whatsup_eval.py --model "clip" --output_name OOD --ckpt clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt
-#srun python main_whatsup_eval.py --model "clip" --output_name OOD --ckpt clip-OOD_b4-v8-epoch=07-val_accuracy=1.00.ckpt
+#srun python main_whatsup_eval.py --model "clip" --output_name OOD --ckpt clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "clip" --output_name OOD --ckpt clip-OOD_b4-v8-epoch=07-val_accuracy=1.00.ckpt
 
 
 

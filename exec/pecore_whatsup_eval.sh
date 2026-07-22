@@ -17,12 +17,12 @@ source /gaueko0/users/ietxarri010/env/pe_core/bin/activate
 srun python main_whatsup_eval.py --model "pecore" --output_name ZS  
 
 # ID
-srun python main_whatsup_eval.py --model "pecore" --output_name ID --ckpt pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt
-#srun python main_whatsup_eval.py --model "pecore" --output_name ID --ckpt pecore-ID_b4-v5-epoch=03-val_accuracy=1.00.ckpt
+#srun python main_whatsup_eval.py --model "pecore" --output_name ID --ckpt pecore-E3-v5-epoch=18-val_accuracy=0.99.ckpt
+srun python main_whatsup_eval.py --model "pecore" --output_name ID --ckpt pecore-ID_b4-v5-epoch=03-val_accuracy=1.00.ckpt
    
 # OOD
-srun python main_whatsup_eval.py --model "pecore" --output_name OOD --ckpt pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt
-#srun python main_whatsup_eval.py --model "pecore" --output_name OOD --ckpt pecore-OOD_b4-v8-epoch=14-val_accuracy=1.00.ckpt
+#srun python main_whatsup_eval.py --model "pecore" --output_name OOD --ckpt pecore-E3-v8-epoch=126-val_accuracy=0.72.ckpt
+srun python main_whatsup_eval.py --model "pecore" --output_name OOD --ckpt pecore-OOD_b4-v8-epoch=14-val_accuracy=1.00.ckpt
 
 # ID_P
 # srun python main_whatsup_eval.py --model "pecore" --output_name ID_P1 --ckpt pecore-ID_P_b1-v6-epoch=00-val_accuracy=1.00.ckpt
