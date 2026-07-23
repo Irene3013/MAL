@@ -42,7 +42,7 @@ def parse_args():
         "--ckpt", type=str, default=None, help="Model's checkpoint to be loaded before training."
     )
     parser.add_argument(
-        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out_L/", help="Model's checkpoint path."
+        "--ckpt_path", type=str, default="/gaueko0/users/ietxarri010/out/", help="Model's checkpoint path."
     )
     parser.add_argument(
         "--gpus", type=int, default=1, help="Number of GPUs in use. (0 == cpu)"
@@ -56,7 +56,9 @@ def parse_args():
     parser.add_argument(
         "--output_name", type=str, required=True, help="Name for output file."
     )
-
+    parser.add_argument(
+        "--size", type=str, required=True, help="Model size."
+    )
     # Model args
     parser.add_argument(
         "--model", type=str, required=True, choices=["clip", "siglip", "siglip2", "pecore", "qwen2", "clip-flant5"],
@@ -327,7 +329,8 @@ def pairwise_matrix_to_dict(pairwise_acc):
     }
 
 def save_results(output_path, args, accuracies):
-    results_file = Path(output_path) / f"{args.model}_L_results.json"
+    if args.size == "large": results_file = Path(output_path) / f"{args.model}_L_results.json"
+    else: results_file = Path(output_path) / f"{args.model}_results.json"
 
     if results_file.exists():
         with open(results_file, "r") as f:
@@ -391,12 +394,15 @@ def main_program():
     print("Parsing args...")
     args = parse_args()
 
+    if args.size == "large": ckpt_path = "/gaueko0/users/ietxarri010/out_L/"
+    else: ckpt_path = args.ckpt_path
+
     # Load model and processor 
     if args.model == "clip":
         from transformers import CLIPModel, CLIPProcessor
 
-        model_name = "openai/clip-vit-large-patch14"
-        #model_name = "openai/clip-vit-base-patch32"
+        if args.size == "large": model_name = "openai/clip-vit-large-patch14"
+        else: model_name = "openai/clip-vit-base-patch32"
 
         processor = CLIPProcessor.from_pretrained(model_name)
 
@@ -405,7 +411,7 @@ def main_program():
         else:
             #checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
             checkpoint = torch.load(
-                f"{args.ckpt_path}/{args.ckpt}",
+                f"{ckpt_path}/{args.ckpt}",
                 map_location="cpu",
                 weights_only=False
             )
@@ -419,14 +425,15 @@ def main_program():
         import core.vision_encoder.pe as pe
         import core.vision_encoder.transforms as coreTransforms
 
-        model_name = "PE-Core-L14-336"
-        #model_name = "PE-Core-B16-224"
+        if args.size == "large": model_name = "PE-Core-L14-336"
+        else: model_name = "PE-Core-B16-224"
+
         if args.ckpt == None:
             model = pe.CLIP.from_config(model_name, pretrained=True)
         else:
             #checkpoint = torch.load(f"{args.ckpt_path}/{args.ckpt}", map_location="cpu")
             checkpoint = torch.load(
-                f"{args.ckpt_path}/{args.ckpt}",
+                f"{ckpt_path}/{args.ckpt}",
                 map_location="cpu",
                 weights_only=False
             )

@@ -17,12 +17,16 @@ source /gaueko0/users/ietxarri010/env/nire_env/bin/activate
 srun python main_whatsup_eval.py --model "clip" --output_name ZS  
 
 # ID
-#srun python main_whatsup_eval.py --model "clip" --output_name ID --ckpt clip-E5-v5-epoch=19-val_accuracy=0.99.ckpt
-srun python main_whatsup_eval.py --model "clip" --output_name ID --ckpt clip-ID_b4-v5-epoch=07-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "clip" --size base --output_name ID --ckpt clip-ID-v5-epoch=03-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "clip" --size base --output_name ID --ckpt clip-ID-v5-epoch=27-val_accuracy=0.89.ckpt
+srun python main_whatsup_eval.py --model "clip" --size base --output_name ID --ckpt clip-ID-v5-epoch=66-val_accuracy=0.97.ckpt
+srun python main_whatsup_eval.py --model "clip" --size large --output_name ID --ckpt clip-ID_b1-v5-epoch=02-val_accuracy=1.00.ckpt
    
 # OOD
-#srun python main_whatsup_eval.py --model "clip" --output_name OOD --ckpt clip-E5-v8-epoch=15-val_accuracy=1.00.ckpt
-srun python main_whatsup_eval.py --model "clip" --output_name OOD --ckpt clip-OOD_b4-v8-epoch=07-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "clip" --size base --output_name OOD --ckpt clip-OOD-v8-epoch=06-val_accuracy=1.00.ckpt
+srun python main_whatsup_eval.py --model "clip" --size base --output_name OOD --ckpt clip-OOD-v8-epoch=37-val_accuracy=0.93.ckpt
+srun python main_whatsup_eval.py --model "clip" --size base --output_name OOD --ckpt clip-OOD-v8-epoch=61-val_accuracy=0.86.ckpt
+srun python main_whatsup_eval.py --model "clip" --size large --output_name OOD --ckpt clip-OOD_b1-v8-epoch=01-val_accuracy=1.00.ckpt
 
 
 
