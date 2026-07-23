@@ -163,5 +163,115 @@
         "behind": null
       }
     }
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-ID_b1-v5-epoch=02-val_accuracy=1.00.ckpt",
+    "score": "individual",
+    "accuracy": 0.29901960784313725
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-ID_b1-v5-epoch=02-val_accuracy=1.00.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.08823529411764706
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-ID_b1-v5-epoch=02-val_accuracy=1.00.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-ID_b1-v5-epoch=02-val_accuracy=1.00.ckpt",
+    "score": "similarity",
+    "accuracy": 0.7316176470588235
+  },
+  {
+    "model": "ID",
+    "ckpt": "pecore-ID_b1-v5-epoch=02-val_accuracy=1.00.ckpt",
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.1471,
+        "front": 0.1373,
+        "behind": 0.0098
+      },
+      "right": {
+        "left": 0.1471,
+        "right": null,
+        "front": 0.0882,
+        "behind": 0.0098
+      },
+      "front": {
+        "left": 0.1373,
+        "right": 0.0882,
+        "front": null,
+        "behind": 0.0294
+      },
+      "behind": {
+        "left": 0.0098,
+        "right": 0.0098,
+        "front": 0.0294,
+        "behind": null
+      }
+    }
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-OOD_b1-v8-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "individual",
+    "accuracy": 0.3480392156862745
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-OOD_b1-v8-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "pairwise",
+    "accuracy": 0.09313725490196079
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-OOD_b1-v8-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "setwise",
+    "accuracy": 0.0
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-OOD_b1-v8-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "similarity",
+    "accuracy": 0.7622549019607843
+  },
+  {
+    "model": "OOD",
+    "ckpt": "pecore-OOD_b1-v8-epoch=04-val_accuracy=1.00.ckpt",
+    "score": "pairwise_matrix",
+    "accuracy": {
+      "left": {
+        "left": null,
+        "right": 0.1667,
+        "front": 0.0,
+        "behind": 0.2255
+      },
+      "right": {
+        "left": 0.1667,
+        "right": null,
+        "front": 0.0,
+        "behind": 0.0686
+      },
+      "front": {
+        "left": 0.0,
+        "right": 0.0,
+        "front": null,
+        "behind": 0.0196
+      },
+      "behind": {
+        "left": 0.2255,
+        "right": 0.0686,
+        "front": 0.0196,
+        "behind": null
+      }
+    }
   }
 ]
